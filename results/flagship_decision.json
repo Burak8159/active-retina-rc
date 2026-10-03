@@ -2,7 +2,7 @@
   "analysis_api_status": "VERIFIED_LOCAL_API",
   "arxiv_status": "GO_AS_TRANSPARENT_REPRODUCIBLE_BENCHMARK_PREPRINT",
   "autonomous_candidate_status": "CANDIDATE_MODE_IDENTIFIED_NOT_CERTIFIED",
-  "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_UNTOUCHED_CERTIFICATION_STILL_REQUIRED",
+  "autonomous_diagnosis_status": "CONDITIONAL_GO_AUTONOMOUS_DIAGNOSIS_AFTER_UNTOUCHED_CERTIFICATION",
   "best_development_autonomous_candidate": {
     "candidate": "logistic_c025_balanced",
     "certified_posthoc": false,
@@ -14,7 +14,7 @@
     "zero_miss_specificity_ge_50_ucb95": 0.0605034093488943
   },
   "certification_gap_report": "docs/certification_gap_report.md",
-  "clinical_workflow_software_status": "GO_CLINICIAN_REVIEWED_ACQUISITION_ASSISTANT",
+  "clinical_workflow_software_status": "GO_CLINICIAN_REVIEWED_COMPUTATIONAL_PRODUCT",
   "completed_artifacts": [
     "results/flagship_frontier.csv",
     "results/flagship_cost_frontier.csv",
@@ -75,9 +75,12 @@
     "docs/untouched_certification_protocol.md",
     "src/active_retina/validate_untouched_cohort.py",
     "configs/untouched_attestation_template.json",
-    "results/online_cohort_untouched_validation.json"
+    "results/online_cohort_untouched_validation.json",
+    "docs/external_untouched_data_routes.md",
+    "src/active_retina/prepare_mbrset_for_untouched_review.py",
+    "docs/deployable_computation_gate.md"
   ],
-  "computational_product_status": "FROZEN_AUTONOMOUS_CANDIDATE_READY_FOR_UNTOUCHED_CERTIFICATION_RUN",
+  "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
     "DeepDRiD suffix-to-anatomy mapping is not officially resolved in reviewed public metadata.",
     "Current validation has 39 patients; uncertainty is too wide for an unqualified IEEE safety claim.",
@@ -102,6 +105,14 @@
     "combined_positive_patients": 247
   },
   "expanded_cohort_development_status": "SAMPLE_SIZE_MATH_CLEARS_IN_DEVELOPMENT_NOT_CERTIFICATION",
+  "external_untouched_route_status": {
+    "best_route": "mBRSET after credentialed access if metadata exposes same-eye macula/optic-disc pairing",
+    "boundary": "No current local labeled cohort is untouched; final autonomous certificate still requires a new eligible cohort.",
+    "deployability_gate": "docs/deployable_computation_gate.md",
+    "mbrset_importer": "src/active_retina/prepare_mbrset_for_untouched_review.py",
+    "route_doc": "docs/external_untouched_data_routes.md",
+    "smoke_result": "Importer creates a canonical manifest when view metadata exists and fails closed when view metadata is absent."
+  },
   "frozen_autonomous_candidate": {
     "artifact": "models/active_retina_rc_autonomous_candidate.joblib",
     "candidate_family": "logistic_c025_balanced",
@@ -127,8 +138,9 @@
     }
   },
   "go_claim": [
-    "GO for a public-data computational-system paper: frozen paired-view model benchmark, clinician-reviewed workflow artifact, frozen autonomous-candidate artifact, and one-shot certification runner.",
-    "CONDITIONAL GO for autonomous diagnosis: the expanded development pool clears sample-size arithmetic, but final claim requires an untouched cohort run with the frozen candidate and no repair."
+    "GO for clinician-reviewed computational product: frozen model artifact, local station/API, reports, hashes, audit logs, and fail-closed gateway are present.",
+    "GO for arXiv/IEEE computational-system paper: frozen public-data model package, risk-control analysis, certification runner, and external certification route are documented.",
+    "CONDITIONAL GO for autonomous diagnosis: allowed only after a new untouched paired-view cohort returns GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED with no threshold repair."
   ],
   "ieee_status": "CONDITIONAL_GO_REQUIRES_STRONGER_DEEPDRID_ONLY_RISK_CONTROL",
   "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_EVALUATED",
@@ -170,5 +182,5 @@
     "reason": "Current local labeled cohorts are inspected/development data or fixtures; none can certify autonomous diagnosis.",
     "validator": "src/active_retina/validate_untouched_cohort.py"
   },
-  "untouched_certification_status": "NO_LOCAL_UNTOUCHED_COHORT_AVAILABLE"
+  "untouched_certification_status": "NO_LOCAL_UNTOUCHED_COHORT_AVAILABLE_EXTERNAL_ROUTE_READY"
 }
