@@ -41,9 +41,12 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cohort-kind", choices=["canonical", "mbrset"], required=True)
+    parser.add_argument("--cohort-kind", choices=["canonical", "mbrset", "drtid"], required=True)
     parser.add_argument("--labels", help="mBRSET labels CSV when --cohort-kind=mbrset")
     parser.add_argument("--image-root", help="mBRSET image root when --cohort-kind=mbrset")
+    parser.add_argument("--drtid-root", help="DRTiD root folder when --cohort-kind=drtid")
+    parser.add_argument("--drtid-include-training", action="store_true")
+    parser.add_argument("--drtid-include-testing", action="store_true")
     parser.add_argument(
         "--suffix-view-map",
         help="Audited mBRSET filename suffix anatomy map, e.g. 1:macula,2:optic_disc,3:macula,4:optic_disc.",
@@ -87,6 +90,25 @@ def main() -> None:
         if args.suffix_view_map:
             prep_cmd.extend(["--suffix-view-map", args.suffix_view_map])
         prep = run(prep_cmd)
+    elif args.cohort_kind == "drtid":
+        if not args.drtid_root:
+            raise SystemExit("--drtid-root is required for DRTiD")
+        prep_cmd = [
+            py,
+            "-m",
+            "active_retina.prepare_drtid_for_untouched_review",
+            "--drtid-root",
+            args.drtid_root,
+            "--output-manifest",
+            str(manifest),
+            "--output-summary",
+            str(prep_summary),
+        ]
+        if args.drtid_include_training:
+            prep_cmd.append("--include-training")
+        if args.drtid_include_testing:
+            prep_cmd.append("--include-testing")
+        prep = run(prep_cmd)
     else:
         if not args.canonical_input:
             raise SystemExit("--canonical-input is required for canonical cohorts")
@@ -106,7 +128,11 @@ def main() -> None:
             ]
         )
 
-    if prep.get("status") not in {"MBRSET_PAIRED_MANIFEST_CREATED", "UNTOUCHED_CERTIFICATION_MANIFEST_PREPARED"}:
+    if prep.get("status") not in {
+        "MBRSET_PAIRED_MANIFEST_CREATED",
+        "DRTID_CERTIFICATION_MANIFEST_PREPARED",
+        "UNTOUCHED_CERTIFICATION_MANIFEST_PREPARED",
+    }:
         decision = {
             "status": "NO_GO_CERTIFICATION_MANIFEST_NOT_CREATED",
             "manifest_preparation": prep,

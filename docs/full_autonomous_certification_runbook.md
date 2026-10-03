@@ -78,6 +78,26 @@ PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.run_untouched_cer
   --output-dir results/external_untouched_certification
 ```
 
+## DRTiD Parallel Path
+
+While PhysioNet credentialing is pending, request DRTiD access through the
+official repository/form. After download:
+
+```bash
+PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.run_untouched_certification_package \
+  --cohort-kind drtid \
+  --drtid-root external/DRTiD \
+  --drtid-include-training \
+  --drtid-include-testing \
+  --attestation configs/untouched_attestation_template.json \
+  --output-dir results/drtid_untouched_certification
+```
+
+Important boundary: if the downloaded DRTiD grade CSVs contain only
+`Macula`, `Optic disc`, and `Grade`, the run is pair-level external validation.
+If the metadata also contains a true patient identifier, the importer uses it
+and the run can support patient-level certification.
+
 ## Decision Rule
 
 Only this status upgrades the product and paper to autonomous-certified:
