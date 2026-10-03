@@ -10,6 +10,7 @@ import argparse
 import csv
 import json
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
@@ -62,7 +63,14 @@ def download_labels(local_dir: Path) -> dict[str, Path]:
     return paths
 
 
+def expected_image_path(local_dir: Path, split: str, filename: str) -> Path:
+    return local_dir / "DR_grading" / split / filename
+
+
 def download_image(local_dir: Path, split: str, filename: str) -> Path:
+    expected = expected_image_path(local_dir, split, filename)
+    if expected.exists() and expected.stat().st_size > 0:
+        return expected
     repo_file = f"DR_grading/{split}/{filename}"
     return Path(
         hf_hub_download(
@@ -72,6 +80,27 @@ def download_image(local_dir: Path, split: str, filename: str) -> Path:
             local_dir=local_dir,
         )
     )
+
+
+def download_images_parallel(local_dir: Path, rows: list[dict[str, Any]], workers: int) -> dict[tuple[str, str], Path]:
+    paths: dict[tuple[str, str], Path] = {}
+    total = len(rows)
+    done = 0
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
+        futures = {
+            executor.submit(download_image, local_dir, str(row["split"]), str(row["filename"])): (
+                str(row["split"]),
+                str(row["filename"]),
+            )
+            for row in rows
+        }
+        for future in as_completed(futures):
+            key = futures[future]
+            paths[key] = future.result()
+            done += 1
+            if done == 1 or done % 50 == 0 or done == total:
+                print(json.dumps({"downloaded_images": done, "total_images": total}), flush=True)
+    return paths
 
 
 def write_manifest(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -89,6 +118,7 @@ def main() -> None:
     parser.add_argument("--manifest-output", default="results/ddr_hf_manifest.csv")
     parser.add_argument("--summary-output", default="results/ddr_hf_summary.json")
     parser.add_argument("--download-images", action="store_true")
+    parser.add_argument("--download-workers", type=int, default=8)
     parser.add_argument("--limit-per-split", type=int)
     parser.add_argument("--limit-per-grade-per-split", type=int)
     args = parser.parse_args()
@@ -100,15 +130,19 @@ def main() -> None:
     for split, path in label_paths.items():
         label_rows.extend(read_label_file(path, split, args.limit_per_split, args.limit_per_grade_per_split))
 
+    downloaded_paths: dict[tuple[str, str], Path] = {}
+    if args.download_images:
+        downloaded_paths = download_images_parallel(local_dir, label_rows, args.download_workers)
+
     manifest: list[dict[str, Any]] = []
     missing: list[str] = []
     for row in label_rows:
         split = row["split"]
         filename = row["filename"]
         if args.download_images:
-            image_path = download_image(local_dir, split, filename)
+            image_path = downloaded_paths[(split, filename)]
         else:
-            image_path = local_dir / "DR_grading" / split / filename
+            image_path = expected_image_path(local_dir, split, filename)
         if not image_path.exists():
             missing.append(str(image_path))
         image_id = f"ddr_{split}_{Path(filename).stem}"
@@ -134,6 +168,7 @@ def main() -> None:
         "repo_id": REPO_ID,
         "local_dir": str(local_dir),
         "download_images": args.download_images,
+        "download_workers": args.download_workers,
         "limit_per_split": args.limit_per_split,
         "limit_per_grade_per_split": args.limit_per_grade_per_split,
         "n_rows": len(manifest),

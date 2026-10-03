@@ -23,18 +23,34 @@ VIEW_SETS = ("macula", "optic_disc", "macula+optic_disc")
 
 
 class ImagePathDataset(Dataset):
-    def __init__(self, items: list[tuple[str, str]], transform: Any) -> None:
+    def __init__(self, items: list[tuple[str, str]], transform: Any, project_root: Path | None = None) -> None:
         self.items = items
         self.transform = transform
+        self.project_root = project_root or Path.cwd()
 
     def __len__(self) -> int:
         return len(self.items)
 
     def __getitem__(self, idx: int):
         image_id, path = self.items[idx]
-        with Image.open(path) as img:
+        with Image.open(self.resolve_path(path)) as img:
             image = img.convert("RGB")
         return image_id, self.transform(image)
+
+    def resolve_path(self, raw_path: str) -> Path:
+        path = Path(raw_path)
+        if path.exists():
+            return path
+        normalized = raw_path.replace("\\", "/")
+        marker = "/external/"
+        if marker in normalized:
+            candidate = self.project_root / "external" / normalized.split(marker, 1)[1]
+            if candidate.exists():
+                return candidate
+        candidate = self.project_root / raw_path
+        if candidate.exists():
+            return candidate
+        return path
 
 
 def build_encoder(model_name: str, pretrained: bool):
@@ -49,6 +65,8 @@ def build_encoder(model_name: str, pretrained: bool):
 
 def device_for(name: str) -> torch.device:
     if name == "auto":
+        if torch.cuda.is_available():
+            return torch.device("cuda")
         if torch.backends.mps.is_available():
             return torch.device("mps")
         return torch.device("cpu")
@@ -95,17 +113,32 @@ def extract_features(
     device = device_for(device_name)
     model, transform = build_encoder(model_name, pretrained)
     model.to(device)
-    dataset = ImagePathDataset(items, transform)
+    dataset = ImagePathDataset(items, transform, Path.cwd())
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0)
     feats: dict[str, np.ndarray] = {}
 
+    total_batches = len(loader)
     with torch.inference_mode():
-        for image_ids, batch in loader:
+        for batch_idx, (image_ids, batch) in enumerate(loader, start=1):
             batch = batch.to(device)
             out = model(batch)
             out = out.detach().cpu().float().numpy()
             for image_id, feat in zip(image_ids, out):
                 feats[str(image_id)] = feat.astype(np.float32)
+            if batch_idx == 1 or batch_idx % 25 == 0 or batch_idx == total_batches:
+                print(
+                    json.dumps(
+                        {
+                            "feature_extraction_batches": batch_idx,
+                            "total_batches": total_batches,
+                            "features": len(feats),
+                            "device": str(device),
+                            "model_name": model_name,
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
 
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(cache_path, **feats)

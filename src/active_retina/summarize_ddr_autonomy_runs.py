@@ -17,6 +17,12 @@ DEFAULT_RUNS = {
     "resnet50_finetune_e2": "results/ddr_finetuned_autonomy_resnet50_e2/summary.json",
     "feature_mlp_h1024": "results/rtx3050_feature_mlp_ensemble_h1024/summary.json",
     "feature_mlp_h512_d60_wd1e3": "results/rtx3050_feature_mlp_ensemble_h512_d60_wd1e3/summary.json",
+    "specificity300_resnet50": "results/ddr_open_autonomy_specificity300/summary.json",
+    "specificity300_resnet50_observed_threshold_diagnostic": "results/ddr_open_autonomy_specificity300_observed_thresholds/summary.json",
+    "specificity300_dino_vit": "results/ddr_open_autonomy_specificity300_vit_dino/summary.json",
+    "specificity300_convnext_tiny": "results/ddr_open_autonomy_specificity300_convnext_tiny/summary.json",
+    "specificity300_resnet_dino": "results/ddr_open_autonomy_specificity300_resnet_dino/summary.json",
+    "specificity300_three_encoder_ensemble": "results/ddr_open_autonomy_specificity300_ensemble/summary.json",
 }
 
 

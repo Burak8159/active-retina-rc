@@ -93,6 +93,30 @@ DRTiD recovery check:
   - 15.5% patient coverage.
 - This is useful for the product as a limited autonomous sub-mode, but it is not full all-case autonomous diagnosis.
 
+Larger DDR specificity300 check:
+
+- The larger DDR slice is complete:
+  - 4,238 images,
+  - 2,723 referable-positive images,
+  - 0 missing images,
+  - 1,618 train / 1,185 validation / 1,435 test images.
+- RTX CUDA feature extraction was used because Mac CPU/MPS extraction was too slow.
+- ResNet-50 on the larger slice:
+  - 946/946 test positives captured,
+  - 95% upper missed-risk bound 0.32%,
+  - specificity 6.5%.
+- DINO ViT on the larger slice:
+  - AUROC 0.939 and AP 0.968,
+  - specificity 13.5%,
+  - but 1 missed positive, so it is not a zero-miss artifact.
+- ConvNeXt-Tiny on the larger slice:
+  - specificity 2.5% with 4 missed positives.
+- Three-encoder ensemble on the larger slice:
+  - 946/946 test positives captured,
+  - 95% upper missed-risk bound 0.32%,
+  - specificity 8.4%.
+- Conclusion: adding more immediate DDR images improved statistical power and representation metrics, but it still did not recover clinically useful all-case autonomous specificity.
+
 Partial expanded-train shortcut:
 
 - Used extra DDR train images that had downloaded before the full 100-per-grade run completed.
