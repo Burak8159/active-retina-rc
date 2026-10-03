@@ -106,7 +106,8 @@
     "results/drtid_recovery_candidate_inspected_test_run/features.npz",
     "results/drtid_recovery_candidate_inspected_test_run/predictions.csv",
     "results/drtid_recovery_candidate_inspected_test_run/summary.json",
-    "docs/drcr_protocol_aa_public_audit.md"
+    "docs/drcr_protocol_aa_public_audit.md",
+    "docs/immediate_dataset_deep_search.md"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -283,6 +284,18 @@
     "NO-GO for autonomous diagnosis today: the original frozen candidate failed DRTiD, and the recovery candidate was selected after DRTiD inspection, so it requires a different untouched certification cohort such as mBRSET."
   ],
   "ieee_status": "CONDITIONAL_GO_REQUIRES_STRONGER_DEEPDRID_ONLY_RISK_CONTROL",
+  "immediate_dataset_deep_search": {
+    "final_certification_route": "mBRSET remains primary; MFIDDR/DR10K author access are backups.",
+    "new_promising_leads": {
+      "DR10K": "Structurally excellent but no immediate public download found.",
+      "DRCR_Protocol_AA": "Strong ETDRS/UWF table-level evidence; no images in public package.",
+      "GDRBench": "Multi-domain single-image DR grading benchmark, useful for robustness; not paired-view acquisition certification.",
+      "Harvard_FairVision_DR": "Large SLO/OCT DR dataset via Google Drive, useful for robustness/fairness; not macula/disc paired color fundus certification.",
+      "IBIA_OPTHS_1000000049": "Open-access 500-image macula/disc fundus dataset, likely useful for smoke/lesion robustness; DR severity and enough positives not verified."
+    },
+    "report": "docs/immediate_dataset_deep_search.md",
+    "status": "NO_IMMEDIATE_FULL_CERTIFICATION_DATASET_FOUND"
+  },
   "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_EVALUATED",
   "online_certification_status": "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED_ON_ONLINE_COHORT",
   "recovery_plan": "docs/autonomous_certification_recovery_plan.md",
