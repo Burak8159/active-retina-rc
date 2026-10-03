@@ -64,8 +64,16 @@
     "results/deepdrid_online_resnet50_features.npz",
     "src/active_retina/expanded_cohort_development_analysis.py",
     "results/expanded_cohort_development_summary.json",
-    "results/expanded_cohort_development_table.csv"
+    "results/expanded_cohort_development_table.csv",
+    "src/active_retina/train_autonomous_candidate_artifact.py",
+    "src/active_retina/certify_autonomous_candidate.py",
+    "models/active_retina_rc_autonomous_candidate.joblib",
+    "models/active_retina_rc_autonomous_candidate.metadata.json",
+    "docs/autonomous_candidate_model_card.md",
+    "results/autonomous_candidate_online_smoke_predictions.csv",
+    "results/autonomous_candidate_online_smoke_summary.json"
   ],
+  "computational_product_status": "FROZEN_AUTONOMOUS_CANDIDATE_READY_FOR_UNTOUCHED_CERTIFICATION_RUN",
   "conditional_ieee_blockers": [
     "DeepDRiD suffix-to-anatomy mapping is not officially resolved in reviewed public metadata.",
     "Current validation has 39 patients; uncertainty is too wide for an unqualified IEEE safety claim.",
@@ -90,9 +98,33 @@
     "combined_positive_patients": 247
   },
   "expanded_cohort_development_status": "SAMPLE_SIZE_MATH_CLEARS_IN_DEVELOPMENT_NOT_CERTIFICATION",
+  "frozen_autonomous_candidate": {
+    "artifact": "models/active_retina_rc_autonomous_candidate.joblib",
+    "candidate_family": "logistic_c025_balanced",
+    "development_operating_point": {
+      "coverage_patients": 0.6129032258064516,
+      "decided_positive_patients": 181,
+      "minimum_specificity": 0.8,
+      "misses": 0,
+      "patient_missed_risk_ucb_95": 0.016414791655192464,
+      "specificity_decided_negative_patients": 0.8017241379310345
+    },
+    "high_threshold": 0.9,
+    "low_threshold": 0.00025252211213228293,
+    "metadata": "models/active_retina_rc_autonomous_candidate.metadata.json",
+    "model_card": "docs/autonomous_candidate_model_card.md",
+    "online_smoke": {
+      "decided_positive_patients": 39,
+      "decision": "NO_GO_AUTONOMOUS_CERTIFICATION",
+      "misses": 0,
+      "patient_missed_risk_ucb_95": 0.07393758892668655,
+      "specificity_decided_negative_patients": 0.8666666666666667,
+      "summary": "results/autonomous_candidate_online_smoke_summary.json"
+    }
+  },
   "go_claim": [
-    "The paper is a GO as a reproducible DeepDRiD-only benchmark and methods preprint with a working clinician-reviewed station and quantified autonomous-certification gap.",
-    "A development-only autonomous candidate has been identified, but it is not a certified autonomous diagnostic product until a frozen artifact achieves zero misses on an untouched cohort with at least 59 positive patients, preferably 80-120."
+    "GO for a public-data computational-system paper: frozen paired-view model benchmark, clinician-reviewed workflow artifact, frozen autonomous-candidate artifact, and one-shot certification runner.",
+    "CONDITIONAL GO for autonomous diagnosis: the expanded development pool clears sample-size arithmetic, but final claim requires an untouched cohort run with the frozen candidate and no repair."
   ],
   "ieee_status": "CONDITIONAL_GO_REQUIRES_STRONGER_DEEPDRID_ONLY_RISK_CONTROL",
   "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_EVALUATED",

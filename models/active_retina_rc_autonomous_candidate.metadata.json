@@ -1,0 +1,37 @@
+{
+  "artifact": "models/active_retina_rc_autonomous_candidate.joblib",
+  "candidate_family": "logistic_c025_balanced",
+  "encoder": "resnet50.a1_in1k",
+  "expanded_development_summary_sha256": "fa7728464b6195c59152da72353a924dc204d5cfb70bbc682d53ae9523c54ab5",
+  "expanded_development_table_sha256": "ad65fb1031d02774f50fe35fe70c763a6d718d60cf0160cc208b765439a37805",
+  "feature_cache_sha256": "7e7f9648d4c6dff1b2dda489893b3c907a4006461e1c1c31bd6e6364201a25b0",
+  "manifest_sha256": "ffbdfbe984f9098d724e5a1ff80edae06a0a92695f1378f767d84ef24e88149c",
+  "policy": {
+    "high_threshold": 0.9,
+    "low_threshold": 0.00025252211213228293,
+    "mode": "paired_view_autonomous_candidate",
+    "score_above_or_equal_high": "autonomous_referable_candidate",
+    "score_below_or_equal_low": "autonomous_nonreferable_candidate",
+    "score_between_thresholds": "defer_to_clinician",
+    "selected_from": "expanded development stress test at minimum 80% decided-negative specificity"
+  },
+  "policy_sha256": "03100aede6f08a34b431d7dd0a28a45d5edc2e7301c8578377d65b4f0b827e65",
+  "selection_boundary": "Thresholds were selected on inspected/development evidence. The artifact may only become an autonomous product after a single no-repair run on an untouched certification cohort.",
+  "status": "FROZEN_AUTONOMOUS_CANDIDATE_NOT_CERTIFIED",
+  "training_eyes": 792,
+  "training_patients": 396,
+  "training_positive_eyes": 348,
+  "untouched_certification_requirements": {
+    "confidence": 0.95,
+    "maximum_misses": 0,
+    "minimum_decided_positive_patients": 59,
+    "missed_referable_dr_risk_target": 0.05,
+    "preferred_positive_patients": "80-120",
+    "threshold_or_model_repair_allowed_after_viewing_certification": false
+  },
+  "version": "active-retina-rc-autonomous-candidate-2026-10-03",
+  "view_order": {
+    "first": "macula",
+    "second": "optic_disc"
+  }
+}
