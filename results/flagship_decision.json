@@ -81,7 +81,11 @@
     "docs/deployable_computation_gate.md",
     "src/active_retina/run_untouched_certification_package.py",
     "docs/full_autonomous_certification_runbook.md",
-    "docs/mbrset_public_metadata_audit.md"
+    "docs/mbrset_public_metadata_audit.md",
+    "src/active_retina/audit_mbrset_suffix_candidates.py",
+    "results/mbrset_public_metadata_candidate_summary.json",
+    "docs/physionet_mbrset_access_action_pack.md",
+    "docs/mbrset_access_request_note.md"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -112,10 +116,17 @@
     "best_route": "mBRSET after credentialed access if metadata exposes same-eye macula/optic-disc pairing",
     "boundary": "No current local labeled cohort is untouched; final autonomous certificate still requires a new eligible cohort.",
     "deployability_gate": "docs/deployable_computation_gate.md",
+    "mbrset_access_action_pack": "docs/physionet_mbrset_access_action_pack.md",
+    "mbrset_candidate_paired_patients_before_image_audit": 1262,
+    "mbrset_candidate_positive_paired_patients_before_image_audit": 293,
     "mbrset_importer": "src/active_retina/prepare_mbrset_for_untouched_review.py",
     "mbrset_public_metadata": "GitHub CSV exposes patient, file, laterality, final_quality, final_icdr; no explicit anatomy column.",
     "mbrset_public_metadata_audit": "docs/mbrset_public_metadata_audit.md",
+    "mbrset_public_metadata_candidate_summary": "results/mbrset_public_metadata_candidate_summary.json",
+    "mbrset_public_metadata_local_path_untracked": "external/mBRSET_dataframe_brsetmobile_PUBLIC.csv",
+    "mbrset_public_metadata_storage_note": "Local downloaded metadata is kept under ignored external/ dataset storage; repeatable audit summary is committed.",
     "mbrset_suffix_mapping_route": "Importer supports audited suffix map such as 1:macula,2:optic_disc,3:macula,4:optic_disc after official or manual visual audit.",
+    "remaining_blocker": "PhysioNet credentialed image access plus visual/official suffix-to-anatomy audit.",
     "route_doc": "docs/external_untouched_data_routes.md",
     "smoke_result": "Importer creates a canonical manifest when view metadata exists and fails closed when view metadata is absent."
   },

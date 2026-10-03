@@ -1,0 +1,22 @@
+{
+  "candidate_complete_suffix_pairs": 2343,
+  "candidate_paired_patients": 1262,
+  "candidate_positive_paired_patients": 293,
+  "grade_counts_candidate_pairs": {
+    "0": 1736,
+    "1": 146,
+    "2": 308,
+    "3": 45,
+    "4": 108
+  },
+  "metadata": "external/mBRSET_dataframe_brsetmobile_PUBLIC.csv",
+  "minimum_59_positive_patients_met_before_image_audit": true,
+  "next_step": "Download credentialed images from PhysioNet, audit suffix-to-anatomy mapping, then run run_untouched_certification_package.py with the audited suffix map.",
+  "patients": 1291,
+  "preferred_80_positive_patients_met_before_image_audit": true,
+  "rows": 5164,
+  "status": "MBRSET_PUBLIC_METADATA_SUFFIX_PAIR_AUDIT_COMPLETE",
+  "suffix_pattern_note": "Assumes same-eye candidate pairs are patient.1/patient.2 right and patient.3/patient.4 left; anatomy still requires visual or official audit.",
+  "valid_quality_labeled_patients": 1285,
+  "valid_quality_labeled_rows": 4859
+}
