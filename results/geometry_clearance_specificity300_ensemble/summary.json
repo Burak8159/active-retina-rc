@@ -1,0 +1,50 @@
+{
+  "feature_cache": "results/ddr_hf_specificity300_ensemble_features.npz",
+  "l2_normalize": true,
+  "manifest": "results/ddr_hf_specificity300_manifest.csv",
+  "predictions": "results\\geometry_clearance_specificity300_ensemble\\predictions.csv",
+  "selected_on_validation": {
+    "rule": {
+      "max_pos_frac": {
+        "knn_pos_frac_51": 0.2
+      },
+      "min_grade0_frac": {
+        "knn_neg_grade0_frac_3": 0.5
+      },
+      "min_grade2_dist_ge": 1.176618719100952,
+      "min_pos_dist_ge": 0.3048010766506195
+    },
+    "valid_metrics": {
+      "clearance_coverage": 0.04050632911392405,
+      "false_nonreferable_clearance": 0,
+      "n": 1185,
+      "negative": 426,
+      "nonreferable_clearance_specificity": 0.11267605633802817,
+      "positive": 759,
+      "true_nonreferable_cleared": 48,
+      "zero_miss": true
+    }
+  },
+  "status": "NO_GO_FEATURE_GEOMETRY_90_SPECIFICITY_ZERO_MISS",
+  "target_specificity": 0.9,
+  "test_metrics": {
+    "clearance_coverage": 0.041811846689895474,
+    "false_nonreferable_clearance": 13,
+    "n": 1435,
+    "negative": 489,
+    "nonreferable_clearance_specificity": 0.09611451942740286,
+    "positive": 946,
+    "true_nonreferable_cleared": 47,
+    "zero_miss": false
+  },
+  "valid_metrics": {
+    "clearance_coverage": 0.04050632911392405,
+    "false_nonreferable_clearance": 0,
+    "n": 1185,
+    "negative": 426,
+    "nonreferable_clearance_specificity": 0.11267605633802817,
+    "positive": 759,
+    "true_nonreferable_cleared": 48,
+    "zero_miss": true
+  }
+}

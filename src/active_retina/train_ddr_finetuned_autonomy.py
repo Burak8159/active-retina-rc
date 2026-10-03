@@ -22,7 +22,7 @@ import numpy as np
 import torch
 from PIL import Image
 from torch import nn
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
 from .formal_risk_control import binomial_upper
 
@@ -54,6 +54,7 @@ class FundusDataset(Dataset):
         return (
             self.transform(image),
             torch.tensor(float(row["referable_dr"]), dtype=torch.float32),
+            torch.tensor(int(row["grade"]), dtype=torch.long),
             row["image_id"],
         )
 
@@ -83,11 +84,13 @@ def device_for(name: str) -> torch.device:
     return torch.device(name)
 
 
-def build_model(model_name: str):
+def build_model(model_name: str, image_size: int | None = None):
     import timm
 
     model = timm.create_model(model_name, pretrained=True, num_classes=1)
     cfg = timm.data.resolve_model_data_config(model)
+    if image_size:
+        cfg["input_size"] = (3, image_size, image_size)
     train_transform = timm.data.create_transform(**cfg, is_training=True)
     eval_transform = timm.data.create_transform(**cfg, is_training=False)
     return model, train_transform, eval_transform
@@ -129,7 +132,11 @@ def predict(model: nn.Module, loader: DataLoader, device: torch.device) -> tuple
     labels: list[float] = []
     ids: list[str] = []
     with torch.inference_mode():
-        for images, y, image_ids in loader:
+        for batch in loader:
+            if len(batch) == 4:
+                images, y, _, image_ids = batch
+            else:
+                images, y, image_ids = batch
             logits = model(images.to(device)).flatten()
             probs = torch.sigmoid(logits).detach().cpu().float().numpy()
             scores.extend(float(x) for x in probs)
@@ -212,6 +219,7 @@ def main() -> None:
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--artifact", required=True)
     parser.add_argument("--model-name", default="resnet50.a1_in1k")
+    parser.add_argument("--image-size", type=int, default=0)
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--num-workers", type=int, default=0)
@@ -225,6 +233,11 @@ def main() -> None:
     parser.add_argument("--device", default="auto")
     parser.add_argument("--min-validation-positive", type=int, default=59)
     parser.add_argument("--threshold-safety-factors", default="0.9,0.75,0.5,0.25")
+    parser.add_argument("--boundary-weighting", action="store_true")
+    parser.add_argument("--loss-mode", choices=["binary_bce", "ordinal_mse"], default="binary_bce")
+    parser.add_argument("--grade2-positive-weight", type=float, default=8.0)
+    parser.add_argument("--grade1-negative-weight", type=float, default=3.0)
+    parser.add_argument("--referable-weight-multiplier", type=float, default=4.0)
     args = parser.parse_args()
 
     set_seed(args.seed)
@@ -234,20 +247,41 @@ def main() -> None:
     rows = read_manifest(Path(args.manifest))
     by_split = split_rows(rows)
     device = device_for(args.device)
-    model, train_transform, eval_transform = build_model(args.model_name)
+    model, train_transform, eval_transform = build_model(args.model_name, args.image_size or None)
     trainable_info = apply_trainable_filter(
         model,
         [x.strip() for x in args.trainable_name_fragments.split(",") if x.strip()],
     )
     model.to(device)
 
-    train_loader = DataLoader(FundusDataset(by_split["train"], train_transform, project_root), batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
+    train_dataset = FundusDataset(by_split["train"], train_transform, project_root)
+    sampler = None
+    shuffle = True
+    if args.boundary_weighting:
+        sampler_weights = []
+        for row in by_split["train"]:
+            weight = 1.0
+            if int(row["referable_dr"]):
+                weight *= args.referable_weight_multiplier
+            if int(row["grade"]) == 2:
+                weight *= args.grade2_positive_weight
+            if int(row["grade"]) == 1:
+                weight *= args.grade1_negative_weight
+            sampler_weights.append(weight)
+        sampler = WeightedRandomSampler(sampler_weights, num_samples=len(sampler_weights), replacement=True)
+        shuffle = False
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=shuffle, sampler=sampler, num_workers=args.num_workers)
     valid_loader = DataLoader(FundusDataset(by_split["valid"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
     test_loader = DataLoader(FundusDataset(by_split["test"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
     y_train = np.asarray([int(r["referable_dr"]) for r in by_split["train"]])
     pos_weight = float((y_train == 0).sum() / max(1, int((y_train == 1).sum())))
-    loss_fn = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(pos_weight, dtype=torch.float32, device=device))
+    if args.loss_mode == "ordinal_mse":
+        loss_fn = nn.MSELoss(reduction="none")
+    elif args.boundary_weighting:
+        loss_fn = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(pos_weight * args.referable_weight_multiplier, dtype=torch.float32, device=device), reduction="none")
+    else:
+        loss_fn = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(pos_weight, dtype=torch.float32, device=device))
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr, weight_decay=args.weight_decay)
     scaler = torch.amp.GradScaler("cuda", enabled=bool(args.use_amp and device.type == "cuda"))
 
@@ -259,13 +293,25 @@ def main() -> None:
         total_loss = 0.0
         seen = 0
         total_batches = len(train_loader)
-        for batch_idx, (images, y, _) in enumerate(train_loader, start=1):
+        for batch_idx, (images, y, grade, _) in enumerate(train_loader, start=1):
             images = images.to(device)
             y = y.to(device)
+            grade = grade.to(device)
             optimizer.zero_grad(set_to_none=True)
             with torch.amp.autocast("cuda", enabled=bool(args.use_amp and device.type == "cuda")):
                 logits = model(images).flatten()
-                loss = loss_fn(logits, y)
+                if args.loss_mode == "ordinal_mse":
+                    ordinal_target = grade.float() / 5.0
+                    loss_raw = loss_fn(torch.sigmoid(logits), ordinal_target)
+                else:
+                    loss_raw = loss_fn(logits, y)
+                if args.boundary_weighting:
+                    boundary = torch.ones_like(y)
+                    boundary = torch.where((y == 1) & (grade == 2), boundary * args.grade2_positive_weight, boundary)
+                    boundary = torch.where((y == 0) & (grade == 1), boundary * args.grade1_negative_weight, boundary)
+                    loss = (loss_raw * boundary).mean()
+                else:
+                    loss = loss_raw
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
@@ -350,9 +396,18 @@ def main() -> None:
             else "NO_GO_FINETUNED_SINGLE_IMAGE_AUTONOMY"
         ),
         "model_name": args.model_name,
+        "image_size": args.image_size or None,
+        "loss_mode": args.loss_mode,
         "artifact": args.artifact,
         "manifest": args.manifest,
         "trainable_info": trainable_info,
+        "loss_mode": args.loss_mode,
+        "boundary_weighting": {
+            "enabled": args.boundary_weighting,
+            "grade2_positive_weight": args.grade2_positive_weight,
+            "grade1_negative_weight": args.grade1_negative_weight,
+            "referable_weight_multiplier": args.referable_weight_multiplier,
+        },
         "best_epoch": best_epoch,
         "history": history,
         "selected_threshold": selected,
