@@ -1,0 +1,42 @@
+{
+  "status": "GO_ZERO_MISS_90_SPECIFICITY_AUTONOMOUS_MODE",
+  "mode_name": "ActiveRetina-DDR-selective-fusion-90-0-v1",
+  "candidate": "median_all_ranknorm",
+  "decision_space": "CLEAR_REFER_ABSTAIN",
+  "score_inputs": [
+    "convnext_tiny",
+    "dino_vit",
+    "feature_ensemble",
+    "mlp_ensemble",
+    "mlp_ensemble_conservative",
+    "resnet50"
+  ],
+  "fusion": {
+    "type": "median_all_ranknorm",
+    "rank_normalization_scope": "within_split_for_evaluation; deployment must use frozen calibration transform"
+  },
+  "thresholds": {
+    "clear_if_score_lte": 0.05000000000000001,
+    "refer_if_score_gte": 0.5875,
+    "otherwise": "ABSTAIN_MANUAL_REVIEW"
+  },
+  "selection": {
+    "selected_on": "DDR validation split",
+    "min_validation_specificity": 0.925,
+    "required_validation_false_negative_clearances": 0,
+    "selection_priority": "pass zero-miss and >=90% specificity, then maximize autonomous coverage"
+  },
+  "held_out_test_result": {
+    "false_negative_clearances": 0,
+    "specificity_among_automatic_decisions": 0.9473684210526315,
+    "sensitivity_all_cases_clear_is_negative": 1.0,
+    "automatic_coverage": 0.4627177700348432,
+    "abstention_rate": 0.5372822299651568,
+    "true_negative_clearances": 72,
+    "true_positive_referrals": 588,
+    "false_positive_referrals": 4,
+    "negative_clearance_rate": 0.147239263803681,
+    "referable_auto_rate": 0.6215644820295984
+  },
+  "boundary": "This is an autonomous high-confidence CLEAR/REFER/ABSTAIN mode on DDR held-out evaluation, not forced diagnosis for every case and not yet a prospective clinical certificate."
+}

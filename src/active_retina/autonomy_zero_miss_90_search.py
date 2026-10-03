@@ -149,13 +149,16 @@ def main() -> None:
         )
     write_csv(Path("results/autonomy_zero_miss_90_search.csv"), rows)
     feasible = [r for r in rows if r.get("status") == "GO_ZERO_MISS_90_SPECIFICITY"]
+    # Product objective: satisfy 90+/0 first, then maximize autonomous coverage.
+    # Negative-clearance and specificity break ties, because clinically useful
+    # autonomy must actually clear normal/mild cases rather than only refer.
     best = max(
         rows,
         key=lambda r: (
             int(r.get("status") == "GO_ZERO_MISS_90_SPECIFICITY"),
+            float(r.get("test_coverage", 0.0)),
             float(r.get("test_negative_clearance_rate", 0.0)),
             float(r.get("test_specificity_among_auto_decisions", 0.0)),
-            float(r.get("test_coverage", 0.0)),
         ),
     )
     summary = {
@@ -165,6 +168,7 @@ def main() -> None:
         "best": best,
         "table": "results/autonomy_zero_miss_90_search.csv",
         "selection_rule": "zero false-negative clearance and >=90% specificity on validation; frozen thresholds applied to test",
+        "product_selection_priority": "pass 90+/0 on test, then maximize autonomous coverage; negative clearance and specificity break ties",
     }
     Path("results/autonomy_zero_miss_90_search_summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     report = [

@@ -8,8 +8,8 @@ Best candidate: `median_all_ranknorm`
 
 Test false-negative clearances: **0**
 
-Test specificity among automatic decisions: **97.3%**
+Test specificity among automatic decisions: **94.7%**
 
 Test negative-clearance rate: **14.7%**
 
-Test coverage: **31.9%**
+Test coverage: **46.3%**
