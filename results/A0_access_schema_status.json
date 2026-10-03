@@ -1,0 +1,18 @@
+{
+  "field_mapping": {
+    "F1": "macula_centered",
+    "F2": "optic_disc_centered",
+    "F3": "superior_tangent_to_optic_disc_horizontal_line",
+    "F4": "inferior_tangent_to_optic_disc_horizontal_line"
+  },
+  "gate": "A0",
+  "missing": [
+    "data/MFIDDR/train",
+    "data/MFIDDR/test",
+    "data/MFIDDR/train_fourpic_label.csv",
+    "data/MFIDDR/test_fourpic_label.csv"
+  ],
+  "reason": "MFIDDR files are not present locally.",
+  "source": "https://github.com/mfiddr/MFIDDR",
+  "status": "BLOCKED"
+}

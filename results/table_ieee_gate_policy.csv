@@ -1,0 +1,3 @@
+branch,target_risk,mean_images,image_savings_vs_always_two_view,defer_rate,missed_referable_dr_risk,specificity_among_decided,sensitivity_among_decided,referable_decision_coverage,n_decided_eyes,n_deferred_eyes,risk_ci_low,risk_ci_high,defer_ci_low,defer_ci_high
+suffix2_initial,0.01,1.205128205128205,0.39743589743589747,0.20512820512820512,0.03571428571428571,0.5588235294117647,0.9642857142857143,0.875,62,16,0.0,0.11538461538461539,0.11538461538461539,0.3076923076923077
+suffix1_initial,0.01,1.4102564102564104,0.2948717948717948,0.3974358974358974,0.0,0.55,1.0,0.84375,47,31,0.0,0.0,0.2692307692307692,0.5256410256410257

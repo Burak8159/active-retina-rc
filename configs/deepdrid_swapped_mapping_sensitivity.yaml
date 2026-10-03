@@ -1,0 +1,57 @@
+project:
+  name: ActiveRetina-RC
+  track: flagship_risk_controlled_adaptive_imaging_mapping_sensitivity
+  status: DATA_READY_CROSSFIT_PREDICTIONS_PENDING
+  claim_scope: paired_view_stop_acquire_defer_sensitivity
+
+dataset:
+  name: DeepDRiD
+  official_source: https://github.com/deepdrdoc/DeepDRiD
+  local_root: external/DeepDRiD_v1_1/deepdrdoc-DeepDRiD-56d8af7/regular_fundus_images
+  metadata_root: external/DeepDRiD_metadata
+  manifest_output: results/deepdrid_swapped_mapping_manifest.csv
+  status_output: results/deepdrid_swapped_mapping_D1_audit.json
+  split_output: results/deepdrid_swapped_mapping_splits_manifest.json
+  license: CC-BY-SA-4.0
+  endpoint:
+    primary: referable_dr_grade_ge_2
+    secondary: five_class_dr_grade_0_to_4
+  view_mapping:
+    suffix_1: macula
+    suffix_2: optic_disc
+  view_mapping_status: SENSITIVITY_ANALYSIS_SWAPPED_NOT_OFFICIAL
+  view_mapping_note: "Sensitivity-only mapping. Public DeepDRiD metadata reviewed so far does not explicitly state the filename suffix-to-field mapping. Run this config beside configs/deepdrid.yaml; if conclusions change materially, treat field mapping as a blocker pending author confirmation."
+  required_views:
+    - macula
+    - optic_disc
+
+splits:
+  unit: patient_id
+  seed: 20261003
+  fractions:
+    train: 0.70
+    calibration: 0.10
+    validation: 0.10
+    sealed_test: 0.10
+
+evaluation:
+  fixed_first_view: macula
+  second_view: optic_disc
+  prediction_input: results/deepdrid_swapped_mapping_crossfit_predictions.csv
+  output: results/deepdrid_swapped_mapping_active_retina_rc_metrics.json
+  policy_actions:
+    - STOP
+    - ACQUIRE_SECOND_VIEW
+    - DEFER
+  risk_control:
+    primary_risk: missed_referable_dr
+    calibration_unit: patient_id
+    sealed_test_unit: patient_id
+    candidate_target_risks:
+      - 0.01
+      - 0.02
+      - 0.05
+      - 0.10
+  bootstrap:
+    n: 2000
+    seed: 20261003

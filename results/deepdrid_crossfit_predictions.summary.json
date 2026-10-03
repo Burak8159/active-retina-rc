@@ -1,0 +1,14 @@
+{
+  "folds": 5,
+  "image_size": 128,
+  "model_family": "dependency_light_image_feature_logistic",
+  "n_eyes": 797,
+  "note": "This is an executable baseline for pipeline readiness. It is not the final pretrained encoder intended for flagship performance claims.",
+  "output": "results/deepdrid_crossfit_predictions.csv",
+  "status": "PREDICTIONS_WRITTEN",
+  "view_sets": [
+    "macula",
+    "optic_disc",
+    "macula+optic_disc"
+  ]
+}

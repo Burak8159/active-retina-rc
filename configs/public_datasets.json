@@ -1,0 +1,181 @@
+{
+  "created": "2026-10-03",
+  "purpose": "Public and broadly accessible datasets that can support ActiveRetina evidence while MFIDDR access is pending.",
+  "primary_endpoint": "referable_dr_grade_ge_2_when_5_class_grade_is_available",
+  "datasets": [
+    {
+      "name": "DeepDRiD",
+      "official_source": "https://github.com/deepdrdoc/DeepDRiD",
+      "access_class": "public_download",
+      "local_root": "data/DeepDRiD",
+      "view_structure": "two_view_same_eye_cfp_plus_uwf_component",
+      "fields": {
+        "macula": "macula-centered CFP",
+        "disc": "optic-disc-centered CFP"
+      },
+      "active_retina_role": "two_view_acquisition_generalization",
+      "supports": ["A0_schema", "A1_1_vs_2_view_value", "external_validation"],
+      "does_not_support": ["four_field_subsets", "nonmyopic_planning_after_initial_field"],
+      "notes": "Use CFP macula/disc pairs for two-view tests. Keep UWF separate as modality/domain robustness evidence."
+    },
+    {
+      "name": "DRTiD",
+      "official_source": "https://github.com/FDU-VTS/DRTiD",
+      "access_class": "application_gated_research_only",
+      "local_root": "data/DRTiD",
+      "view_structure": "two_field_macula_disc",
+      "fields": {
+        "macula": "macula-centered fundus field",
+        "disc": "optic-disc-centered fundus field"
+      },
+      "active_retina_role": "two_field_model_comparison_when_access_is_granted",
+      "supports": ["A0_schema_after_access", "A1_1_vs_2_view_value"],
+      "does_not_support": ["four_field_subsets", "nonmyopic_planning_after_initial_field"],
+      "notes": "Do not report DRTiD metrics until the upstream application route provides data and terms are documented."
+    },
+    {
+      "name": "MMRDR",
+      "official_source": "https://figshare.com/articles/dataset/MMRDR/29423747",
+      "access_class": "public_download",
+      "local_root": "data/MMRDR",
+      "view_structure": "multimodal_cfp_uwf_oct",
+      "fields": {
+        "cfp": "color fundus photography",
+        "uwf": "ultra-widefield fundus imaging",
+        "oct": "optical coherence tomography"
+      },
+      "active_retina_role": "modality_and_lesion_label_robustness",
+      "supports": ["external_validation", "encoder_pretraining_or_stress_test", "lesion_label_analysis"],
+      "does_not_support": ["standardized_same_eye_field_selection", "four_field_subsets"],
+      "notes": "Keep modality experiments distinct from field-acquisition experiments."
+    },
+    {
+      "name": "BRSET",
+      "official_source": "https://physionet.org/content/brazilian-ophthalmological/1.0.2/",
+      "access_class": "physionet_open_account",
+      "local_root": "data/BRSET",
+      "view_structure": "mostly_single_field_with_patient_metadata",
+      "fields": {
+        "fundus": "retinal fundus photo"
+      },
+      "active_retina_role": "patient_level_external_validation_and_demographic_robustness",
+      "supports": ["external_validation", "patient_level_split", "domain_robustness"],
+      "does_not_support": ["field_subset_acquisition", "nonmyopic_planning"],
+      "notes": "Useful for referable DR robustness and metadata/fairness checks, not acquisition policy proof."
+    },
+    {
+      "name": "mBRSET",
+      "official_source": "https://physionet.org/content/mbrset/1.0/",
+      "access_class": "physionet_credentialed_dua",
+      "local_root": "data/mBRSET",
+      "view_structure": "portable_camera_macula_and_disc",
+      "fields": {
+        "macula": "macula-centered portable image when present",
+        "disc": "optic-disc-centered portable image when present"
+      },
+      "active_retina_role": "portable_screening_generalization",
+      "supports": ["A0_schema_after_access", "A1_1_vs_2_view_value_if_pairs_verified", "domain_robustness"],
+      "does_not_support": ["four_field_subsets", "nonmyopic_planning_after_initial_field"],
+      "notes": "Credentialed access and DUA are required before local use."
+    },
+    {
+      "name": "EyePACS_Kaggle_DR",
+      "official_source": "https://www.kaggle.com/c/diabetic-retinopathy-detection/data",
+      "access_class": "kaggle_rules",
+      "local_root": "data/EyePACS_Kaggle_DR",
+      "view_structure": "single_image_per_eye_common",
+      "fields": {
+        "fundus": "macula-centered or screening fundus image"
+      },
+      "active_retina_role": "large_scale_encoder_training_and_external_validation",
+      "supports": ["encoder_pretraining", "single_image_external_validation"],
+      "does_not_support": ["same_eye_field_selection", "nonmyopic_planning"],
+      "notes": "Use only after Kaggle terms are accepted; public test labels are not generally available."
+    },
+    {
+      "name": "APTOS2019",
+      "official_source": "https://www.kaggle.com/competitions/APTOS2019-blindness-detection/data",
+      "access_class": "kaggle_rules",
+      "local_root": "data/APTOS2019",
+      "view_structure": "single_image",
+      "fields": {
+        "fundus": "single fundus image"
+      },
+      "active_retina_role": "single_image_external_validation",
+      "supports": ["single_image_external_validation"],
+      "does_not_support": ["field_subset_acquisition", "nonmyopic_planning"],
+      "notes": "Use labeled train set for internal validation only unless a legal labeled test source is available."
+    },
+    {
+      "name": "DDR_OIA",
+      "official_source": "https://github.com/nkicsl/DDR-dataset",
+      "access_class": "public_download",
+      "local_root": "data/DDR_OIA",
+      "view_structure": "single_image_with_grading_and_lesion_annotations",
+      "fields": {
+        "fundus": "single fundus image"
+      },
+      "active_retina_role": "lesion_aware_external_validation",
+      "supports": ["single_image_external_validation", "lesion_label_analysis"],
+      "does_not_support": ["same_eye_field_selection", "nonmyopic_planning"],
+      "notes": "Useful to test whether the encoder is learning lesion signal rather than dataset shortcuts."
+    },
+    {
+      "name": "IDRiD",
+      "official_source": "https://idrid.grand-challenge.org/Data/",
+      "access_class": "public_or_challenge_download",
+      "local_root": "data/IDRiD",
+      "view_structure": "single_image_with_grading_and_lesion_annotations",
+      "fields": {
+        "fundus": "single fundus image"
+      },
+      "active_retina_role": "small_high_quality_lesion_validation",
+      "supports": ["single_image_external_validation", "lesion_label_analysis"],
+      "does_not_support": ["same_eye_field_selection", "nonmyopic_planning"],
+      "notes": "Small but useful as a high-quality sanity check."
+    },
+    {
+      "name": "Messidor2",
+      "official_source": "https://www.adcis.net/en/third-party/messidor2/",
+      "access_class": "public_request_or_download",
+      "local_root": "data/Messidor2",
+      "view_structure": "two_eyes_not_same_eye_multifield",
+      "fields": {
+        "macula": "macula-centered fundus image"
+      },
+      "active_retina_role": "classic_external_screening_validation",
+      "supports": ["single_image_external_validation"],
+      "does_not_support": ["same_eye_field_selection", "nonmyopic_planning"],
+      "notes": "Do not treat left/right eye pairs as same-eye views."
+    },
+    {
+      "name": "ODIR5K",
+      "official_source": "https://odir2019.grand-challenge.org/dataset/",
+      "access_class": "public_download",
+      "local_root": "data/ODIR5K",
+      "view_structure": "left_right_eye_multidisease",
+      "fields": {
+        "left_eye": "left eye fundus image",
+        "right_eye": "right eye fundus image"
+      },
+      "active_retina_role": "disease_confounding_and_specificity_check",
+      "supports": ["external_specificity_check"],
+      "does_not_support": ["referable_dr_grading_primary_endpoint", "same_eye_field_selection", "nonmyopic_planning"],
+      "notes": "Use diabetes/multidisease labels cautiously; not a clean DR severity dataset."
+    },
+    {
+      "name": "RFMiD",
+      "official_source": "https://khosravipooya.com/EyeDataHub/datasets/rfmid/",
+      "access_class": "public_or_research_download",
+      "local_root": "data/RFMiD",
+      "view_structure": "single_image_multidisease",
+      "fields": {
+        "fundus": "single fundus image"
+      },
+      "active_retina_role": "disease_confounding_and_specificity_check",
+      "supports": ["external_specificity_check"],
+      "does_not_support": ["referable_dr_grading_primary_endpoint_unless_grade_mapping_verified", "same_eye_field_selection", "nonmyopic_planning"],
+      "notes": "Useful for robustness to other retinal diseases, not a replacement for graded DR acquisition evidence."
+    }
+  ]
+}

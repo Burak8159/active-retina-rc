@@ -1,0 +1,33 @@
+{
+  "seed": 20261003,
+  "bootstrap_replicates": 1000,
+  "sources": [
+    {
+      "branch": "suffix2_initial",
+      "sha256": "2939dcfcc832210133ba2b10a6daa032ea268b8337dcf8b063fa5f78888af802",
+      "patients": {
+        "train": 279,
+        "calibration": 40,
+        "validation": 40
+      },
+      "calibration_eyes": 80,
+      "validation_eyes": 78,
+      "historical_test_evaluated": false
+    },
+    {
+      "branch": "suffix1_initial",
+      "sha256": "7e0e4984b551edff483dc06d29903b5ac3e5aa4993c9ed8e9f7efd59ab1fb781",
+      "patients": {
+        "train": 279,
+        "calibration": 40,
+        "validation": 40
+      },
+      "calibration_eyes": 80,
+      "validation_eyes": 78,
+      "historical_test_evaluated": false
+    }
+  ],
+  "evaluation_status": "REUSED_DEVELOPMENT_VALIDATION_NOT_CONFIRMATORY",
+  "finding": "Shared calibration targets; infeasible fixed baselines shown with risk-constrained fallback explicitly marked.",
+  "uncertainty": "Fixed-model fixed-threshold paired patient bootstrap; excludes selection and training uncertainty."
+}

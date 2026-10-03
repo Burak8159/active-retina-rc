@@ -1,0 +1,57 @@
+project:
+  name: ActiveRetina-RC
+  track: flagship_risk_controlled_adaptive_imaging
+  status: DATA_READY_CROSSFIT_PREDICTIONS_PENDING
+  claim_scope: paired_view_stop_acquire_defer
+
+dataset:
+  name: DeepDRiD
+  official_source: https://github.com/deepdrdoc/DeepDRiD
+  local_root: external/DeepDRiD_v1_1/deepdrdoc-DeepDRiD-56d8af7/regular_fundus_images
+  metadata_root: external/DeepDRiD_metadata
+  manifest_output: results/deepdrid_manifest.csv
+  status_output: results/deepdrid_D1_audit.json
+  split_output: results/deepdrid_splits_manifest.json
+  license: CC-BY-SA-4.0
+  endpoint:
+    primary: referable_dr_grade_ge_2
+    secondary: five_class_dr_grade_0_to_4
+  view_mapping:
+    suffix_1: optic_disc
+    suffix_2: macula
+  view_mapping_status: INFERRED_NOT_OFFICIAL_VISUAL_AUDIT
+  view_mapping_note: "Official DeepDRiD paper and repository confirm macula-centered and optic-disc-centered dual views, but public metadata reviewed so far does not explicitly state the suffix mapping. Sample-image visual audit indicates suffix_1=optic_disc and suffix_2=macula; keep this provenance visible in reports."
+  required_views:
+    - macula
+    - optic_disc
+
+splits:
+  unit: patient_id
+  seed: 20261003
+  fractions:
+    train: 0.70
+    calibration: 0.10
+    validation: 0.10
+    sealed_test: 0.10
+
+evaluation:
+  fixed_first_view: macula
+  second_view: optic_disc
+  prediction_input: results/deepdrid_crossfit_predictions.csv
+  output: results/deepdrid_active_retina_rc_metrics.json
+  policy_actions:
+    - STOP
+    - ACQUIRE_SECOND_VIEW
+    - DEFER
+  risk_control:
+    primary_risk: missed_referable_dr
+    calibration_unit: patient_id
+    sealed_test_unit: patient_id
+    candidate_target_risks:
+      - 0.01
+      - 0.02
+      - 0.05
+      - 0.10
+  bootstrap:
+    n: 2000
+    seed: 20261003

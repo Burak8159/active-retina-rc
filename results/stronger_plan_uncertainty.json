@@ -1,0 +1,256 @@
+{
+  "branches": [
+    {
+      "active": {
+        "auprc_decided": 0.8237631306021728,
+        "auroc_decided": 0.8600543478260869,
+        "brier_decided": 0.1802651408358415,
+        "defer_rate": 0.0,
+        "image_savings_vs_two": 0.46153846153846156,
+        "mean_images": 1.0769230769230769,
+        "missed_referable_fraction_all": 0.0625,
+        "missed_referable_risk_decided": 0.0625,
+        "n_decided_eyes": 78,
+        "n_decided_positive_patients": 18,
+        "n_deferred_eyes": 0,
+        "n_positive_patients": 18,
+        "n_total_eyes": 78,
+        "patient_missed_fraction_all_positive": 0.1111111111111111,
+        "patient_missed_risk_decided_positive": 0.1111111111111111,
+        "patient_zero_event_upper95_if_no_misses": NaN,
+        "sensitivity_decided": 0.9375,
+        "specificity_decided": 0.5217391304347826
+      },
+      "bootstrap_ci": {
+        "active_defer_rate": {
+          "high": 0.0,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "active_mean_images": {
+          "high": 1.1538461538461537,
+          "low": 1.0128205128205128,
+          "valid_replicates": 1000
+        },
+        "active_missed_referable_risk_decided": {
+          "high": 0.15555555555555556,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "active_patient_missed_risk_decided_positive": {
+          "high": 0.26666666666666666,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "active_specificity_decided": {
+          "high": 0.7090909090909091,
+          "low": 0.32432432432432434,
+          "valid_replicates": 1000
+        },
+        "delta_defer_rate": {
+          "high": -0.01282051282051282,
+          "low": -0.14102564102564102,
+          "valid_replicates": 1000
+        },
+        "delta_mean_images": {
+          "high": 0.15384615384615374,
+          "low": 0.012820512820512775,
+          "valid_replicates": 1000
+        },
+        "delta_missed_referable_risk_decided": {
+          "high": 0.0,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "delta_patient_missed_risk_decided_positive": {
+          "high": 0.0,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "delta_specificity_decided": {
+          "high": 0.016260162601625883,
+          "low": -0.11974789915966388,
+          "valid_replicates": 1000
+        },
+        "triage_defer_rate": {
+          "high": 0.1282051282051282,
+          "low": 0.01282051282051282,
+          "valid_replicates": 1000
+        },
+        "triage_mean_images": {
+          "high": 1.0,
+          "low": 1.0,
+          "valid_replicates": 1000
+        },
+        "triage_missed_referable_risk_decided": {
+          "high": 0.15555555555555556,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "triage_patient_missed_risk_decided_positive": {
+          "high": 0.26666666666666666,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "triage_specificity_decided": {
+          "high": 0.7586206896551724,
+          "low": 0.3555555555555555,
+          "valid_replicates": 1000
+        }
+      },
+      "branch": "suffix2_initial",
+      "eyes": 78,
+      "patients": 39,
+      "triage": {
+        "auprc_decided": 0.8187096762121014,
+        "auroc_decided": 0.8414634146341463,
+        "brier_decided": 0.20517743176026396,
+        "defer_rate": 0.0641025641025641,
+        "image_savings_vs_two": 0.5,
+        "mean_images": 1.0,
+        "missed_referable_fraction_all": 0.0625,
+        "missed_referable_risk_decided": 0.0625,
+        "n_decided_eyes": 73,
+        "n_decided_positive_patients": 18,
+        "n_deferred_eyes": 5,
+        "n_positive_patients": 18,
+        "n_total_eyes": 78,
+        "patient_missed_fraction_all_positive": 0.1111111111111111,
+        "patient_missed_risk_decided_positive": 0.1111111111111111,
+        "patient_zero_event_upper95_if_no_misses": NaN,
+        "sensitivity_decided": 0.9375,
+        "specificity_decided": 0.5609756097560976
+      }
+    },
+    {
+      "active": {
+        "auprc_decided": 0.8536875029032559,
+        "auroc_decided": 0.8831521739130435,
+        "brier_decided": 0.16177044275391592,
+        "defer_rate": 0.0,
+        "image_savings_vs_two": 0.41025641025641024,
+        "mean_images": 1.1794871794871795,
+        "missed_referable_fraction_all": 0.0625,
+        "missed_referable_risk_decided": 0.0625,
+        "n_decided_eyes": 78,
+        "n_decided_positive_patients": 18,
+        "n_deferred_eyes": 0,
+        "n_positive_patients": 18,
+        "n_total_eyes": 78,
+        "patient_missed_fraction_all_positive": 0.1111111111111111,
+        "patient_missed_risk_decided_positive": 0.1111111111111111,
+        "patient_zero_event_upper95_if_no_misses": NaN,
+        "sensitivity_decided": 0.9375,
+        "specificity_decided": 0.4565217391304348
+      },
+      "bootstrap_ci": {
+        "active_defer_rate": {
+          "high": 0.0,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "active_mean_images": {
+          "high": 1.2820512820512822,
+          "low": 1.0897435897435896,
+          "valid_replicates": 1000
+        },
+        "active_missed_referable_risk_decided": {
+          "high": 0.16666666666666666,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "active_patient_missed_risk_decided_positive": {
+          "high": 0.2727272727272727,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "active_specificity_decided": {
+          "high": 0.6363636363636364,
+          "low": 0.2692307692307693,
+          "valid_replicates": 1000
+        },
+        "delta_defer_rate": {
+          "high": -0.05128205128205128,
+          "low": -0.21794871794871795,
+          "valid_replicates": 1000
+        },
+        "delta_mean_images": {
+          "high": 0.28205128205128216,
+          "low": 0.08974358974358965,
+          "valid_replicates": 1000
+        },
+        "delta_missed_referable_risk_decided": {
+          "high": 0.0,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "delta_patient_missed_risk_decided_positive": {
+          "high": 0.0,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "delta_specificity_decided": {
+          "high": 0.06027164685908315,
+          "low": -0.08689458689458684,
+          "valid_replicates": 1000
+        },
+        "triage_defer_rate": {
+          "high": 0.21794871794871795,
+          "low": 0.05128205128205128,
+          "valid_replicates": 1000
+        },
+        "triage_mean_images": {
+          "high": 1.0,
+          "low": 1.0,
+          "valid_replicates": 1000
+        },
+        "triage_missed_referable_risk_decided": {
+          "high": 0.16666666666666666,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "triage_patient_missed_risk_decided_positive": {
+          "high": 0.2727272727272727,
+          "low": 0.0,
+          "valid_replicates": 1000
+        },
+        "triage_specificity_decided": {
+          "high": 0.65625,
+          "low": 0.2647058823529411,
+          "valid_replicates": 1000
+        }
+      },
+      "branch": "suffix1_initial",
+      "eyes": 78,
+      "patients": 39,
+      "triage": {
+        "auprc_decided": 0.8549359613043137,
+        "auroc_decided": 0.8559027777777778,
+        "brier_decided": 0.18960656469449808,
+        "defer_rate": 0.1282051282051282,
+        "image_savings_vs_two": 0.5,
+        "mean_images": 1.0,
+        "missed_referable_fraction_all": 0.0625,
+        "missed_referable_risk_decided": 0.0625,
+        "n_decided_eyes": 68,
+        "n_decided_positive_patients": 18,
+        "n_deferred_eyes": 10,
+        "n_positive_patients": 18,
+        "n_total_eyes": 78,
+        "patient_missed_fraction_all_positive": 0.1111111111111111,
+        "patient_missed_risk_decided_positive": 0.1111111111111111,
+        "patient_zero_event_upper95_if_no_misses": NaN,
+        "sensitivity_decided": 0.9375,
+        "specificity_decided": 0.4722222222222222
+      }
+    }
+  ],
+  "decision": "GO-ARXIV / CONDITIONAL-IEEE",
+  "interpretation": "Exploratory fixed-policy patient cluster bootstrap; excludes selection uncertainty and cannot certify safety or noninferiority.",
+  "replicates": 1000,
+  "seed": 20261003,
+  "sha256": {
+    "results/deepdrid_swapped_train_only_development_predictions.csv": "7e0e4984b551edff483dc06d29903b5ac3e5aa4993c9ed8e9f7efd59ab1fb781",
+    "results/deepdrid_train_only_development_predictions.csv": "2939dcfcc832210133ba2b10a6daa032ea268b8337dcf8b063fa5f78888af802"
+  }
+}

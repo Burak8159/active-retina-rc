@@ -1,0 +1,67 @@
+{
+  "branches": [
+    {
+      "branch": "suffix2_initial",
+      "defer_ci_high": 0.3076923076923077,
+      "defer_ci_low": 0.11538461538461539,
+      "defer_rate": 0.20512820512820512,
+      "image_savings_vs_always_two_view": 0.39743589743589747,
+      "mean_images": 1.205128205128205,
+      "missed_referable_dr_risk": 0.03571428571428571,
+      "n_decided_eyes": 62,
+      "n_deferred_eyes": 16,
+      "referable_decision_coverage": 0.875,
+      "risk_ci_high": 0.11538461538461539,
+      "risk_ci_low": 0.0,
+      "sensitivity_among_decided": 0.9642857142857143,
+      "specificity_among_decided": 0.5588235294117647,
+      "target_risk": 0.01
+    },
+    {
+      "branch": "suffix1_initial",
+      "defer_ci_high": 0.5256410256410257,
+      "defer_ci_low": 0.2692307692307692,
+      "defer_rate": 0.3974358974358974,
+      "image_savings_vs_always_two_view": 0.2948717948717948,
+      "mean_images": 1.4102564102564104,
+      "missed_referable_dr_risk": 0.0,
+      "n_decided_eyes": 47,
+      "n_deferred_eyes": 31,
+      "referable_decision_coverage": 0.84375,
+      "risk_ci_high": 0.0,
+      "risk_ci_low": 0.0,
+      "sensitivity_among_decided": 1.0,
+      "specificity_among_decided": 0.55,
+      "target_risk": 0.01
+    }
+  ],
+  "decision": "METHOD_DEVELOPMENT_CONTINUE",
+  "flagship_rebuild_doc": "docs/flagship_rebuild_v2.md",
+  "non_negotiable_submission_disclosures": [
+    "DeepDRiD suffix-to-anatomy mapping remains unresolved; both branches are reported.",
+    "Historical test partition is exposed and not used for confirmatory claims.",
+    "Risk is empirically selected and uncertified; bootstrap intervals are wide.",
+    "MFIDDR-only four-field and non-myopic CCG claims are excluded.",
+    "Current manuscript is not ready for arXiv or IEEE submission."
+  ],
+  "primary_policy_target_risk": 0.01,
+  "reason": "The project is being rebuilt to exceed an MFIDDR-style dataset benchmark by adding risk-controlled sequential acquisition, external robustness, failure analysis, and clinical cost-risk-defer evaluation. Current evidence remains development-only.",
+  "required_before_arxiv": [
+    "Complete DeepDRiD paired-view analysis reproducibly",
+    "Clean all tables and plots",
+    "Resolve or explicitly stabilize the suffix-to-anatomy limitation",
+    "Expand related work across active acquisition, selective prediction, multi-view DR grading, and DR screening",
+    "Complete or remove pending secondary analyses"
+  ],
+  "required_before_ieee_journal": [
+    "Clean unexposed paired/multi-field test or independent external validation",
+    "Complete secondary five-class grading analysis",
+    "Stronger acquisition, selective-classification, and encoder comparator experiments",
+    "Formal uncertainty and risk-bound treatment",
+    "Detailed model, protocol, and clinical workflow reporting",
+    "Cost-risk-defer frontier analysis",
+    "Broad reference list and failure analysis"
+  ],
+  "scope": "Internal DeepDRiD paired-view development artifact under ActiveRetina Flagship Rebuild V2; not a public preprint or journal submission.",
+  "stronger_than_mfiddr_definition": "Stronger means decision-theoretic clinical acquisition evidence beyond a dataset benchmark, not pretending to have MFIDDR-scale four-field data."
+}

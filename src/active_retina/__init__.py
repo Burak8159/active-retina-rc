@@ -1,0 +1,2 @@
+"""ActiveRetina feasibility-gate utilities."""
+

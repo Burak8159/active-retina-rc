@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    "results/deepdrid_full_cv_predictions.csv",
+    "results/deepdrid_full_cv_metrics.csv",
+    "results/deepdrid_full_cv_policy.csv",
+    "results/deepdrid_full_cv_folds.csv"
+  ],
+  "feature_source": "frozen ResNet-50 ImageNet embeddings",
+  "inner_calibration_fraction": 0.2,
+  "outer_folds": 5,
+  "status": "FULL_DEEPDRID_CV_BENCHMARK_COMPLETE",
+  "tasks": [
+    "referable_binary",
+    "five_class_grade",
+    "stop_acquire_defer_policy"
+  ]
+}

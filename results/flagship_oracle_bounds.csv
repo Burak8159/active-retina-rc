@@ -1,0 +1,7 @@
+branch,oracle,images,defer,coverage,risk,specificity,missed_all_ref,fraction_second_view_helped
+suffix2_initial,fixed_one,1.0,0.0,1.0,0.78125,1.0,0.78125,
+suffix2_initial,fixed_two,2.0,0.0,1.0,0.53125,1.0,0.53125,
+suffix2_initial,hindsight_second_view_brier_help,1.5256410256410255,0.0,1.0,nan,nan,nan,0.5256410256410257
+suffix1_initial,fixed_one,1.0,0.0,1.0,0.625,1.0,0.625,
+suffix1_initial,fixed_two,2.0,0.0,1.0,0.53125,1.0,0.53125,
+suffix1_initial,hindsight_second_view_brier_help,1.5897435897435899,0.0,1.0,nan,nan,nan,0.5897435897435898

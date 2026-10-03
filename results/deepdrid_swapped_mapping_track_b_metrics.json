@@ -1,0 +1,26 @@
+{
+  "dataset": "DeepDRiD",
+  "reason": "Track B second-view value and stopping analysis require out-of-fold/cross-fitted predictions. No empirical metrics were fabricated because the required prediction file is not present.",
+  "required_prediction_columns": [
+    "eye_id",
+    "fold_id",
+    "grade",
+    "patient_id",
+    "prediction_scope",
+    "referable_dr",
+    "referable_score",
+    "view_set"
+  ],
+  "required_prediction_file": "results/deepdrid_swapped_mapping_crossfit_predictions.csv",
+  "required_view_sets": [
+    "macula",
+    "macula+optic_disc"
+  ],
+  "status": "BLOCKED_CROSSFIT_PREDICTIONS_MISSING",
+  "track": "B_deepdrid_pipeline_derisking",
+  "view_mapping": {
+    "suffix_1": "macula",
+    "suffix_2": "optic_disc"
+  },
+  "view_mapping_status": "SENSITIVITY_ANALYSIS_SWAPPED_NOT_OFFICIAL"
+}

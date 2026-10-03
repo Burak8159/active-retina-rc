@@ -1,0 +1,57 @@
+project:
+  name: ActiveRetina-RC
+  title: Risk-Controlled Adaptive Retinal Imaging for Diabetic Retinopathy Screening
+  status: FLAGSHIP_UPGRADED_METRICS_PENDING
+  primary_claim: >
+    Adaptive retinal imaging can reduce acquisition burden by choosing STOP,
+    ACQUIRE_SECOND_VIEW, or DEFER under a calibrated missed-referable-DR risk
+    constraint.
+
+primary_endpoint:
+  name: referable_dr
+  definition: grade >= 2 when five-class DR grade is available
+
+secondary_endpoint:
+  name: five_class_dr
+  definition: grades 0-4, with ungradable quality handled separately
+
+policy:
+  actions:
+    - STOP
+    - ACQUIRE_SECOND_VIEW
+    - DEFER
+  risk_control:
+    primary_risk: missed_referable_dr
+    calibration_unit: patient_id
+    selection_rule: lowest_mean_images_among_calibrated_policies
+    candidate_target_risks:
+      - 0.01
+      - 0.02
+      - 0.05
+      - 0.10
+
+datasets:
+  primary_acquisition:
+    - DeepDRiD
+  external_robustness_candidates:
+    - APTOS2019
+    - IDRiD
+    - DDR_OIA
+    - Messidor2
+    - BRSET
+    - MMRDR
+  future_four_field_extension:
+    - MFIDDR
+
+evidence_boundaries:
+  fixture_outputs_support_claims: false
+  in_sample_predictions_support_claims: false
+  sealed_test_used_for_model_selection: false
+  single_image_datasets_support_acquisition_claims: false
+  mfiddr_required_for_main_flagship: false
+  mfiddr_required_for_four_field_ccg: true
+
+decision_labels:
+  flagship_go: calibrated_policy_saves_images_and_satisfies_target_risk_on_sealed_patients
+  method_only_weak_evidence: method_valid_but_empirical_savings_or_robustness_too_weak
+  no_go: paired_view_value_or_risk_controlled_stopping_fails

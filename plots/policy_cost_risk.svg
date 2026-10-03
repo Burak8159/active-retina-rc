@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+<rect width="100%" height="100%" fill="white"/>
+<line x1="70" y1="355" x2="690" y2="355" stroke="#333"/>
+<line x1="70" y1="35" x2="70" y2="355" stroke="#333"/>
+<text x="360.0" y="402" text-anchor="middle" font-family="Arial" font-size="14">Image savings vs always-two-view</text>
+<text x="18" y="210.0" text-anchor="middle" transform="rotate(-90 18 210.0)" font-family="Arial" font-size="14">Sealed-test missed referable DR risk</text>
+<text x="360.0" y="22" text-anchor="middle" font-family="Arial" font-size="16">ActiveRetina-RC Baseline Cost-Risk Points</text>
+<line x1="70" y1="355" x2="70" y2="360" stroke="#333"/>
+<text x="70" y="377" text-anchor="middle" font-family="Arial" font-size="11">0.00</text>
+<line x1="65" y1="355.0" x2="70" y2="355.0" stroke="#333"/>
+<text x="60" y="359.0" text-anchor="end" font-family="Arial" font-size="11">0.00</text>
+<line x1="225.0" y1="355" x2="225.0" y2="360" stroke="#333"/>
+<text x="225.0" y="377" text-anchor="middle" font-family="Arial" font-size="11">0.25</text>
+<line x1="65" y1="275.0" x2="70" y2="275.0" stroke="#333"/>
+<text x="60" y="279.0" text-anchor="end" font-family="Arial" font-size="11">0.25</text>
+<line x1="380.0" y1="355" x2="380.0" y2="360" stroke="#333"/>
+<text x="380.0" y="377" text-anchor="middle" font-family="Arial" font-size="11">0.50</text>
+<line x1="65" y1="195.0" x2="70" y2="195.0" stroke="#333"/>
+<text x="60" y="199.0" text-anchor="end" font-family="Arial" font-size="11">0.50</text>
+<line x1="535.0" y1="355" x2="535.0" y2="360" stroke="#333"/>
+<text x="535.0" y="377" text-anchor="middle" font-family="Arial" font-size="11">0.75</text>
+<line x1="65" y1="115.0" x2="70" y2="115.0" stroke="#333"/>
+<text x="60" y="119.0" text-anchor="end" font-family="Arial" font-size="11">0.75</text>
+<line x1="690.0" y1="355" x2="690.0" y2="360" stroke="#333"/>
+<text x="690.0" y="377" text-anchor="middle" font-family="Arial" font-size="11">1.00</text>
+<line x1="65" y1="35.0" x2="70" y2="35.0" stroke="#333"/>
+<text x="60" y="39.0" text-anchor="end" font-family="Arial" font-size="11">1.00</text>
+<circle cx="360.625" cy="345.0" r="5" fill="#1f77b4"/>
+<text x="367.625" y="338.0" font-family="Arial" font-size="10">visual_audit, target 0.01</text>
+<circle cx="360.625" cy="345.0" r="5" fill="#1f77b4"/>
+<text x="367.625" y="338.0" font-family="Arial" font-size="10">visual_audit, target 0.02</text>
+<circle cx="360.625" cy="345.0" r="5" fill="#1f77b4"/>
+<text x="367.625" y="338.0" font-family="Arial" font-size="10">visual_audit, target 0.05</text>
+<circle cx="380.0" cy="325.0" r="5" fill="#1f77b4"/>
+<text x="387.0" y="318.0" font-family="Arial" font-size="10">visual_audit, target 0.10</text>
+<circle cx="376.125" cy="355.0" r="5" fill="#d62728"/>
+<text x="383.125" y="348.0" font-family="Arial" font-size="10">swapped_sensitivity, target 0.01</text>
+<circle cx="376.125" cy="355.0" r="5" fill="#d62728"/>
+<text x="383.125" y="348.0" font-family="Arial" font-size="10">swapped_sensitivity, target 0.02</text>
+<circle cx="372.25" cy="335.0" r="5" fill="#d62728"/>
+<text x="379.25" y="328.0" font-family="Arial" font-size="10">swapped_sensitivity, target 0.05</text>
+<circle cx="372.25" cy="335.0" r="5" fill="#d62728"/>
+<text x="379.25" y="328.0" font-family="Arial" font-size="10">swapped_sensitivity, target 0.10</text>
+<circle cx="510" cy="48" r="5" fill="#1f77b4"/>
+<text x="522" y="52" font-family="Arial" font-size="12">visual audit</text>
+<circle cx="510" cy="68" r="5" fill="#d62728"/>
+<text x="522" y="72" font-family="Arial" font-size="12">swapped sensitivity</text>
+</svg>

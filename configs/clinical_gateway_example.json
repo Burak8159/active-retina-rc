@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "case_id": "DEMO-001",
+  "operator_id": "research-user",
+  "first_view_score": 0.42,
+  "two_view_score": null,
+  "first_view_quality_ok": true,
+  "second_view_quality_ok": true,
+  "anatomy_mapping_verified": false,
+  "intended_use": "research"
+}

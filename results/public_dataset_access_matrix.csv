@@ -1,0 +1,13 @@
+name,access_class,readiness,active_retina_role,local_root,official_source
+DeepDRiD,public_download,DOWNLOAD_OR_REQUEST_NEEDED,two_view_acquisition_generalization,data/DeepDRiD,https://github.com/deepdrdoc/DeepDRiD
+DRTiD,application_gated_research_only,UPSTREAM_APPLICATION_NEEDED,two_field_model_comparison_when_access_is_granted,data/DRTiD,https://github.com/FDU-VTS/DRTiD
+MMRDR,public_download,DOWNLOAD_OR_REQUEST_NEEDED,modality_and_lesion_label_robustness,data/MMRDR,https://figshare.com/articles/dataset/MMRDR/29423747
+BRSET,physionet_open_account,PHYSIONET_LOGIN_NEEDED,patient_level_external_validation_and_demographic_robustness,data/BRSET,https://physionet.org/content/brazilian-ophthalmological/1.0.2/
+mBRSET,physionet_credentialed_dua,PHYSIONET_CREDENTIALING_AND_DUA_NEEDED,portable_screening_generalization,data/mBRSET,https://physionet.org/content/mbrset/1.0/
+EyePACS_Kaggle_DR,kaggle_rules,KAGGLE_TERMS_AND_CLI_AUTH_NEEDED,large_scale_encoder_training_and_external_validation,data/EyePACS_Kaggle_DR,https://www.kaggle.com/c/diabetic-retinopathy-detection/data
+APTOS2019,kaggle_rules,KAGGLE_TERMS_AND_CLI_AUTH_NEEDED,single_image_external_validation,data/APTOS2019,https://www.kaggle.com/competitions/APTOS2019-blindness-detection/data
+DDR_OIA,public_download,DOWNLOAD_OR_REQUEST_NEEDED,lesion_aware_external_validation,data/DDR_OIA,https://github.com/nkicsl/DDR-dataset
+IDRiD,public_or_challenge_download,DOWNLOAD_OR_REQUEST_NEEDED,small_high_quality_lesion_validation,data/IDRiD,https://idrid.grand-challenge.org/Data/
+Messidor2,public_request_or_download,DOWNLOAD_OR_REQUEST_NEEDED,classic_external_screening_validation,data/Messidor2,https://www.adcis.net/en/third-party/messidor2/
+ODIR5K,public_download,DOWNLOAD_OR_REQUEST_NEEDED,disease_confounding_and_specificity_check,data/ODIR5K,https://odir2019.grand-challenge.org/dataset/
+RFMiD,public_or_research_download,UNKNOWN_ACCESS_ROUTE,disease_confounding_and_specificity_check,data/RFMiD,https://khosravipooya.com/EyeDataHub/datasets/rfmid/

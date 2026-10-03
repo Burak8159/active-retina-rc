@@ -1,0 +1,411 @@
+{
+  "branches": [
+    {
+      "active_retina_rc_target_0_05": {
+        "calibration": {
+          "auprc_among_decided": 0.8761165589831718,
+          "auroc_among_decided": 0.8561904761904762,
+          "brier_among_decided": 0.19291547331896708,
+          "defer_rate": 0.1875,
+          "image_savings_vs_always_two_view": 0.40625,
+          "mean_images": 1.1875,
+          "missed_referable_dr_fraction_all_referable": 0.0,
+          "missed_referable_dr_risk": 0.0,
+          "n_decided_eyes": 65,
+          "n_deferred_eyes": 15,
+          "n_total_eyes": 80,
+          "referable_decision_coverage": 0.8974358974358975,
+          "sensitivity_among_decided": 1.0,
+          "specificity_among_decided": 0.5
+        },
+        "status": "EMPIRICALLY_SELECTED_UNCERTIFIED",
+        "thresholds": {
+          "final_threshold": 0.952988,
+          "stop_high": 0.038933,
+          "stop_low": 0.000986
+        },
+        "validation": {
+          "auprc_decided": 0.8485184907336649,
+          "auroc_decided": 0.865546218487395,
+          "brier_decided": 0.17921435319542753,
+          "canonical_eye_image_savings": 0.39743589743589747,
+          "canonical_eye_missed_risk": 0.03571428571428571,
+          "defer_rate": 0.20512820512820512,
+          "image_savings_vs_two": 0.39743589743589747,
+          "mean_images": 1.205128205128205,
+          "missed_referable_fraction_all": 0.03125,
+          "missed_referable_risk_decided": 0.03571428571428571,
+          "n_decided_eyes": 62,
+          "n_decided_positive_patients": 15,
+          "n_deferred_eyes": 16,
+          "n_positive_patients": 18,
+          "n_total_eyes": 78,
+          "patient_missed_fraction_all_positive": 0.05555555555555555,
+          "patient_missed_risk_decided_positive": 0.06666666666666667,
+          "patient_zero_event_upper95_if_no_misses": NaN,
+          "sensitivity_decided": 0.9642857142857143,
+          "specificity_decided": 0.5588235294117647
+        },
+        "validation_ci": {
+          "defer_rate": {
+            "ci_high": 0.3076923076923077,
+            "ci_low": 0.11538461538461539,
+            "observed": 0.20512820512820512
+          },
+          "image_savings_vs_always_two_view": {
+            "ci_high": 0.4423076923076923,
+            "ci_low": 0.35256410256410253,
+            "observed": 0.39743589743589747
+          },
+          "mean_images": {
+            "ci_high": 1.3076923076923077,
+            "ci_low": 1.1153846153846154,
+            "observed": 1.205128205128205
+          },
+          "missed_referable_dr_risk": {
+            "ci_high": 0.11538461538461539,
+            "ci_low": 0.0,
+            "observed": 0.03571428571428571
+          }
+        }
+      },
+      "baselines": {
+        "active_retina_rc_two_stage": {
+          "calibration": {
+            "auprc_decided": 0.8405737264945375,
+            "auroc_decided": 0.8398999374609131,
+            "brier_decided": 0.21611335324167755,
+            "defer_rate": 0.0,
+            "image_savings_vs_two": 0.46875,
+            "mean_images": 1.0625,
+            "missed_referable_fraction_all": 0.02564102564102564,
+            "missed_referable_risk_decided": 0.02564102564102564,
+            "n_decided_eyes": 80,
+            "n_decided_positive_patients": 21,
+            "n_deferred_eyes": 0,
+            "n_positive_patients": 21,
+            "n_total_eyes": 80,
+            "patient_missed_fraction_all_positive": 0.047619047619047616,
+            "patient_missed_risk_decided_positive": 0.047619047619047616,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9743589743589743,
+            "specificity_decided": 0.5121951219512195
+          },
+          "status": "EMPIRICALLY_SELECTED_UNCERTIFIED",
+          "thresholds": {
+            "first_high": 0.013227,
+            "first_low": 0.004375,
+            "second_high": 0.000614,
+            "second_low": 0.000501
+          },
+          "validation": {
+            "auprc_decided": 0.8237631306021728,
+            "auroc_decided": 0.8600543478260869,
+            "brier_decided": 0.1802651408358415,
+            "defer_rate": 0.0,
+            "image_savings_vs_two": 0.46153846153846156,
+            "mean_images": 1.0769230769230769,
+            "missed_referable_fraction_all": 0.0625,
+            "missed_referable_risk_decided": 0.0625,
+            "n_decided_eyes": 78,
+            "n_decided_positive_patients": 18,
+            "n_deferred_eyes": 0,
+            "n_positive_patients": 18,
+            "n_total_eyes": 78,
+            "patient_missed_fraction_all_positive": 0.1111111111111111,
+            "patient_missed_risk_decided_positive": 0.1111111111111111,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9375,
+            "specificity_decided": 0.5217391304347826
+          }
+        },
+        "always_one_initial": {
+          "status": "NO_EMPIRICALLY_FEASIBLE_BASELINE"
+        },
+        "always_two_views": {
+          "status": "NO_EMPIRICALLY_FEASIBLE_BASELINE"
+        },
+        "confidence_triage_no_acquisition": {
+          "calibration": {
+            "auprc_decided": 0.8611380931234859,
+            "auroc_decided": 0.8671052631578947,
+            "brier_decided": 0.19739030071967084,
+            "defer_rate": 0.025,
+            "image_savings_vs_two": 0.5,
+            "mean_images": 1.0,
+            "missed_referable_fraction_all": 0.02564102564102564,
+            "missed_referable_risk_decided": 0.02631578947368421,
+            "n_decided_eyes": 78,
+            "n_decided_positive_patients": 21,
+            "n_deferred_eyes": 2,
+            "n_positive_patients": 21,
+            "n_total_eyes": 80,
+            "patient_missed_fraction_all_positive": 0.047619047619047616,
+            "patient_missed_risk_decided_positive": 0.047619047619047616,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9736842105263158,
+            "specificity_decided": 0.5
+          },
+          "status": "EMPIRICALLY_SELECTED_UNCERTIFIED",
+          "stop_high": 0.009516,
+          "stop_low": 0.004375,
+          "validation": {
+            "auprc_decided": 0.8187096762121014,
+            "auroc_decided": 0.8414634146341463,
+            "brier_decided": 0.20517743176026396,
+            "defer_rate": 0.0641025641025641,
+            "image_savings_vs_two": 0.5,
+            "mean_images": 1.0,
+            "missed_referable_fraction_all": 0.0625,
+            "missed_referable_risk_decided": 0.0625,
+            "n_decided_eyes": 73,
+            "n_decided_positive_patients": 18,
+            "n_deferred_eyes": 5,
+            "n_positive_patients": 18,
+            "n_total_eyes": 78,
+            "patient_missed_fraction_all_positive": 0.1111111111111111,
+            "patient_missed_risk_decided_positive": 0.1111111111111111,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9375,
+            "specificity_decided": 0.5609756097560976
+          }
+        }
+      },
+      "mapping_note": "visual-audit branch: suffix_2 treated as initial view, suffix_1 as second view",
+      "n_calibration": 80,
+      "n_examples": 712,
+      "n_validation": 78,
+      "name": "suffix2_initial",
+      "paired_value": {
+        "calibration": {
+          "auroc_gain": 0.010631644777986282,
+          "first_auprc": 0.855439562089988,
+          "first_auroc": 0.8599124452782989,
+          "first_brier": 0.20484033370352905,
+          "n": 80,
+          "split": "calibration",
+          "two_view_auprc": 0.8811334859386439,
+          "two_view_auroc": 0.8705440900562852,
+          "two_view_brier": 0.20118227533490698
+        },
+        "validation": {
+          "auroc_gain": 0.041440217391304324,
+          "first_auprc": 0.8157811790556632,
+          "first_auroc": 0.8519021739130435,
+          "first_brier": 0.1920280805536403,
+          "n": 78,
+          "split": "validation",
+          "two_view_auprc": 0.8704819505230943,
+          "two_view_auroc": 0.8933423913043478,
+          "two_view_brier": 0.15612317947277968
+        }
+      }
+    },
+    {
+      "active_retina_rc_target_0_05": {
+        "calibration": {
+          "auprc_among_decided": 0.908238058535479,
+          "auroc_among_decided": 0.8888888888888888,
+          "brier_among_decided": 0.1561527052354693,
+          "defer_rate": 0.175,
+          "image_savings_vs_always_two_view": 0.40625,
+          "mean_images": 1.1875,
+          "missed_referable_dr_fraction_all_referable": 0.02564102564102564,
+          "missed_referable_dr_risk": 0.027777777777777776,
+          "n_decided_eyes": 66,
+          "n_deferred_eyes": 14,
+          "n_total_eyes": 80,
+          "referable_decision_coverage": 0.9230769230769231,
+          "sensitivity_among_decided": 0.9722222222222222,
+          "specificity_among_decided": 0.5
+        },
+        "status": "EMPIRICALLY_SELECTED_UNCERTIFIED",
+        "thresholds": {
+          "final_threshold": 0.23874,
+          "stop_high": 0.140686,
+          "stop_low": 0.004485
+        },
+        "validation": {
+          "auprc_decided": 0.8586309914322707,
+          "auroc_decided": 0.8556985294117647,
+          "brier_decided": 0.19076688069227726,
+          "canonical_eye_image_savings": 0.41025641025641024,
+          "canonical_eye_missed_risk": 0.0625,
+          "defer_rate": 0.15384615384615385,
+          "image_savings_vs_two": 0.41025641025641024,
+          "mean_images": 1.1794871794871795,
+          "missed_referable_fraction_all": 0.0625,
+          "missed_referable_risk_decided": 0.0625,
+          "n_decided_eyes": 66,
+          "n_decided_positive_patients": 18,
+          "n_deferred_eyes": 12,
+          "n_positive_patients": 18,
+          "n_total_eyes": 78,
+          "patient_missed_fraction_all_positive": 0.1111111111111111,
+          "patient_missed_risk_decided_positive": 0.1111111111111111,
+          "patient_zero_event_upper95_if_no_misses": NaN,
+          "sensitivity_decided": 0.9375,
+          "specificity_decided": 0.5
+        },
+        "validation_ci": {
+          "defer_rate": {
+            "ci_high": 0.2564102564102564,
+            "ci_low": 0.0641025641025641,
+            "observed": 0.15384615384615385
+          },
+          "image_savings_vs_always_two_view": {
+            "ci_high": 0.4551282051282052,
+            "ci_low": 0.3589743589743589,
+            "observed": 0.41025641025641024
+          },
+          "mean_images": {
+            "ci_high": 1.2820512820512822,
+            "ci_low": 1.0897435897435896,
+            "observed": 1.1794871794871795
+          },
+          "missed_referable_dr_risk": {
+            "ci_high": 0.16666666666666666,
+            "ci_low": 0.0,
+            "observed": 0.0625
+          }
+        }
+      },
+      "baselines": {
+        "active_retina_rc_two_stage": {
+          "calibration": {
+            "auprc_decided": 0.8793024064554751,
+            "auroc_decided": 0.8705128205128205,
+            "brier_decided": 0.17835797946938994,
+            "defer_rate": 0.0125,
+            "image_savings_vs_two": 0.375,
+            "mean_images": 1.25,
+            "missed_referable_fraction_all": 0.02564102564102564,
+            "missed_referable_risk_decided": 0.02564102564102564,
+            "n_decided_eyes": 79,
+            "n_decided_positive_patients": 21,
+            "n_deferred_eyes": 1,
+            "n_positive_patients": 21,
+            "n_total_eyes": 80,
+            "patient_missed_fraction_all_positive": 0.047619047619047616,
+            "patient_missed_risk_decided_positive": 0.047619047619047616,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9743589743589743,
+            "specificity_decided": 0.5
+          },
+          "status": "EMPIRICALLY_SELECTED_UNCERTIFIED",
+          "thresholds": {
+            "first_high": 0.170305,
+            "first_low": 0.003821,
+            "second_high": 0.000962,
+            "second_low": 0.000771
+          },
+          "validation": {
+            "auprc_decided": 0.8536875029032559,
+            "auroc_decided": 0.8831521739130435,
+            "brier_decided": 0.16177044275391592,
+            "defer_rate": 0.0,
+            "image_savings_vs_two": 0.41025641025641024,
+            "mean_images": 1.1794871794871795,
+            "missed_referable_fraction_all": 0.0625,
+            "missed_referable_risk_decided": 0.0625,
+            "n_decided_eyes": 78,
+            "n_decided_positive_patients": 18,
+            "n_deferred_eyes": 0,
+            "n_positive_patients": 18,
+            "n_total_eyes": 78,
+            "patient_missed_fraction_all_positive": 0.1111111111111111,
+            "patient_missed_risk_decided_positive": 0.1111111111111111,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9375,
+            "specificity_decided": 0.4565217391304348
+          }
+        },
+        "always_one_initial": {
+          "status": "NO_EMPIRICALLY_FEASIBLE_BASELINE"
+        },
+        "always_two_views": {
+          "status": "NO_EMPIRICALLY_FEASIBLE_BASELINE"
+        },
+        "confidence_triage_no_acquisition": {
+          "calibration": {
+            "auprc_decided": 0.9106324052605265,
+            "auroc_decided": 0.8935185185185185,
+            "brier_decided": 0.1498993876161154,
+            "defer_rate": 0.175,
+            "image_savings_vs_two": 0.5,
+            "mean_images": 1.0,
+            "missed_referable_fraction_all": 0.02564102564102564,
+            "missed_referable_risk_decided": 0.027777777777777776,
+            "n_decided_eyes": 66,
+            "n_decided_positive_patients": 20,
+            "n_deferred_eyes": 14,
+            "n_positive_patients": 21,
+            "n_total_eyes": 80,
+            "patient_missed_fraction_all_positive": 0.047619047619047616,
+            "patient_missed_risk_decided_positive": 0.05,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9722222222222222,
+            "specificity_decided": 0.5
+          },
+          "status": "EMPIRICALLY_SELECTED_UNCERTIFIED",
+          "stop_high": 0.060791,
+          "stop_low": 0.004485,
+          "validation": {
+            "auprc_decided": 0.8549359613043137,
+            "auroc_decided": 0.8559027777777778,
+            "brier_decided": 0.18960656469449808,
+            "defer_rate": 0.1282051282051282,
+            "image_savings_vs_two": 0.5,
+            "mean_images": 1.0,
+            "missed_referable_fraction_all": 0.0625,
+            "missed_referable_risk_decided": 0.0625,
+            "n_decided_eyes": 68,
+            "n_decided_positive_patients": 18,
+            "n_deferred_eyes": 10,
+            "n_positive_patients": 18,
+            "n_total_eyes": 78,
+            "patient_missed_fraction_all_positive": 0.1111111111111111,
+            "patient_missed_risk_decided_positive": 0.1111111111111111,
+            "patient_zero_event_upper95_if_no_misses": NaN,
+            "sensitivity_decided": 0.9375,
+            "specificity_decided": 0.4722222222222222
+          }
+        }
+      },
+      "mapping_note": "swapped sensitivity branch: suffix_1 treated as initial view, suffix_2 as second view",
+      "n_calibration": 80,
+      "n_examples": 712,
+      "n_validation": 78,
+      "name": "suffix1_initial",
+      "paired_value": {
+        "calibration": {
+          "auroc_gain": -0.008755472170106304,
+          "first_auprc": 0.886071335553682,
+          "first_auroc": 0.8792995622263915,
+          "first_brier": 0.16000076972428842,
+          "n": 80,
+          "split": "calibration",
+          "two_view_auprc": 0.8811334859386439,
+          "two_view_auroc": 0.8705440900562852,
+          "two_view_brier": 0.20118227533490698
+        },
+        "validation": {
+          "auroc_gain": 0.01970108695652173,
+          "first_auprc": 0.8490376350934875,
+          "first_auroc": 0.873641304347826,
+          "first_brier": 0.16536232677885276,
+          "n": 78,
+          "split": "validation",
+          "two_view_auprc": 0.8704819505230943,
+          "two_view_auroc": 0.8933423913043478,
+          "two_view_brier": 0.15612317947277968
+        }
+      }
+    }
+  ],
+  "min_specificity": 0.5,
+  "risk_certificate": "NONE",
+  "status": "FAST_PAPER_PACK_EXPLORATORY",
+  "target_risk": 0.05,
+  "test_status": "historical DeepDRiD test split is exposed and omitted from development paper pack"
+}

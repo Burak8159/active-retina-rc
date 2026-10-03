@@ -1,0 +1,86 @@
+project:
+  name: ActiveRetina
+  version: paper_v1_feasibility_A0_A2
+  created: 2026-10-01
+  status: BLOCKED_FOR_REAL_METRICS_UNTIL_MFIDDR_PRESENT
+
+dataset:
+  name: MFIDDR
+  root: data/MFIDDR
+  train_images: train
+  test_images: test
+  train_csv: train_fourpic_label.csv
+  test_csv: test_fourpic_label.csv
+  manifest_output: results/mfiddr_canonical_manifest.csv
+  status_output: results/A0_access_schema_status.json
+  official_source: https://github.com/mfiddr/MFIDDR
+  access_note: >
+    Public repository provides sample structure, MIT-licensed repository code, and a Google Docs access link
+    for the full dataset. Full image access must be obtained and documented before real metrics are reported.
+  fields:
+    F1: macula_centered
+    F2: optic_disc_centered
+    F3: superior_tangent_to_optic_disc_horizontal_line
+    F4: inferior_tangent_to_optic_disc_horizontal_line
+  field_order: [F1, F2, F3, F4]
+  filename_field_codes:
+    right:
+      "01": F1
+      "02": F2
+      "03": F3
+      "04": F4
+    left:
+      "05": F1
+      "06": F2
+      "07": F3
+      "08": F4
+  expected_grades: [0, 1, 2, 3, 4]
+  referable_threshold: 2
+
+splits:
+  unit: patient_id
+  preserve_official_train_test: true
+  validation_fraction_within_train: 0.15
+  seed: 20261001
+  immutable_output: results/splits_manifest.json
+
+model:
+  image_encoder:
+    family: timm
+    candidate: convnext_tiny.fb_in22k_ft_in1k
+    fallback: resnet50
+    pretrained: true
+    image_size: 512
+  subset_classifier:
+    type: permutation_aware_set_pooling
+    pooling: mean_plus_max_plus_missing_mask
+    hidden_dim: 512
+    dropout: 0.20
+  training:
+    optimizer: adamw
+    learning_rate: 0.0001
+    batch_size: 16
+    max_epochs: 20
+    early_stopping_patience: 4
+    class_weighting: balanced
+
+evaluation:
+  output: results/A1_A2_metrics.json
+  fixed_first_field: F1
+  subset_budgets: [1, 2, 3, 4]
+  bootstrap:
+    n: 2000
+    seed: 20261001
+    unit: patient_id
+  primary_metrics:
+    - auroc
+    - average_precision
+    - balanced_accuracy
+    - sensitivity_at_90_specificity
+  secondary_metrics:
+    - macro_f1
+    - quadratic_weighted_kappa
+  decision_thresholds:
+    min_four_view_minus_best_one_view_auroc: 0.02
+    min_patient_oracle_minus_best_fixed_same_budget_auroc: 0.015
+    min_nonmyopic_minus_greedy_expected_utility: 0.01

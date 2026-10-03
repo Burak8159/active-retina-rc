@@ -1,0 +1,21 @@
+{
+  "csv_hashes": {
+    "test_fourpic_label.csv": "15e5927feab4bedf7509f870f3b2a12e0918752f0fe044b092ccd6a02efff33e",
+    "train_fourpic_label.csv": "148770f6e6c77075c5783eb75b276b2665e6eb255d33d8d59da17db47014a271"
+  },
+  "field_mapping": {
+    "F1": "macula_centered",
+    "F2": "optic_disc_centered",
+    "F3": "superior_tangent_to_optic_disc_horizontal_line",
+    "F4": "inferior_tangent_to_optic_disc_horizontal_line"
+  },
+  "gate": "A0",
+  "grades": [
+    0,
+    1,
+    3
+  ],
+  "n_images": 96,
+  "n_patients": 12,
+  "status": "PASS"
+}

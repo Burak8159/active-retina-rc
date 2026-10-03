@@ -1,0 +1,48 @@
+# Python/runtime
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv*/
+venv/
+env/
+
+# Local model/runtime caches
+.model_cache/
+external/model_cache/
+*.pt
+*.pth
+*.onnx
+
+# Restricted or bulky datasets
+external/
+data/
+clinical_station_cases/
+
+# Generated large feature caches
+results/*.npz
+results/*feature_cache/
+results/**/*.npy
+
+# Local case exports and audit logs that may contain PHI-like metadata
+results/*case*_output.json
+results/*case*_report.html
+results/clinical_gateway_audit.jsonl
+results/api_demo_response.json
+
+# LaTeX build products
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.pdf
+
+# macOS/editor
+.DS_Store
+.idea/
+.vscode/

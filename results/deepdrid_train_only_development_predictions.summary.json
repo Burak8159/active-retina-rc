@@ -1,0 +1,17 @@
+{
+  "encoder": "resnet50.a1_in1k",
+  "feature_cache": "results/deepdrid_resnet50_features.npz",
+  "folds": 5,
+  "model_family": "frozen_pretrained_encoder_logistic",
+  "n_eyes": 717,
+  "output": "results/deepdrid_train_only_development_predictions.csv",
+  "pretrained": true,
+  "status": "PRETRAINED_ENCODER_PREDICTIONS_WRITTEN",
+  "test_included": false,
+  "training_patients": "train_only",
+  "view_sets": [
+    "macula",
+    "optic_disc",
+    "macula+optic_disc"
+  ]
+}

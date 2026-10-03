@@ -1,0 +1,59 @@
+{
+  "online_eval_images": {
+    "n_files": 400,
+    "n_jpg": 400,
+    "n_patient_dirs": 100,
+    "patient_dir_file_count_distribution": {
+      "4": 100
+    },
+    "sample_paths": [
+      "347/347_l1.jpg",
+      "347/347_l2.jpg",
+      "347/347_r1.jpg",
+      "347/347_r2.jpg",
+      "353/353_l1.jpg",
+      "353/353_l2.jpg",
+      "353/353_r1.jpg",
+      "353/353_r2.jpg"
+    ],
+    "truncated": false
+  },
+  "train_images": {
+    "n_files": 1200,
+    "n_jpg": 1200,
+    "n_patient_dirs": 300,
+    "patient_dir_file_count_distribution": {
+      "4": 300
+    },
+    "sample_paths": [
+      "1/1_l1.jpg",
+      "1/1_l2.jpg",
+      "1/1_r1.jpg",
+      "1/1_r2.jpg",
+      "10/10_l1.jpg",
+      "10/10_l2.jpg",
+      "10/10_r1.jpg",
+      "10/10_r2.jpg"
+    ],
+    "truncated": false
+  },
+  "validation_images": {
+    "n_files": 400,
+    "n_jpg": 400,
+    "n_patient_dirs": 100,
+    "patient_dir_file_count_distribution": {
+      "4": 100
+    },
+    "sample_paths": [
+      "265/265_l1.jpg",
+      "265/265_l2.jpg",
+      "265/265_r1.jpg",
+      "265/265_r2.jpg",
+      "267/267_l1.jpg",
+      "267/267_l2.jpg",
+      "267/267_r1.jpg",
+      "267/267_r2.jpg"
+    ],
+    "truncated": false
+  }
+}

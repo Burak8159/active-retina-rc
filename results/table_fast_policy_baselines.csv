@@ -1,0 +1,11 @@
+branch,method,status,mean_images,image_savings_vs_two,defer_rate,missed_ref_risk_decided_eye,missed_ref_fraction_all_eye,specificity_decided,positive_patient_missed_risk,zero_event_upper95,delta_images_vs_confidence,delta_defer_vs_confidence,break_even_defer_cost_images
+suffix2_initial,active_retina_rc_legacy,EMPIRICALLY_SELECTED_UNCERTIFIED,1.205,0.397,0.205,0.036,0.031,0.559,0.067,NA,0.205,0.141,NA
+suffix2_initial,active_retina_rc_two_stage,EMPIRICALLY_SELECTED_UNCERTIFIED,1.077,0.462,0.000,0.062,0.062,0.522,0.111,NA,0.077,-0.064,1.203
+suffix2_initial,always_one_initial,NO_EMPIRICALLY_FEASIBLE_BASELINE,,,,,,,,,NA,NA,NA
+suffix2_initial,always_two_views,NO_EMPIRICALLY_FEASIBLE_BASELINE,,,,,,,,,NA,NA,NA
+suffix2_initial,confidence_triage_no_acquisition,EMPIRICALLY_SELECTED_UNCERTIFIED,1.000,0.500,0.064,0.062,0.062,0.561,0.111,NA,0.000,0.000,dominates
+suffix1_initial,active_retina_rc_legacy,EMPIRICALLY_SELECTED_UNCERTIFIED,1.179,0.410,0.154,0.062,0.062,0.500,0.111,NA,0.179,0.026,NA
+suffix1_initial,active_retina_rc_two_stage,EMPIRICALLY_SELECTED_UNCERTIFIED,1.179,0.410,0.000,0.062,0.062,0.457,0.111,NA,0.179,-0.128,1.398
+suffix1_initial,always_one_initial,NO_EMPIRICALLY_FEASIBLE_BASELINE,,,,,,,,,NA,NA,NA
+suffix1_initial,always_two_views,NO_EMPIRICALLY_FEASIBLE_BASELINE,,,,,,,,,NA,NA,NA
+suffix1_initial,confidence_triage_no_acquisition,EMPIRICALLY_SELECTED_UNCERTIFIED,1.000,0.500,0.128,0.062,0.062,0.472,0.111,NA,0.000,0.000,dominates

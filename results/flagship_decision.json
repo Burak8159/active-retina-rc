@@ -1,0 +1,96 @@
+{
+  "analysis_api_status": "VERIFIED_LOCAL_API",
+  "arxiv_status": "GO_AS_TRANSPARENT_REPRODUCIBLE_BENCHMARK_PREPRINT",
+  "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_INSUFFICIENT_FINITE_SAMPLE_CERTIFICATE",
+  "certification_gap_report": "docs/certification_gap_report.md",
+  "clinical_workflow_software_status": "GO_CLINICIAN_REVIEWED_ACQUISITION_ASSISTANT",
+  "completed_artifacts": [
+    "results/flagship_frontier.csv",
+    "results/flagship_cost_frontier.csv",
+    "results/flagship_mechanism.csv",
+    "results/flagship_oracle_bounds.csv",
+    "plots/flagship_risk_image_frontier.svg",
+    "plots/flagship_risk_image_frontier.png",
+    "plots/flagship_paired_view_value.png",
+    "plots/flagship_mechanism_brier.png",
+    "plots/flagship_cost_sensitivity.png",
+    "results/formal_risk_control_summary.json",
+    "results/formal_risk_control_selected.csv",
+    "results/formal_risk_control_candidates.csv",
+    "results/deepdrid_full_cv_predictions.csv",
+    "results/deepdrid_full_cv_metrics.csv",
+    "results/deepdrid_full_cv_policy.csv",
+    "results/deepdrid_full_cv_folds.csv",
+    "models/active_retina_rc_clinical_artifact.joblib",
+    "models/active_retina_rc_clinical_artifact.metadata.json",
+    "src/active_retina/clinical_gateway.py",
+    "src/active_retina/clinical_case_runner.py",
+    "results/clinical_gateway_example_output.json",
+    "results/clinical_gateway_audit.jsonl",
+    "results/clinical_case_demo_output.json",
+    "results/clinical_case_demo_report.html",
+    "src/active_retina/clinical_station.py",
+    "docs/hardware_enclosure_clinical_station.md",
+    "results/clinical_case_live_encoder_output.json",
+    "results/clinical_case_live_encoder_report.html",
+    "results/risk_certificate_feasibility.json",
+    "docs/api_contract.md",
+    "results/api_demo_response.json",
+    "clinical_station_cases/API-DEMO-001/result.json",
+    "clinical_station_cases/API-DEMO-001/report.html",
+    "src/active_retina/deepdrid_online_certification.py",
+    "src/active_retina/certification_mode_search.py",
+    "results/deepdrid_online_certification_manifest.csv",
+    "results/deepdrid_online_certification_predictions.csv",
+    "results/deepdrid_online_certification_summary.json",
+    "results/certification_mode_search_online.json",
+    "docs/certification_gap_report.md",
+    "docs/autonomous_certification_recovery_plan.md",
+    "src/active_retina/model_upgrade_harness.py",
+    "results/model_upgrade_harness_summary.json",
+    "results/model_upgrade_harness_table.csv"
+  ],
+  "conditional_ieee_blockers": [
+    "DeepDRiD suffix-to-anatomy mapping is not officially resolved in reviewed public metadata.",
+    "Current validation has 39 patients; uncertainty is too wide for an unqualified IEEE safety claim.",
+    "Exact calibration-set risk bounds do not certify a 5% missed-referable-DR target with the present sample.",
+    "The conservative acquisition policy trades lower observed missed referable DR for lower coverage, higher imaging, and higher deferral versus confidence triage."
+  ],
+  "core_hypothesis": "Acquisition must improve the risk-coverage-cost frontier over confidence triage on independent patient-disjoint data.",
+  "go_claim": [
+    "The paper is a GO as a reproducible DeepDRiD-only benchmark and methods preprint: it has real paired-view predictions, five-fold patient-level cross-validation, binary referable-DR and five-class grading endpoints, inner-calibrated policy evaluation, risk-coverage-cost baselines, bootstrap uncertainty, mapping sensitivity, mechanism diagnostics, generated figures, and exact calibration-set risk upper bounds.",
+    "The paper is not a GO for an unqualified clinical or IEEE-journal superiority claim until the DeepDRiD-only ML stack can provide stronger prespecified finite-sample risk control and calibration."
+  ],
+  "ieee_status": "CONDITIONAL_GO_REQUIRES_STRONGER_DEEPDRID_ONLY_RISK_CONTROL",
+  "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_READY",
+  "online_certification_status": "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED_ON_ONLINE_COHORT",
+  "recovery_plan": "docs/autonomous_certification_recovery_plan.md",
+  "risk_certificate_feasibility": "results/risk_certificate_feasibility.json",
+  "source_audit": [
+    {
+      "branch": "suffix2_initial",
+      "calibration_eyes": 80,
+      "patients": {
+        "calibration": 40,
+        "train": 279,
+        "validation": 40
+      },
+      "prediction_file": "results/deepdrid_train_only_development_predictions.csv",
+      "sha256": "2939dcfcc832210133ba2b10a6daa032ea268b8337dcf8b063fa5f78888af802",
+      "validation_eyes": 78
+    },
+    {
+      "branch": "suffix1_initial",
+      "calibration_eyes": 80,
+      "patients": {
+        "calibration": 40,
+        "train": 279,
+        "validation": 40
+      },
+      "prediction_file": "results/deepdrid_swapped_train_only_development_predictions.csv",
+      "sha256": "7e0e4984b551edff483dc06d29903b5ac3e5aa4993c9ed8e9f7efd59ab1fb781",
+      "validation_eyes": 78
+    }
+  ],
+  "status": "GO_DEEPDRID_ARXIV_BENCHMARK_CONDITIONAL_IEEE"
+}

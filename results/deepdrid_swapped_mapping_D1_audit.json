@@ -1,0 +1,74 @@
+{
+  "blocking_items": [],
+  "can_train": true,
+  "dataset": "DeepDRiD",
+  "field_mapping": {
+    "suffix_1": "macula",
+    "suffix_2": "optic_disc"
+  },
+  "field_mapping_note": "Sensitivity-only mapping. Public DeepDRiD metadata reviewed so far does not explicitly state the filename suffix-to-field mapping. Run this config beside configs/deepdrid.yaml; if conclusions change materially, treat field mapping as a blocker pending author confirmation.",
+  "field_mapping_status": "SENSITIVITY_ANALYSIS_SWAPPED_NOT_OFFICIAL",
+  "grade_counts": {
+    "0": 706,
+    "1": 185,
+    "2": 324,
+    "3": 282,
+    "4": 92
+  },
+  "image_inventory": {
+    "missing_examples": [],
+    "n_existing_images": 1589,
+    "n_manifest_rows": 1589,
+    "n_missing_images": 0
+  },
+  "license": "CC-BY-SA-4.0",
+  "local_root": "external/DeepDRiD_v1_1/deepdrdoc-DeepDRiD-56d8af7/regular_fundus_images",
+  "manifest_output": "results/deepdrid_swapped_mapping_manifest.csv",
+  "metadata_root": "external/DeepDRiD_metadata",
+  "n_eyes": 797,
+  "n_images_labeled_regular_fundus": 1589,
+  "n_patients": 399,
+  "official_source": "https://github.com/deepdrdoc/DeepDRiD",
+  "pair_status": {
+    "incomplete_eye_examples": [
+      "56_left",
+      "56_right",
+      "164_right",
+      "167_left",
+      "167_right"
+    ],
+    "n_complete_suffix_1_2_eye_pairs": 792,
+    "n_eyes": 797,
+    "suffix_set_counts": {
+      "1": 2,
+      "1+2": 792,
+      "2": 3
+    }
+  },
+  "patient_leakage_between_official_splits": [],
+  "quality_counts": {
+    "field_definition": {
+      "1": 6,
+      "4": 59,
+      "6": 251,
+      "8": 1052,
+      "10": 221
+    },
+    "overall_quality": {
+      "0": 838,
+      "1": 751
+    }
+  },
+  "referable_counts": {
+    "0": 891,
+    "1": 698
+  },
+  "risk_items": [
+    "Suffix-to-field mapping is visually inferred from sample images; no official suffix mapping statement has been found in public DeepDRiD metadata reviewed so far."
+  ],
+  "source_split_counts": {
+    "official_train": 1189,
+    "official_validation": 400
+  },
+  "status": "SCHEMA_AND_LOCAL_IMAGES_VERIFIED"
+}

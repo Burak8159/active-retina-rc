@@ -1,0 +1,51 @@
+{
+  "artifacts": [
+    "results/rebuild_v2_grade_stratified_referable.csv",
+    "results/rebuild_v2_paired_score_deltas.csv",
+    "results/rebuild_v2_paired_delta_by_grade.csv"
+  ],
+  "branch_summaries": [
+    {
+      "available_view_sets": [
+        "macula",
+        "macula+optic_disc",
+        "optic_disc"
+      ],
+      "branch": "suffix2_initial",
+      "five_class_secondary_reason": "Existing prediction files contain referable-DR scores and grade labels, but not five-class class probabilities or predicted grades.",
+      "five_class_secondary_status": "BLOCKED_CLASS_PROBABILITIES_MISSING",
+      "grade_counts_validation": {
+        "0": 37,
+        "1": 9,
+        "2": 18,
+        "3": 11,
+        "4": 5
+      },
+      "prediction_file": "results/deepdrid_train_only_development_predictions.csv",
+      "validation_rows": 236
+    },
+    {
+      "available_view_sets": [
+        "macula",
+        "macula+optic_disc",
+        "optic_disc"
+      ],
+      "branch": "suffix1_initial",
+      "five_class_secondary_reason": "Existing prediction files contain referable-DR scores and grade labels, but not five-class class probabilities or predicted grades.",
+      "five_class_secondary_status": "BLOCKED_CLASS_PROBABILITIES_MISSING",
+      "grade_counts_validation": {
+        "0": 37,
+        "1": 9,
+        "2": 16,
+        "3": 11,
+        "4": 5
+      },
+      "prediction_file": "results/deepdrid_swapped_train_only_development_predictions.csv",
+      "validation_rows": 236
+    }
+  ],
+  "decision": "METHOD_DEVELOPMENT_CONTINUE",
+  "next_required_model_output": "five-class predicted probabilities or predicted grades for each view set and split",
+  "publication_readiness": "NOT_READY_FOR_ARXIV_OR_IEEE",
+  "source_of_truth": "docs/flagship_rebuild_v2.md"
+}

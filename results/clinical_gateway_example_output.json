@@ -1,0 +1,18 @@
+{
+  "action": "DEFER_TO_CLINICIAN",
+  "case_id": "DEMO-001",
+  "clinically_actionable": false,
+  "images_required": 1,
+  "input_sha256": "a3df69f299d07b2f911e13031e055eca5bda6b5a1c8d77415f61333aec59d6b9",
+  "model_status": "RESEARCH_ONLY_NOT_CLINICALLY_CERTIFIED",
+  "model_version": "active-retina-rc-deepdrid-resnet50-cv-2026-10-03",
+  "must_review": true,
+  "reasons": [
+    "Anatomical field mapping is not verified for this case/workflow.",
+    "Formal calibration audit does not certify a 5% missed-referable-DR risk target; use for research workflow simulation only."
+  ],
+  "recommendation": "manual_review_required",
+  "risk_score_used": 0.42,
+  "schema_version": "1.0",
+  "timestamp_utc": "2026-10-03T11:02:35.698281+00:00"
+}

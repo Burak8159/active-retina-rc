@@ -1,0 +1,5 @@
+candidate,feature_source,online_auroc,positive_eyes,note
+current_locked_artifact_online,online_predictions,0.9405746176105829,82,development-only baseline from inspected online cohort
+logistic_balanced,deepdrid_resnet50_pair_features,,,candidate for retraining before future untouched certification cohort
+gradient_boosting,deepdrid_resnet50_pair_features,,,candidate for retraining before future untouched certification cohort
+random_forest_balanced,deepdrid_resnet50_pair_features,,,candidate for retraining before future untouched certification cohort

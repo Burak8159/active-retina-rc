@@ -1,0 +1,30 @@
+{
+  "decided_referable_eye_count": 79,
+  "decision": "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED_ON_ONLINE_COHORT",
+  "eye_missed_risk": 0.08860759493670886,
+  "eye_missed_risk_ucb_95": 0.159992887822513,
+  "grade_counts_images": {
+    "0": 200,
+    "1": 36,
+    "2": 72,
+    "3": 72,
+    "4": 20
+  },
+  "manifest": "results/deepdrid_online_certification_manifest.csv",
+  "missed_decided_referable_eye_count": 7,
+  "n_complete_eyes": 200,
+  "n_images": 400,
+  "n_patients": 100,
+  "patient_certificate": {
+    "certifies_5_percent_95_confidence": false,
+    "decided_positive_patients": 47,
+    "missed_decided_positive_patients": 7,
+    "patient_missed_risk": 0.14893617021276595,
+    "patient_missed_risk_ucb_95": 0.2616173520110007,
+    "positive_patients": 48,
+    "zero_miss_59_case_condition_met": false
+  },
+  "predictions": "results/deepdrid_online_certification_predictions.csv",
+  "referable_eye_count": 82,
+  "status": "ONLINE_CERTIFICATION_EVALUATED_LOCKED_ARTIFACT_NO_THRESHOLD_TUNING"
+}

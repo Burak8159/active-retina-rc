@@ -1,0 +1,20 @@
+{
+  "artifact": "models/active_retina_rc_clinical_artifact.joblib",
+  "feature_cache_sha256": "7e7f9648d4c6dff1b2dda489893b3c907a4006461e1c1c31bd6e6364201a25b0",
+  "known_limits": [
+    "DeepDRiD suffix mapping remains inferred, not official.",
+    "Formal 5% missed-DR risk certification is not achieved.",
+    "Artifact supports clinical workflow testing, not autonomous diagnosis."
+  ],
+  "manifest_sha256": "ffbdfbe984f9098d724e5a1ff80edae06a0a92695f1378f767d84ef24e88149c",
+  "policy": {
+    "default": "manual_review_on_uncertainty",
+    "second_high": 0.5,
+    "second_low": 0.15,
+    "stop_high": 0.85,
+    "stop_low": 0.05
+  },
+  "status": "SOFTWARE_ARTIFACT_READY_FOR_CLINICAL_WORKFLOW_TESTING_NOT_RISK_CERTIFIED",
+  "training_eyes": 792,
+  "version": "active-retina-rc-clinical-software-2026-10-03"
+}

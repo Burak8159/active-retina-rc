@@ -1,0 +1,27 @@
+{
+  "autonomous_use_decision": "NO_GO_AUTONOMOUS_DIAGNOSIS",
+  "best_overall_candidate": {
+    "branch": "suffix2_initial",
+    "cal_decided_positive_patients": 21,
+    "cal_misses": 0,
+    "certifies_5_percent": false,
+    "exact_ucb_95": 0.13294591102652337,
+    "method": "fixed_one",
+    "params": "{\"threshold\": 0.0}"
+  },
+  "best_zero_miss_candidate": {
+    "branch": "suffix2_initial",
+    "cal_decided_positive_patients": 21,
+    "cal_misses": 0,
+    "certifies_5_percent": false,
+    "exact_ucb_95": 0.13294591102652337,
+    "method": "fixed_one",
+    "params": "{\"threshold\": 0.0}"
+  },
+  "confidence": 0.95,
+  "minimum_decided_positive_patients_needed_if_zero_misses": 59,
+  "reason": "An exact one-sided 95% binomial upper bound for zero misses requires at least 59 automatically decided positive-patient cases. The current calibration grid does not provide that many zero-miss decided positive-patient cases.",
+  "status": "FIVE_PERCENT_AUTONOMOUS_CERTIFICATE_NOT_FEASIBLE_WITH_CURRENT_CALIBRATION_SAMPLE",
+  "supervised_workflow_decision": "GO_CLINICIAN_REVIEWED_ACQUISITION_ASSISTANT",
+  "target_missed_referable_dr_risk": 0.05
+}

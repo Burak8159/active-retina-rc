@@ -1,0 +1,25 @@
+{
+  "branches": [
+    {
+      "branch": "suffix2_initial",
+      "n_calibration": 80,
+      "n_candidates": 6188,
+      "n_validation": 78
+    },
+    {
+      "branch": "suffix1_initial",
+      "n_calibration": 80,
+      "n_candidates": 6188,
+      "n_validation": 78
+    }
+  ],
+  "limits": [
+    "This is a finite-sample calibration audit, not external validation.",
+    "Bonferroni correction is conservative because the policy grid is large.",
+    "The exposed historical test split remains unused.",
+    "DeepDRiD suffix mapping remains handled by two sensitivity branches."
+  ],
+  "method": "exact one-sided Clopper-Pearson upper bounds on calibration patients; validation is reported once for selected policies",
+  "risk_unit": "patient-level missed referable DR among automatically decided positive-patient cases",
+  "status": "FORMAL_RISK_CONTROL_COMPLETED_WITHOUT_MFIDDR"
+}

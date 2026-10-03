@@ -1,0 +1,7 @@
+{
+  "current_blocker": "locked artifact missed 7 positive patients on inspected online cohort",
+  "current_locked_online_auroc": 0.9405746176105829,
+  "next_required_step": "cache online paired embeddings, train candidate heads, freeze one model before a new untouched certification cohort",
+  "status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_READY",
+  "table": "results/model_upgrade_harness_table.csv"
+}
