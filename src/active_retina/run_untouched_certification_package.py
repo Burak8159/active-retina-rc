@@ -44,6 +44,10 @@ def main() -> None:
     parser.add_argument("--cohort-kind", choices=["canonical", "mbrset"], required=True)
     parser.add_argument("--labels", help="mBRSET labels CSV when --cohort-kind=mbrset")
     parser.add_argument("--image-root", help="mBRSET image root when --cohort-kind=mbrset")
+    parser.add_argument(
+        "--suffix-view-map",
+        help="Audited mBRSET filename suffix anatomy map, e.g. 1:macula,2:optic_disc,3:macula,4:optic_disc.",
+    )
     parser.add_argument("--canonical-input", help="Raw canonical paired-eye CSV when --cohort-kind=canonical")
     parser.add_argument("--attestation", required=True)
     parser.add_argument("--output-dir", default="results/untouched_certification_run")
@@ -67,21 +71,22 @@ def main() -> None:
     if args.cohort_kind == "mbrset":
         if not args.labels or not args.image_root:
             raise SystemExit("--labels and --image-root are required for mBRSET")
-        prep = run(
-            [
-                py,
-                "-m",
-                "active_retina.prepare_mbrset_for_untouched_review",
-                "--labels",
-                args.labels,
-                "--image-root",
-                args.image_root,
-                "--output-manifest",
-                str(manifest),
-                "--output-summary",
-                str(prep_summary),
-            ]
-        )
+        prep_cmd = [
+            py,
+            "-m",
+            "active_retina.prepare_mbrset_for_untouched_review",
+            "--labels",
+            args.labels,
+            "--image-root",
+            args.image_root,
+            "--output-manifest",
+            str(manifest),
+            "--output-summary",
+            str(prep_summary),
+        ]
+        if args.suffix_view_map:
+            prep_cmd.extend(["--suffix-view-map", args.suffix_view_map])
+        prep = run(prep_cmd)
     else:
         if not args.canonical_input:
             raise SystemExit("--canonical-input is required for canonical cohorts")

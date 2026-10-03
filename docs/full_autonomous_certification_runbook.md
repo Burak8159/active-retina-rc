@@ -44,6 +44,22 @@ PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.run_untouched_cer
   --output-dir results/mbrset_untouched_certification
 ```
 
+If the downloaded metadata matches the public GitHub CSV and lacks an anatomy
+column, first verify the filename suffix-to-anatomy mapping by manual image
+audit. Then pass the audited map explicitly:
+
+```bash
+PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.run_untouched_certification_package \
+  --cohort-kind mbrset \
+  --labels external/mBRSET/dataframe_brsetmobile.csv \
+  --image-root external/mBRSET/images \
+  --suffix-view-map 1:macula,2:optic_disc,3:macula,4:optic_disc \
+  --attestation configs/untouched_attestation_template.json \
+  --output-dir results/mbrset_untouched_certification
+```
+
+Do not use a suffix map without official confirmation or manual visual audit.
+
 The command will:
 
 1. Create a certification manifest only if same-eye macula/optic-disc pairs are
@@ -82,4 +98,3 @@ manuscript claims from frozen-candidate/conditional to externally certified:
   missed-risk bound
 - keep the frozen thresholds and artifact version unchanged
 - include the final decision JSON as the primary evidence artifact
-

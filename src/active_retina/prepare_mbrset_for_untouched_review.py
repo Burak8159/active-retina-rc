@@ -44,6 +44,49 @@ def normalize_view(value: str) -> str | None:
     return None
 
 
+def parse_suffix_view_map(value: str | None) -> dict[str, str]:
+    """Parse an explicit filename-suffix anatomy map.
+
+    Example: 1:macula,2:optic_disc,3:macula,4:optic_disc
+    """
+    if not value:
+        return {}
+    out: dict[str, str] = {}
+    for part in value.split(","):
+        if not part.strip():
+            continue
+        if ":" not in part:
+            raise SystemExit(f"Invalid suffix mapping item: {part!r}")
+        suffix, field_raw = part.split(":", 1)
+        field = normalize_view(field_raw)
+        if field is None:
+            raise SystemExit(f"Invalid anatomy field in suffix mapping: {field_raw!r}")
+        out[suffix.strip().lower()] = field
+    if set(out.values()) != {"macula", "optic_disc"}:
+        raise SystemExit("Suffix mapping must include both macula and optic_disc")
+    return out
+
+
+def file_suffix_key(file_value: str) -> str:
+    name = Path(file_value).name
+    if "." not in name:
+        return ""
+    parts = name.split(".")
+    if len(parts) >= 3:
+        return parts[-2].strip().lower()
+    return ""
+
+
+def resolve_field(row: dict[str, str], view_col: str | None, file_col: str, suffix_map: dict[str, str]) -> str | None:
+    if view_col is not None:
+        field = normalize_view(row[view_col])
+        if field is not None:
+            return field
+    if suffix_map:
+        return suffix_map.get(file_suffix_key(row[file_col]))
+    return None
+
+
 def image_path(root: Path, file_value: str) -> str:
     p = Path(file_value)
     if p.suffix:
@@ -68,6 +111,13 @@ def main() -> None:
     parser.add_argument("--image-root", required=True)
     parser.add_argument("--output-manifest", required=True)
     parser.add_argument("--output-summary", required=True)
+    parser.add_argument(
+        "--suffix-view-map",
+        help=(
+            "Explicit audited mapping from filename suffix to anatomy, e.g. "
+            "1:macula,2:optic_disc,3:macula,4:optic_disc. Use only after official or manual audit."
+        ),
+    )
     args = parser.parse_args()
 
     rows = read_csv(Path(args.labels))
@@ -79,6 +129,7 @@ def main() -> None:
     grade_col = first_present(columns, GRADE_COLS)
     laterality_col = first_present(columns, LATERALITY_COLS)
     view_col = first_present(columns, VIEW_COLS)
+    suffix_map = parse_suffix_view_map(args.suffix_view_map)
     missing = [
         name
         for name, value in {
@@ -86,7 +137,7 @@ def main() -> None:
             "file": file_col,
             "grade": grade_col,
             "laterality": laterality_col,
-            "view_position": view_col,
+            "view_position_or_suffix_view_map": view_col or (args.suffix_view_map if suffix_map else None),
         }.items()
         if value is None
     ]
@@ -103,6 +154,8 @@ def main() -> None:
             "laterality": laterality_col,
             "view_position": view_col,
         },
+        "suffix_view_map": suffix_map,
+        "suffix_view_map_requires_audit": bool(suffix_map),
         "missing_required_for_paired_manifest": missing,
         "note": (
             "mBRSET can only be used for paired-view untouched certification if metadata identifies "
@@ -118,7 +171,7 @@ def main() -> None:
     candidate_rows: list[dict[str, Any]] = []
     skipped_unknown_view = 0
     for row in rows:
-        field = normalize_view(row[view_col])  # type: ignore[index]
+        field = resolve_field(row, view_col, file_col, suffix_map)  # type: ignore[arg-type]
         if field is None:
             skipped_unknown_view += 1
             continue

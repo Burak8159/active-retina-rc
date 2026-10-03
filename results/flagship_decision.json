@@ -80,7 +80,8 @@
     "src/active_retina/prepare_mbrset_for_untouched_review.py",
     "docs/deployable_computation_gate.md",
     "src/active_retina/run_untouched_certification_package.py",
-    "docs/full_autonomous_certification_runbook.md"
+    "docs/full_autonomous_certification_runbook.md",
+    "docs/mbrset_public_metadata_audit.md"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -112,6 +113,9 @@
     "boundary": "No current local labeled cohort is untouched; final autonomous certificate still requires a new eligible cohort.",
     "deployability_gate": "docs/deployable_computation_gate.md",
     "mbrset_importer": "src/active_retina/prepare_mbrset_for_untouched_review.py",
+    "mbrset_public_metadata": "GitHub CSV exposes patient, file, laterality, final_quality, final_icdr; no explicit anatomy column.",
+    "mbrset_public_metadata_audit": "docs/mbrset_public_metadata_audit.md",
+    "mbrset_suffix_mapping_route": "Importer supports audited suffix map such as 1:macula,2:optic_disc,3:macula,4:optic_disc after official or manual visual audit.",
     "route_doc": "docs/external_untouched_data_routes.md",
     "smoke_result": "Importer creates a canonical manifest when view metadata exists and fails closed when view metadata is absent."
   },
