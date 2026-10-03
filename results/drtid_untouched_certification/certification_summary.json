@@ -1,0 +1,35 @@
+{
+  "artifact": "models/active_retina_rc_autonomous_candidate.joblib",
+  "artifact_version": "active-retina-rc-autonomous-candidate-2026-10-03",
+  "decision": "NO_GO_AUTONOMOUS_CERTIFICATION",
+  "feature_cache": "results/drtid_untouched_certification/certification_features.npz",
+  "manifest": "results/drtid_untouched_certification/certification_manifest.csv",
+  "patient_certificate": {
+    "certifies_5_percent_95_confidence": false,
+    "coverage_patients": 0.47677419354838707,
+    "decided_negative_patients": 429,
+    "decided_patients": 739,
+    "decided_positive_patients": 310,
+    "false_positive_patients": 24,
+    "missed_positive_patients": 118,
+    "n_patients": 1550,
+    "negative_patients": 887,
+    "patient_missed_risk": 0.38064516129032255,
+    "patient_missed_risk_ucb_95": 0.42833281347595353,
+    "positive_patients": 663,
+    "specificity_decided_negative_patients": 0.9440559440559441,
+    "zero_miss_59_case_condition_met": false
+  },
+  "policy": {
+    "high_threshold": 0.9,
+    "low_threshold": 0.00025252211213228293,
+    "mode": "paired_view_autonomous_candidate",
+    "score_above_or_equal_high": "autonomous_referable_candidate",
+    "score_below_or_equal_low": "autonomous_nonreferable_candidate",
+    "score_between_thresholds": "defer_to_clinician",
+    "selected_from": "expanded development stress test at minimum 80% decided-negative specificity"
+  },
+  "predictions": "results/drtid_untouched_certification/certification_predictions.csv",
+  "status": "FROZEN_AUTONOMOUS_CANDIDATE_CERTIFICATION_RUN_COMPLETE",
+  "warning": "This decision is valid only if the input cohort was untouched before this run."
+}

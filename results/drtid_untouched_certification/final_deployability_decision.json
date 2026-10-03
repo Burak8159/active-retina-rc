@@ -1,0 +1,113 @@
+{
+  "certification": {
+    "artifact": "models/active_retina_rc_autonomous_candidate.joblib",
+    "artifact_version": "active-retina-rc-autonomous-candidate-2026-10-03",
+    "decision": "NO_GO_AUTONOMOUS_CERTIFICATION",
+    "feature_cache": "results/drtid_untouched_certification/certification_features.npz",
+    "manifest": "results/drtid_untouched_certification/certification_manifest.csv",
+    "patient_certificate": {
+      "certifies_5_percent_95_confidence": false,
+      "coverage_patients": 0.47677419354838707,
+      "decided_negative_patients": 429,
+      "decided_patients": 739,
+      "decided_positive_patients": 310,
+      "false_positive_patients": 24,
+      "missed_positive_patients": 118,
+      "n_patients": 1550,
+      "negative_patients": 887,
+      "patient_missed_risk": 0.38064516129032255,
+      "patient_missed_risk_ucb_95": 0.42833281347595353,
+      "positive_patients": 663,
+      "specificity_decided_negative_patients": 0.9440559440559441,
+      "zero_miss_59_case_condition_met": false
+    },
+    "policy": {
+      "high_threshold": 0.9,
+      "low_threshold": 0.00025252211213228293,
+      "mode": "paired_view_autonomous_candidate",
+      "score_above_or_equal_high": "autonomous_referable_candidate",
+      "score_below_or_equal_low": "autonomous_nonreferable_candidate",
+      "score_between_thresholds": "defer_to_clinician",
+      "selected_from": "expanded development stress test at minimum 80% decided-negative specificity"
+    },
+    "predictions": "results/drtid_untouched_certification/certification_predictions.csv",
+    "status": "FROZEN_AUTONOMOUS_CANDIDATE_CERTIFICATION_RUN_COMPLETE",
+    "warning": "This decision is valid only if the input cohort was untouched before this run."
+  },
+  "manifest_preparation": {
+    "certification_boundary": "Patient-level certification is valid only if true patient IDs are present. If absent, this is pair-level untouched validation and should be reported as such.",
+    "drtid_root": "external/DRTiD_download/DRTiD",
+    "grade_counts_pairs": {
+      "0": 747,
+      "1": 140,
+      "2": 406,
+      "3": 199,
+      "4": 58
+    },
+    "missing_image_count": 0,
+    "missing_image_examples": [],
+    "n_eyes_or_pairs": 1550,
+    "n_manifest_rows": 3100,
+    "n_patients": 1550,
+    "output_manifest": "results/drtid_untouched_certification/certification_manifest.csv",
+    "positive_patients": 663,
+    "splits": [
+      {
+        "columns_detected": {
+          "grade": "Grade",
+          "macula": "Macula",
+          "optic_disc": "Optic disc",
+          "patient": "ID"
+        },
+        "csv": "external/DRTiD_download/DRTiD/Ground Truths/DR_grade/a. DR_grade_Training.csv",
+        "rows": 1000,
+        "split": "drtid_training"
+      },
+      {
+        "columns_detected": {
+          "grade": "Grade",
+          "macula": "Macula",
+          "optic_disc": "Optic disc",
+          "patient": "ID"
+        },
+        "csv": "external/DRTiD_download/DRTiD/Ground Truths/DR_grade/b. DR_grade_Testing.csv",
+        "rows": 550,
+        "split": "drtid_testing"
+      }
+    ],
+    "status": "DRTID_CERTIFICATION_MANIFEST_PREPARED",
+    "true_patient_id_available": true
+  },
+  "paper_claim": "Report as failed untouched certification and retain clinician-reviewed/conditional claim.",
+  "product_claim": "Frozen computation ran correctly, but autonomous diagnosis is not certified.",
+  "status": "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED",
+  "untouched_validation": {
+    "attestation": {
+      "attestation_date": "2026-10-03",
+      "collector_or_owner": "",
+      "not_inspected_before_freeze": true,
+      "not_used_for_training_or_threshold_selection": true,
+      "source": "",
+      "untouched_for_active_retina_certification": true
+    },
+    "blocking_items": [],
+    "manifest": "results/drtid_untouched_certification/certification_manifest.csv",
+    "manifest_sha256": "e965cb4a7316bd6b417d5e2b04915e8e45cdfbad2eec2b10e9151f71004d9791",
+    "minimum_59_positive_patients_met": true,
+    "missing_image_count": 0,
+    "missing_image_examples": [],
+    "n_complete_paired_eyes": 1550,
+    "n_eyes": 1550,
+    "n_patients": 1550,
+    "n_rows": 3100,
+    "overlap_with_known_development": {
+      "eye_ids": [],
+      "image_ids": [],
+      "patient_ids": []
+    },
+    "positive_patients": 663,
+    "preferred_80_positive_patients_met": true,
+    "schema_missing_columns": [],
+    "status": "UNTOUCHED_CERTIFICATION_ELIGIBLE"
+  }
+}

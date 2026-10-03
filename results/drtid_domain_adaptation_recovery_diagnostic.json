@@ -1,0 +1,238 @@
+{
+  "best_test_auroc": 0.8122526173590003,
+  "boundary": "Exploratory recovery after failed frozen external certification; cannot be called final untouched certification.",
+  "candidates": [
+    {
+      "C": 0.001,
+      "high": 0.35373786091804504,
+      "low": 0.18402059376239777,
+      "test_ap": 0.8001956389523208,
+      "test_auroc": 0.8122526173590003,
+      "test_negative_only": {
+        "coverage": 0.20363636363636364,
+        "decided": 112,
+        "decided_negative": 100,
+        "decided_positive": 12,
+        "false_positive": 0,
+        "missed_positive": 12,
+        "specificity": 1.0,
+        "ucb95": 1.0
+      },
+      "test_positive_only": {
+        "coverage": 0.5618181818181818,
+        "decided": 309,
+        "decided_negative": 123,
+        "decided_positive": 186,
+        "false_positive": 123,
+        "missed_positive": 0,
+        "specificity": 0.0,
+        "ucb95": 0.01597707800636821
+      },
+      "test_two_sided": {
+        "coverage": 0.7654545454545455,
+        "decided": 421,
+        "decided_negative": 223,
+        "decided_positive": 198,
+        "false_positive": 123,
+        "missed_positive": 12,
+        "specificity": 0.44843049327354256,
+        "ucb95": 0.09634655495199175
+      },
+      "train_ap": 0.9751354443449445,
+      "train_auroc": 0.9799400365989152,
+      "valid_two_sided": true
+    },
+    {
+      "C": 0.003,
+      "high": 0.26616257429122925,
+      "low": 0.3174511194229126,
+      "test_ap": 0.7979943490629358,
+      "test_auroc": 0.8111719013846673,
+      "test_negative_only": {
+        "coverage": 0.44363636363636366,
+        "decided": 244,
+        "decided_negative": 195,
+        "decided_positive": 49,
+        "false_positive": 0,
+        "missed_positive": 49,
+        "specificity": 1.0,
+        "ucb95": 1.0
+      },
+      "test_positive_only": {
+        "coverage": 0.5981818181818181,
+        "decided": 329,
+        "decided_negative": 137,
+        "decided_positive": 192,
+        "false_positive": 137,
+        "missed_positive": 0,
+        "specificity": 0.0,
+        "ucb95": 0.01548167961867405
+      },
+      "test_two_sided": null,
+      "train_ap": 0.9971417388630233,
+      "train_auroc": 0.9978800405202275,
+      "valid_two_sided": false
+    },
+    {
+      "C": 0.01,
+      "high": 0.15306667983531952,
+      "low": 0.5605252981185913,
+      "test_ap": 0.7889790406064237,
+      "test_auroc": 0.8071867612293144,
+      "test_negative_only": {
+        "coverage": 0.610909090909091,
+        "decided": 336,
+        "decided_negative": 260,
+        "decided_positive": 76,
+        "false_positive": 0,
+        "missed_positive": 76,
+        "specificity": 1.0,
+        "ucb95": 1.0
+      },
+      "test_positive_only": {
+        "coverage": 0.6436363636363637,
+        "decided": 354,
+        "decided_negative": 154,
+        "decided_positive": 200,
+        "false_positive": 154,
+        "missed_positive": 0,
+        "specificity": 0.0,
+        "ucb95": 0.014867039231272054
+      },
+      "test_two_sided": null,
+      "train_ap": 1.0,
+      "train_auroc": 1.0,
+      "valid_two_sided": false
+    },
+    {
+      "C": 0.03,
+      "high": 0.08037064969539642,
+      "low": 0.7646011710166931,
+      "test_ap": 0.7818686789473288,
+      "test_auroc": 0.8031340763255657,
+      "test_negative_only": {
+        "coverage": 0.6709090909090909,
+        "decided": 369,
+        "decided_negative": 274,
+        "decided_positive": 95,
+        "false_positive": 0,
+        "missed_positive": 95,
+        "specificity": 1.0,
+        "ucb95": 1.0
+      },
+      "test_positive_only": {
+        "coverage": 0.6672727272727272,
+        "decided": 367,
+        "decided_negative": 167,
+        "decided_positive": 200,
+        "false_positive": 167,
+        "missed_positive": 0,
+        "specificity": 0.0,
+        "ucb95": 0.014867039231272054
+      },
+      "test_two_sided": null,
+      "train_ap": 1.0,
+      "train_auroc": 1.0,
+      "valid_two_sided": false
+    },
+    {
+      "C": 0.1,
+      "high": 0.035004112869501114,
+      "low": 0.8984845280647278,
+      "test_ap": 0.7732746591123575,
+      "test_auroc": 0.7993177980412023,
+      "test_negative_only": {
+        "coverage": 0.7072727272727273,
+        "decided": 389,
+        "decided_negative": 281,
+        "decided_positive": 108,
+        "false_positive": 0,
+        "missed_positive": 108,
+        "specificity": 1.0,
+        "ucb95": 1.0
+      },
+      "test_positive_only": {
+        "coverage": 0.6727272727272727,
+        "decided": 370,
+        "decided_negative": 170,
+        "decided_positive": 200,
+        "false_positive": 170,
+        "missed_positive": 0,
+        "specificity": 0.0,
+        "ucb95": 0.014867039231272054
+      },
+      "test_two_sided": null,
+      "train_ap": 1.0,
+      "train_auroc": 1.0,
+      "valid_two_sided": false
+    },
+    {
+      "C": 0.25,
+      "high": 0.01767926849424839,
+      "low": 0.9494472146034241,
+      "test_ap": 0.7742032009653023,
+      "test_auroc": 0.7980209388720026,
+      "test_negative_only": {
+        "coverage": 0.7272727272727273,
+        "decided": 400,
+        "decided_negative": 285,
+        "decided_positive": 115,
+        "false_positive": 0,
+        "missed_positive": 115,
+        "specificity": 1.0,
+        "ucb95": 1.0
+      },
+      "test_positive_only": {
+        "coverage": 0.68,
+        "decided": 374,
+        "decided_negative": 173,
+        "decided_positive": 201,
+        "false_positive": 173,
+        "missed_positive": 0,
+        "specificity": 0.0,
+        "ucb95": 0.014793623694714915
+      },
+      "test_two_sided": null,
+      "train_ap": 1.0,
+      "train_auroc": 1.0,
+      "valid_two_sided": false
+    },
+    {
+      "C": 1.0,
+      "high": 0.005918493028730154,
+      "low": 0.9834477305412292,
+      "test_ap": 0.7745108017693885,
+      "test_auroc": 0.7971158392434988,
+      "test_negative_only": {
+        "coverage": 0.7327272727272728,
+        "decided": 403,
+        "decided_negative": 286,
+        "decided_positive": 117,
+        "false_positive": 0,
+        "missed_positive": 117,
+        "specificity": 1.0,
+        "ucb95": 1.0
+      },
+      "test_positive_only": {
+        "coverage": 0.6890909090909091,
+        "decided": 379,
+        "decided_negative": 178,
+        "decided_positive": 201,
+        "false_positive": 178,
+        "missed_positive": 0,
+        "specificity": 0.0,
+        "ucb95": 0.014793623694714915
+      },
+      "test_two_sided": null,
+      "train_ap": 1.0,
+      "train_auroc": 1.0,
+      "valid_two_sided": false
+    }
+  ],
+  "interpretation": "DRTiD-specific linear heads improve over the DeepDRiD-frozen head only modestly and do not produce a usable zero-miss autonomous negative mode on the already-inspected DRTiD test split.",
+  "status": "DRTID_DOMAIN_ADAPTATION_RECOVERY_DIAGNOSTIC_COMPLETE",
+  "test_pairs": 550,
+  "test_positives": 235,
+  "train_pairs": 1000,
+  "train_positives": 428
+}

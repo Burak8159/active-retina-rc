@@ -1,0 +1,29 @@
+{
+  "attestation": {
+    "attestation_date": "2026-10-03",
+    "collector_or_owner": "",
+    "not_inspected_before_freeze": true,
+    "not_used_for_training_or_threshold_selection": true,
+    "source": "",
+    "untouched_for_active_retina_certification": true
+  },
+  "blocking_items": [],
+  "manifest": "results/drtid_untouched_certification/certification_manifest.csv",
+  "manifest_sha256": "e965cb4a7316bd6b417d5e2b04915e8e45cdfbad2eec2b10e9151f71004d9791",
+  "minimum_59_positive_patients_met": true,
+  "missing_image_count": 0,
+  "missing_image_examples": [],
+  "n_complete_paired_eyes": 1550,
+  "n_eyes": 1550,
+  "n_patients": 1550,
+  "n_rows": 3100,
+  "overlap_with_known_development": {
+    "eye_ids": [],
+    "image_ids": [],
+    "patient_ids": []
+  },
+  "positive_patients": 663,
+  "preferred_80_positive_patients_met": true,
+  "schema_missing_columns": [],
+  "status": "UNTOUCHED_CERTIFICATION_ELIGIBLE"
+}

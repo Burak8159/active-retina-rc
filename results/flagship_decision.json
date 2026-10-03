@@ -2,7 +2,7 @@
   "analysis_api_status": "VERIFIED_LOCAL_API",
   "arxiv_status": "GO_AS_TRANSPARENT_REPRODUCIBLE_BENCHMARK_PREPRINT",
   "autonomous_candidate_status": "CANDIDATE_MODE_IDENTIFIED_NOT_CERTIFIED",
-  "autonomous_diagnosis_status": "CONDITIONAL_GO_AUTONOMOUS_DIAGNOSIS_AFTER_UNTOUCHED_CERTIFICATION",
+  "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_DRTID_FAILED_MBRSET_OR_STRONGER_MODEL_REQUIRED",
   "best_development_autonomous_candidate": {
     "candidate": "logistic_c025_balanced",
     "certified_posthoc": false,
@@ -88,7 +88,13 @@
     "docs/mbrset_access_request_note.md",
     "src/active_retina/prepare_drtid_for_untouched_review.py",
     "docs/drtid_access_action_pack.md",
-    "docs/drtid_access_request_note.md"
+    "docs/drtid_access_request_note.md",
+    "results/drtid_untouched_certification/final_deployability_decision.json",
+    "results/drtid_untouched_certification/certification_summary.json",
+    "results/drtid_untouched_certification/certification_predictions.csv",
+    "results/drtid_external_score_diagnostics.json",
+    "results/drtid_domain_adaptation_recovery_diagnostic.json",
+    "docs/drtid_external_certification_report.md"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -98,6 +104,29 @@
     "The conservative acquisition policy trades lower observed missed referable DR for lower coverage, higher imaging, and higher deferral versus confidence triage."
   ],
   "core_hypothesis": "Acquisition must improve the risk-coverage-cost frontier over confidence triage on independent patient-disjoint data.",
+  "drtid_external_certification_result": {
+    "cohort": {
+      "images": 3100,
+      "negative_ids": 887,
+      "pairs": 1550,
+      "positive_ids": 663
+    },
+    "decision_file": "results/drtid_untouched_certification/final_deployability_decision.json",
+    "frozen_candidate": {
+      "auroc": 0.7576796393694065,
+      "average_precision": 0.7352421221745966,
+      "decided_positive_ids": 310,
+      "missed_positive_ids": 118,
+      "missed_risk_ucb95": 0.42833281347595353
+    },
+    "interpretation": "DRTiD is a real external paired-view failure case. It strengthens the paper but does not complete autonomous certification.",
+    "recovery_diagnostic": {
+      "best_test_auroc": 0.8122526173590003,
+      "result": "Simple DRTiD-specific linear heads do not produce a useful zero-miss autonomous negative mode."
+    },
+    "report": "docs/drtid_external_certification_report.md",
+    "status": "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED_ON_DRTID"
+  },
   "drtid_parallel_route_status": {
     "application_form": "https://docs.google.com/forms/d/e/1FAIpQLSfEYIwk5G1Y6sAcDEjkt7qmv5FWcdG9Jn_P-gSnZ77MWvRM3A/viewform?usp=sf_link",
     "boundary": "Full patient-level certification requires true patient IDs in downloaded metadata; otherwise report as pair-level external paired-view validation.",
@@ -169,8 +198,8 @@
   },
   "go_claim": [
     "GO for clinician-reviewed computational product: frozen model artifact, local station/API, reports, hashes, audit logs, and fail-closed gateway are present.",
-    "GO for arXiv/IEEE computational-system paper: frozen public-data model package, risk-control analysis, certification runner, and external certification route are documented.",
-    "CONDITIONAL GO for autonomous diagnosis: allowed only after a new untouched paired-view cohort returns GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED with no threshold repair."
+    "GO for a stronger IEEE/arXiv computational-system paper with external DRTiD failure evidence and mBRSET certification route.",
+    "NO-GO for autonomous diagnosis on DRTiD: frozen candidate missed 118 decided positive IDs; stronger model and/or mBRSET certification required."
   ],
   "ieee_status": "CONDITIONAL_GO_REQUIRES_STRONGER_DEEPDRID_ONLY_RISK_CONTROL",
   "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_EVALUATED",

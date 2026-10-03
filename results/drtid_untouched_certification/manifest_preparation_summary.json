@@ -1,0 +1,44 @@
+{
+  "certification_boundary": "Patient-level certification is valid only if true patient IDs are present. If absent, this is pair-level untouched validation and should be reported as such.",
+  "drtid_root": "external/DRTiD_download/DRTiD",
+  "grade_counts_pairs": {
+    "0": 747,
+    "1": 140,
+    "2": 406,
+    "3": 199,
+    "4": 58
+  },
+  "missing_image_count": 0,
+  "missing_image_examples": [],
+  "n_eyes_or_pairs": 1550,
+  "n_manifest_rows": 3100,
+  "n_patients": 1550,
+  "output_manifest": "results/drtid_untouched_certification/certification_manifest.csv",
+  "positive_patients": 663,
+  "splits": [
+    {
+      "columns_detected": {
+        "grade": "Grade",
+        "macula": "Macula",
+        "optic_disc": "Optic disc",
+        "patient": "ID"
+      },
+      "csv": "external/DRTiD_download/DRTiD/Ground Truths/DR_grade/a. DR_grade_Training.csv",
+      "rows": 1000,
+      "split": "drtid_training"
+    },
+    {
+      "columns_detected": {
+        "grade": "Grade",
+        "macula": "Macula",
+        "optic_disc": "Optic disc",
+        "patient": "ID"
+      },
+      "csv": "external/DRTiD_download/DRTiD/Ground Truths/DR_grade/b. DR_grade_Testing.csv",
+      "rows": 550,
+      "split": "drtid_testing"
+    }
+  ],
+  "status": "DRTID_CERTIFICATION_MANIFEST_PREPARED",
+  "true_patient_id_available": true
+}
