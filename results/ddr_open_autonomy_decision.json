@@ -1,0 +1,17 @@
+{
+  "status": "GO_OPEN_DDR_SINGLE_IMAGE_AUTONOMOUS_REFERABLE_CERTIFICATE",
+  "date": "2026-10-03",
+  "dataset": "DDR Hugging Face mirror subset",
+  "manifest": "results/ddr_hf_cert_subset_manifest.csv",
+  "artifact": "models/active_retina_rc_ddr_open_single_image_candidate.joblib",
+  "result_summary": "One-sided autonomous referable escalation passed zero-miss open-data certification on DDR test subset, but specificity was too low for full autonomous diagnosis.",
+  "test_positive_cases": 120,
+  "test_missed_positive_cases": 0,
+  "test_missed_risk_ucb95": 0.024655401055656376,
+  "test_specificity": 0.05,
+  "test_precision_referable_action": 0.6779661016949152,
+  "test_referable_action_rate": 0.9833333333333333,
+  "full_autonomous_diagnosis_ready": false,
+  "paired_view_acquisition_certified": false,
+  "boundary": "Certifies only single-image autonomous referable escalation on the immediate-open DDR test subset. Does not certify autonomous nonreferable clearance or paired-view acquisition."
+}

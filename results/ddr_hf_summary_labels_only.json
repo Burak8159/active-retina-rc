@@ -1,0 +1,47 @@
+{
+  "boundary": "DDR is single-image DR grading data. Use it for diagnostic robustness/model hardening, not paired-view acquisition certification.",
+  "download_images": false,
+  "grade_counts": {
+    "0": 6266,
+    "1": 630,
+    "2": 4477,
+    "3": 236,
+    "4": 913,
+    "5": 1151
+  },
+  "limit_per_split": null,
+  "local_dir": "external/DDR_hf",
+  "manifest_output": "results/ddr_hf_manifest_labels_only.csv",
+  "missing_images_count": 13673,
+  "missing_images_sample": [
+    "external/DDR_hf/DR_grading/train/007-0004-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0007-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0008-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0009-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0011-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0013-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0022-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0023-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0024-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0025-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0026-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0028-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0029-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0030-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0031-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0032-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0034-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0035-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0036-000.jpg",
+    "external/DDR_hf/DR_grading/train/007-0037-000.jpg"
+  ],
+  "n_positive": 6777,
+  "n_rows": 13673,
+  "repo_id": "ctmedtech/DDR-dataset",
+  "split_counts": {
+    "ddr_test": 4105,
+    "ddr_train": 6835,
+    "ddr_valid": 2733
+  },
+  "status": "DDR_HF_MANIFEST_LABELS_READY_IMAGES_MISSING"
+}

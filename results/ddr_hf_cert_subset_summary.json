@@ -1,0 +1,27 @@
+{
+  "boundary": "DDR is single-image DR grading data. Use it for diagnostic robustness/model hardening, not paired-view acquisition certification.",
+  "download_images": true,
+  "grade_counts": {
+    "0": 90,
+    "1": 90,
+    "2": 90,
+    "3": 90,
+    "4": 90,
+    "5": 90
+  },
+  "limit_per_grade_per_split": 30,
+  "limit_per_split": null,
+  "local_dir": "external/DDR_hf_cert_subset",
+  "manifest_output": "results/ddr_hf_cert_subset_manifest.csv",
+  "missing_images_count": 0,
+  "missing_images_sample": [],
+  "n_positive": 360,
+  "n_rows": 540,
+  "repo_id": "ctmedtech/DDR-dataset",
+  "split_counts": {
+    "ddr_test": 180,
+    "ddr_train": 180,
+    "ddr_valid": 180
+  },
+  "status": "DDR_HF_MANIFEST_READY"
+}
