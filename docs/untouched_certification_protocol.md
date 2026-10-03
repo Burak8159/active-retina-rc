@@ -23,11 +23,25 @@ A cohort is untouched only if all of the following are true:
 
 ## Required Files
 
-1. A certification manifest CSV with columns:
+1. Either a raw paired-eye CSV with columns:
+
+   `patient_id,eye_id,macula_image_path,optic_disc_image_path,grade,referable_dr`
+
+   Convert it with:
+
+```bash
+PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.prepare_untouched_certification_cohort \
+  --input path/to/raw_paired_eye_table.csv \
+  --output-manifest results/untouched_certification_manifest.csv \
+  --output-summary results/untouched_certification_manifest_summary.json \
+  --source-name untouched_external_certification
+```
+
+2. Or a certification manifest CSV already in canonical format:
 
    `patient_id,eye_id,image_id,field,grade,referable_dr,image_path`
 
-2. An attestation JSON:
+3. An attestation JSON:
 
 ```json
 {
@@ -77,4 +91,3 @@ No current local labeled cohort qualifies as untouched:
 
 Therefore the model is computation-ready, but the autonomous diagnosis claim
 requires a new cohort import.
-

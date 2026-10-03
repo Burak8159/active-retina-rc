@@ -1,0 +1,3 @@
+patient_id,eye_id,macula_image_path,optic_disc_image_path,grade,referable_dr
+example_patient_001,example_patient_001_left,/absolute/path/to/macula.jpg,/absolute/path/to/optic_disc.jpg,0,0
+example_patient_002,example_patient_002_right,/absolute/path/to/macula.jpg,/absolute/path/to/optic_disc.jpg,2,1
