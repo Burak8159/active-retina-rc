@@ -10,6 +10,7 @@ The protocol is intentionally simple and fail-closed:
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import json
 import math
@@ -73,6 +74,26 @@ def build_model(model_name: str):
     train_transform = timm.data.create_transform(**cfg, is_training=True)
     eval_transform = timm.data.create_transform(**cfg, is_training=False)
     return model, train_transform, eval_transform
+
+
+def apply_trainable_filter(model: nn.Module, fragments: list[str]) -> dict[str, Any]:
+    if not fragments:
+        return {"mode": "all_parameters", "trainable_parameters": sum(p.numel() for p in model.parameters())}
+    trainable = 0
+    frozen = 0
+    for name, param in model.named_parameters():
+        keep = any(fragment in name for fragment in fragments)
+        param.requires_grad = keep
+        if keep:
+            trainable += param.numel()
+        else:
+            frozen += param.numel()
+    return {
+        "mode": "filtered",
+        "fragments": fragments,
+        "trainable_parameters": trainable,
+        "frozen_parameters": frozen,
+    }
 
 
 def set_seed(seed: int) -> None:
@@ -178,6 +199,9 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--lr", type=float, default=2e-5)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
+    parser.add_argument("--trainable-name-fragments", default="")
+    parser.add_argument("--min-specificity", type=float, default=0.70)
+    parser.add_argument("--use-amp", action="store_true")
     parser.add_argument("--seed", type=int, default=20261003)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--min-validation-positive", type=int, default=59)
@@ -191,6 +215,10 @@ def main() -> None:
     by_split = split_rows(rows)
     device = device_for(args.device)
     model, train_transform, eval_transform = build_model(args.model_name)
+    trainable_info = apply_trainable_filter(
+        model,
+        [x.strip() for x in args.trainable_name_fragments.split(",") if x.strip()],
+    )
     model.to(device)
 
     train_loader = DataLoader(FundusDataset(by_split["train"], train_transform), batch_size=args.batch_size, shuffle=True, num_workers=0)
@@ -200,9 +228,12 @@ def main() -> None:
     y_train = np.asarray([int(r["referable_dr"]) for r in by_split["train"]])
     pos_weight = float((y_train == 0).sum() / max(1, int((y_train == 1).sum())))
     loss_fn = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(pos_weight, dtype=torch.float32, device=device))
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr, weight_decay=args.weight_decay)
+    scaler = torch.amp.GradScaler("cuda", enabled=bool(args.use_amp and device.type == "cuda"))
 
     history = []
+    best_epoch: dict[str, Any] | None = None
+    best_state: dict[str, torch.Tensor] | None = None
     for epoch in range(1, args.epochs + 1):
         model.train()
         total_loss = 0.0
@@ -211,10 +242,12 @@ def main() -> None:
             images = images.to(device)
             y = y.to(device)
             optimizer.zero_grad(set_to_none=True)
-            logits = model(images).flatten()
-            loss = loss_fn(logits, y)
-            loss.backward()
-            optimizer.step()
+            with torch.amp.autocast("cuda", enabled=bool(args.use_amp and device.type == "cuda")):
+                logits = model(images).flatten()
+                loss = loss_fn(logits, y)
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
             total_loss += float(loss.detach().cpu()) * len(y)
             seen += len(y)
         y_valid, s_valid, _ = predict(model, valid_loader, device)
@@ -224,8 +257,25 @@ def main() -> None:
             [float(x) for x in args.threshold_safety_factors.split(",") if x.strip()],
             args.min_validation_positive,
         )
-        history.append({"epoch": epoch, "train_loss": total_loss / max(1, seen), "valid_selected": selected})
+        epoch_row = {"epoch": epoch, "train_loss": total_loss / max(1, seen), "valid_selected": selected}
+        history.append(epoch_row)
+        if best_epoch is None or (
+            int(selected.get("missed_positive", 10**9)) == 0,
+            float(selected.get("specificity", -1)),
+            float(selected.get("precision_referable_action", -1)),
+            -float(selected.get("referable_action_rate", 1e9)),
+        ) > (
+            int(best_epoch["valid_selected"].get("missed_positive", 10**9)) == 0,
+            float(best_epoch["valid_selected"].get("specificity", -1)),
+            float(best_epoch["valid_selected"].get("precision_referable_action", -1)),
+            -float(best_epoch["valid_selected"].get("referable_action_rate", 1e9)),
+        ):
+            best_epoch = copy.deepcopy(epoch_row)
+            best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
         print(json.dumps(history[-1], sort_keys=True))
+
+    if best_state is not None:
+        model.load_state_dict(best_state)
 
     y_valid, s_valid, valid_ids = predict(model, valid_loader, device)
     selected = select_threshold(
@@ -244,17 +294,28 @@ def main() -> None:
         pred_path.unlink()
     write_predictions(pred_path, "valid", valid_ids, y_valid, s_valid, threshold)
     write_predictions(pred_path, "test", test_ids, y_test, s_test, threshold)
-    torch.save({"model_name": args.model_name, "state_dict": model.cpu().state_dict(), "threshold": threshold}, args.artifact)
+    torch.save(
+        {
+            "model_name": args.model_name,
+            "state_dict": model.cpu().state_dict(),
+            "threshold": threshold,
+            "trainable_info": trainable_info,
+            "best_epoch": best_epoch,
+        },
+        args.artifact,
+    )
 
     summary = {
         "status": (
             "GO_FINETUNED_SINGLE_IMAGE_AUTONOMY"
-            if test_cert["certifies_5_percent_95_confidence"] and test_cert["specificity"] >= 0.70
+            if test_cert["certifies_5_percent_95_confidence"] and test_cert["specificity"] >= args.min_specificity
             else "NO_GO_FINETUNED_SINGLE_IMAGE_AUTONOMY"
         ),
         "model_name": args.model_name,
         "artifact": args.artifact,
         "manifest": args.manifest,
+        "trainable_info": trainable_info,
+        "best_epoch": best_epoch,
         "history": history,
         "selected_threshold": selected,
         "valid_certificate": valid_cert,
