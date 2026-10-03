@@ -1,0 +1,7 @@
+{
+  "predictions": "results/ddr_feature_mlp_specificity300_ensemble_h512_d50/predictions.csv",
+  "selected": {
+    "status": "NO_VALID_SELECTIVE_POLICY"
+  },
+  "status": "NO_GO_SELECTIVE_AUTONOMY_POLICY"
+}

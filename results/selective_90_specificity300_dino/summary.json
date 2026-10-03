@@ -1,0 +1,7 @@
+{
+  "predictions": "results/ddr_open_autonomy_specificity300_vit_dino/predictions.csv",
+  "selected": {
+    "status": "NO_VALID_SELECTIVE_POLICY"
+  },
+  "status": "NO_GO_SELECTIVE_AUTONOMY_POLICY"
+}
