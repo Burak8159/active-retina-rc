@@ -71,7 +71,11 @@
     "models/active_retina_rc_autonomous_candidate.metadata.json",
     "docs/autonomous_candidate_model_card.md",
     "results/autonomous_candidate_online_smoke_predictions.csv",
-    "results/autonomous_candidate_online_smoke_summary.json"
+    "results/autonomous_candidate_online_smoke_summary.json",
+    "docs/untouched_certification_protocol.md",
+    "src/active_retina/validate_untouched_cohort.py",
+    "configs/untouched_attestation_template.json",
+    "results/online_cohort_untouched_validation.json"
   ],
   "computational_product_status": "FROZEN_AUTONOMOUS_CANDIDATE_READY_FOR_UNTOUCHED_CERTIFICATION_RUN",
   "conditional_ieee_blockers": [
@@ -157,5 +161,14 @@
       "validation_eyes": 78
     }
   ],
-  "status": "GO_DEEPDRID_ARXIV_BENCHMARK_CONDITIONAL_IEEE"
+  "status": "GO_DEEPDRID_ARXIV_BENCHMARK_CONDITIONAL_IEEE",
+  "untouched_certification_guardrail": {
+    "attestation_template": "configs/untouched_attestation_template.json",
+    "online_validation_smoke": "results/online_cohort_untouched_validation.json",
+    "online_validation_status": "NOT_ELIGIBLE_FOR_UNTOUCHED_CERTIFICATION",
+    "protocol": "docs/untouched_certification_protocol.md",
+    "reason": "Current local labeled cohorts are inspected/development data or fixtures; none can certify autonomous diagnosis.",
+    "validator": "src/active_retina/validate_untouched_cohort.py"
+  },
+  "untouched_certification_status": "NO_LOCAL_UNTOUCHED_COHORT_AVAILABLE"
 }
