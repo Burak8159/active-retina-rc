@@ -78,7 +78,9 @@
     "results/online_cohort_untouched_validation.json",
     "docs/external_untouched_data_routes.md",
     "src/active_retina/prepare_mbrset_for_untouched_review.py",
-    "docs/deployable_computation_gate.md"
+    "docs/deployable_computation_gate.md",
+    "src/active_retina/run_untouched_certification_package.py",
+    "docs/full_autonomous_certification_runbook.md"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -147,6 +149,13 @@
   "online_certification_status": "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED_ON_ONLINE_COHORT",
   "recovery_plan": "docs/autonomous_certification_recovery_plan.md",
   "risk_certificate_feasibility": "results/risk_certificate_feasibility.json",
+  "single_command_autonomous_certification_package": {
+    "boundary": "Requires a real untouched paired-view cohort. The runner cannot create untouched evidence from inspected development data.",
+    "go_status_required": "GO_FULL_AUTONOMOUS_COMPUTATIONAL_CERTIFICATE",
+    "runbook": "docs/full_autonomous_certification_runbook.md",
+    "runner": "src/active_retina/run_untouched_certification_package.py",
+    "smoke_test": "Passed: tiny canonical cohort is prepared, validated, rejected for positive_patients below 59, and model certification is not run."
+  },
   "source_audit": [
     {
       "branch": "suffix2_initial",

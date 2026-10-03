@@ -1,9 +1,12 @@
 # ActiveRetina Flagship Paper
 
-Status: `GO_DEEPDRID_ARXIV_BENCHMARK_CONDITIONAL_IEEE`
+Status: `GO_CLINICIAN_REVIEWED_COMPUTATIONAL_PRODUCT`
+
+Autonomous status:
+`CONDITIONAL_GO_AUTONOMOUS_DIAGNOSIS_AFTER_UNTOUCHED_CERTIFICATION`.
 
 Software product status:
-`GO_CLINICIAN_REVIEWED_ACQUISITION_ASSISTANT`.
+`GO_CLINICIAN_REVIEWED_COMPUTATIONAL_PRODUCT`.
 The repository now includes a locked model artifact, fail-closed clinical
 gateway, real image case runner, local browser station, audit hashes, JSON
 API, HTML clinician report, and hardware-enclosure runbook. This is
@@ -14,6 +17,14 @@ The current evidence package supports a transparent arXiv benchmark/methods
 preprint. It is not a clinical deployment claim. IEEE journal submission remains
 conditional on a stronger DeepDRiD-only finite-sample risk-control path. See
 `docs/flagship_evidence_layer.md`.
+
+The frozen autonomous candidate is computation-ready. The final autonomous
+claim is controlled by one command:
+
+`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.run_untouched_certification_package --cohort-kind mbrset --labels external/mBRSET/<metadata-file>.csv --image-root external/mBRSET/<image-folder> --attestation configs/untouched_attestation_template.json --output-dir results/mbrset_untouched_certification`
+
+Only `GO_FULL_AUTONOMOUS_COMPUTATIONAL_CERTIFICATE` upgrades the project to
+autonomous-certified. See `docs/full_autonomous_certification_runbook.md`.
 
 Prior policy results are exploratory and uncertified; the original test holdout
 has been exposed. See `docs/evidence_integrity_audit.md`. Corrected development
