@@ -100,7 +100,12 @@
     "results/drtid_recovery_model_search/candidate_table.csv",
     "results/drtid_recovery_model_search/candidate_predictions.csv",
     "models/active_retina_rc_drtid_recovery_candidate.joblib",
-    "models/active_retina_rc_drtid_recovery_candidate.metadata.json"
+    "models/active_retina_rc_drtid_recovery_candidate.metadata.json",
+    "results/drtid_recovery_candidate_inspected_test_run/manifest.csv",
+    "results/drtid_recovery_candidate_inspected_test_run/manifest_summary.json",
+    "results/drtid_recovery_candidate_inspected_test_run/features.npz",
+    "results/drtid_recovery_candidate_inspected_test_run/predictions.csv",
+    "results/drtid_recovery_candidate_inspected_test_run/summary.json"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -142,6 +147,31 @@
     "runner": "src/active_retina/prepare_drtid_for_untouched_review.py",
     "smoke_test": "Passed: official-like tiny DRTiD folder prepared manifest and failed closed for too few positives.",
     "status": "PARALLEL_ACCESS_ROUTE_READY"
+  },
+  "drtid_recovery_candidate_replay": {
+    "boundary": "This verifies the saved recovery artifact, but it is not a final certificate because DRTiD influenced candidate selection.",
+    "decision": "DEVELOPMENT_GO_NOT_A_CERTIFICATE",
+    "feature_cache": "results/drtid_recovery_candidate_inspected_test_run/features.npz",
+    "manifest": "results/drtid_recovery_candidate_inspected_test_run/manifest.csv",
+    "patient_certificate": {
+      "certifies_5_percent_95_confidence": true,
+      "coverage_patients": 0.15454545454545454,
+      "decided_negative_patients": 20,
+      "decided_patients": 85,
+      "decided_positive_patients": 65,
+      "false_positive_patients": 6,
+      "missed_positive_patients": 0,
+      "n_patients": 550,
+      "negative_patients": 315,
+      "patient_missed_risk": 0.0,
+      "patient_missed_risk_ucb_95": 0.04504225812301352,
+      "positive_patients": 235,
+      "specificity_decided_negative_patients": 0.7,
+      "zero_miss_59_case_condition_met": true
+    },
+    "predictions": "results/drtid_recovery_candidate_inspected_test_run/predictions.csv",
+    "status": "INSPECTED_DEVELOPMENT_REPLAY_COMPLETE",
+    "summary": "results/drtid_recovery_candidate_inspected_test_run/summary.json"
   },
   "drtid_recovery_model_search_result": {
     "artifact": "models/active_retina_rc_drtid_recovery_candidate.joblib",

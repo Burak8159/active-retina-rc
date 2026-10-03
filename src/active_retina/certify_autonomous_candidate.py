@@ -116,6 +116,12 @@ def main() -> None:
     parser.add_argument("--model-name", default="resnet50.a1_in1k")
     parser.add_argument("--device", default="auto")
     parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument(
+        "--certification-context",
+        choices=["untouched", "inspected-development"],
+        default="untouched",
+        help="Use inspected-development for replay/recovery checks that must not be treated as final certificates.",
+    )
     args = parser.parse_args()
 
     artifact = joblib.load(args.artifact)
@@ -148,21 +154,30 @@ def main() -> None:
         )
     write_csv(Path(args.output_predictions), pred_rows)
     cert = patient_certificate(pred_rows)
+    raw_go = cert["certifies_5_percent_95_confidence"]
+    decision = (
+        "GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED"
+        if raw_go and args.certification_context == "untouched"
+        else "DEVELOPMENT_GO_NOT_A_CERTIFICATE"
+        if raw_go
+        else "NO_GO_AUTONOMOUS_CERTIFICATION"
+    )
     summary = {
         "status": "FROZEN_AUTONOMOUS_CANDIDATE_CERTIFICATION_RUN_COMPLETE",
         "artifact": args.artifact,
         "artifact_version": artifact["version"],
+        "artifact_status": artifact.get("status", ""),
+        "certification_context": args.certification_context,
         "manifest": args.manifest,
         "feature_cache": args.feature_cache,
         "predictions": args.output_predictions,
         "policy": policy,
         "patient_certificate": cert,
-        "decision": (
-            "GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED"
-            if cert["certifies_5_percent_95_confidence"]
-            else "NO_GO_AUTONOMOUS_CERTIFICATION"
+        "decision": decision,
+        "warning": (
+            "This is a final autonomous certificate only when certification_context is untouched "
+            "and the cohort was untouched before this run."
         ),
-        "warning": "This decision is valid only if the input cohort was untouched before this run.",
     }
     Path(args.output_summary).write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2, sort_keys=True))

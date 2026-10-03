@@ -1,0 +1,34 @@
+{
+  "artifact": "models/active_retina_rc_drtid_recovery_candidate.joblib",
+  "artifact_status": "RECOVERY_CANDIDATE_NOT_UNTOUCHED_CERTIFIED",
+  "artifact_version": "active-retina-rc-drtid-recovery-candidate-2026-10-03",
+  "certification_context": "inspected-development",
+  "decision": "DEVELOPMENT_GO_NOT_A_CERTIFICATE",
+  "feature_cache": "results/drtid_recovery_candidate_inspected_test_run/features.npz",
+  "manifest": "results/drtid_recovery_candidate_inspected_test_run/manifest.csv",
+  "patient_certificate": {
+    "certifies_5_percent_95_confidence": true,
+    "coverage_patients": 0.15454545454545454,
+    "decided_negative_patients": 20,
+    "decided_patients": 85,
+    "decided_positive_patients": 65,
+    "false_positive_patients": 6,
+    "missed_positive_patients": 0,
+    "n_patients": 550,
+    "negative_patients": 315,
+    "patient_missed_risk": 0.0,
+    "patient_missed_risk_ucb_95": 0.04504225812301352,
+    "positive_patients": 235,
+    "specificity_decided_negative_patients": 0.7,
+    "zero_miss_59_case_condition_met": true
+  },
+  "policy": {
+    "decision_rule": "low=autonomous_nonreferable, high=autonomous_referable, middle=defer_to_clinician",
+    "high_threshold": 0.6554050430736857,
+    "low_threshold": 0.2995880110412063,
+    "selected_from": "DRTiD official train-to-test recovery search after external failure"
+  },
+  "predictions": "results/drtid_recovery_candidate_inspected_test_run/predictions.csv",
+  "status": "FROZEN_AUTONOMOUS_CANDIDATE_CERTIFICATION_RUN_COMPLETE",
+  "warning": "This is a final autonomous certificate only when certification_context is untouched and the cohort was untouched before this run."
+}

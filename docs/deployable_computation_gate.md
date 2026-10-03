@@ -10,11 +10,16 @@ ActiveRetina-RC now separates three things that must never be mixed:
 
 ## Ready Now
 
-- Frozen paired-view autonomous candidate:
+- Original frozen paired-view autonomous candidate:
   `models/active_retina_rc_autonomous_candidate.joblib`
-- Frozen thresholds:
+- Original frozen thresholds:
   - low: `0.00025252211213228293`
   - high: `0.9`
+- DRTiD recovery candidate:
+  `models/active_retina_rc_drtid_recovery_candidate.joblib`
+- DRTiD recovery thresholds:
+  - low: `0.2995880110412063`
+  - high: `0.6554050430736857`
 - One-shot certification runner:
   `src/active_retina/certify_autonomous_candidate.py`
 - Untouched-cohort validator:
@@ -44,6 +49,8 @@ The accepted certification run must satisfy all of the following:
 - At least 59 referable-DR positive patients are automatically decided with
   zero misses.
 - The frozen artifact and thresholds are applied once, with no threshold repair.
+- The certification command reports `certification_context=untouched`, not
+  `inspected-development`.
 
 ## Current Product State
 
@@ -55,7 +62,20 @@ Current decision:
 
 `GO_CLINICIAN_REVIEWED_COMPUTATIONAL_PRODUCT`
 
-`CONDITIONAL_GO_AUTONOMOUS_DIAGNOSIS_AFTER_UNTOUCHED_CERTIFICATION`
+`RECOVERY_CANDIDATE_READY_FOR_DIFFERENT_UNTOUCHED_CERTIFICATION`
 
 `NO_GO_AUTONOMOUS_DIAGNOSIS_BEFORE_CERTIFICATE`
 
+## Latest Recovery State
+
+The original DeepDRiD-derived candidate failed on DRTiD. After that failure,
+DRTiD was used as inspected development evidence. A recovery candidate was
+trained on the official DRTiD training split and replayed on the official DRTiD
+testing split. The replay satisfies the finite-sample zero-miss arithmetic on
+that inspected test split, but the command correctly labels the result:
+
+`DEVELOPMENT_GO_NOT_A_CERTIFICATE`
+
+The next valid autonomous product gate is a no-repair run of the DRTiD recovery
+candidate, or a stronger frozen successor, on a different untouched paired-view
+cohort.
