@@ -1,0 +1,29 @@
+{
+  "abstained_negative_images": 413,
+  "abstained_positive_images": 358,
+  "best_oracle_candidate": {
+    "candidate": "median_all",
+    "distance_to_90_specificity_points": 0.7261758691206545,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 404,
+    "n_negative": 489,
+    "n_positive": 946,
+    "oracle_threshold": 0.041611,
+    "sensitivity": 1.0,
+    "specificity": 0.1738241308793456,
+    "true_negative_clearances": 85,
+    "true_positive_referrals": 946
+  },
+  "current_selective_policy": "results/autonomous_mode_90_0_policy.json",
+  "n_test_abstained_by_current_selective_policy": 771,
+  "n_test_images": 1435,
+  "oracle_gap_table": "results/full_autonomy_oracle_gap.csv",
+  "reason": "Even optimistic test-label oracle thresholds cannot approach 90% specificity at zero misses.",
+  "required_fix": [
+    "Train an image-level model specifically on hard abstained negatives and subtle referable positives.",
+    "Add view/quality evidence for ambiguous images instead of forcing the current score family.",
+    "Freeze a new every-image model only after it reaches zero validation misses and >=90% validation specificity, then test once."
+  ],
+  "status": "NO_GO_EVERY_IMAGE_AUTONOMY_WITH_CURRENT_SCORE_FAMILY",
+  "test_action_table": "results/selective_policy_test_actions.csv"
+}

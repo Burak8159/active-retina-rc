@@ -174,9 +174,15 @@ def main() -> None:
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
-    device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else args.device)
-    if str(device) == "auto":
-        device = torch.device("cpu")
+    if args.device == "auto":
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+        elif torch.backends.mps.is_available():
+            device = torch.device("mps")
+        else:
+            device = torch.device("cpu")
+    else:
+        device = torch.device(args.device)
 
     rows = read_manifest(Path(args.manifest))
     raw = np.load(args.feature_cache, allow_pickle=False)
