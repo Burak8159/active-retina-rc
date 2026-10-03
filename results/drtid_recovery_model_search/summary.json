@@ -1,0 +1,31 @@
+{
+  "best_candidate": {
+    "auroc": 0.7935292131036813,
+    "average_precision": 0.7761834702753595,
+    "balanced_accuracy_at_0_5": 0.7121918270854442,
+    "best_certified_coverage": 1.0,
+    "best_certified_misses": 0,
+    "best_certified_ucb95": 0.01266688791445393,
+    "best_useful_zero_miss_59_coverage": 0.15454545454545454,
+    "best_useful_zero_miss_59_decided_positive_patients": 65,
+    "best_useful_zero_miss_59_high": 0.6554050430736857,
+    "best_useful_zero_miss_59_low": 0.2995880110412063,
+    "best_useful_zero_miss_59_specificity": 0.7,
+    "best_zero_miss_coverage": 1.0,
+    "best_zero_miss_decided_positive_patients": 235,
+    "best_zero_miss_ucb95": 0.01266688791445393,
+    "candidate": "extra_trees_depth6",
+    "development_boundary": "DRTiD is inspected and cannot be reused as final untouched certification after this search.",
+    "test_split": "drtid_testing_inspected_after_external_failure",
+    "train_split": "drtid_training"
+  },
+  "boundary": "Development after external failure; not a clinical certificate.",
+  "next_gate": "If recovery artifact exists, run it once on a different untouched cohort such as mBRSET. If no useful zero-miss mode exists, fine-tune the encoder rather than changing thresholds.",
+  "predictions": "results/drtid_recovery_model_search/candidate_predictions.csv",
+  "recovery_artifact": "models/active_retina_rc_drtid_recovery_candidate.joblib",
+  "status": "DRTID_RECOVERY_SEARCH_COMPLETE",
+  "table": "results/drtid_recovery_model_search/candidate_table.csv",
+  "test_patients": 550,
+  "test_positive_patients": 235,
+  "train_patients": 1000
+}

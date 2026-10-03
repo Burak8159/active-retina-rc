@@ -74,6 +74,47 @@ the already-inspected DRTiD test split. Positive-only referral modes can avoid
 misses, but they are not a useful autonomous screening product because they do
 not safely clear nonreferable patients.
 
+## Recovery Model Search
+
+Output:
+
+`results/drtid_recovery_model_search/summary.json`
+
+After the external failure, DRTiD was no longer an untouched certification
+cohort. We therefore used the official DRTiD training split as development data
+and the official DRTiD testing split as an inspected recovery benchmark. This
+does not certify a product, but it answers whether the failure is model-layer
+recoverable.
+
+The best useful recovery candidate was:
+
+`extra_trees_depth6`
+
+Official train-to-test recovery benchmark:
+
+- Test IDs: 550
+- Test positive IDs: 235
+- AUROC: 0.794
+- Average precision: 0.776
+- Useful zero-miss operating mode: 65 decided positive IDs, 0 misses
+- One-sided 95% missed-risk upper bound in that mode: below 5% by finite-sample arithmetic
+- Decided-negative specificity in that mode: 70.0%
+- Patient coverage in that mode: 15.5%
+
+This is a meaningful recovery signal: the DRTiD failure is not hopeless, but
+the product-grade autonomous mode is narrow and must be tested on a different
+untouched cohort. The recovery artifact is:
+
+`models/active_retina_rc_drtid_recovery_candidate.joblib`
+
+Its metadata explicitly marks it as:
+
+`RECOVERY_CANDIDATE_NOT_UNTOUCHED_CERTIFIED`
+
+The correct next step is a single no-repair run of this recovery candidate on a
+different untouched paired-view cohort, with mBRSET still the best near-term
+route.
+
 ## Consequence
 
 DRTiD substantially strengthens the paper because it gives a real external
@@ -85,5 +126,4 @@ Current decision:
 
 `NO_GO_AUTONOMOUS_DIAGNOSIS_ON_DRTID`
 
-`CONTINUE_MODEL_UPGRADE_AND_MBRSET_CERTIFICATION`
-
+`RECOVERY_CANDIDATE_READY_FOR_DIFFERENT_UNTOUCHED_COHORT`

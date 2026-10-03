@@ -2,7 +2,7 @@
   "analysis_api_status": "VERIFIED_LOCAL_API",
   "arxiv_status": "GO_AS_TRANSPARENT_REPRODUCIBLE_BENCHMARK_PREPRINT",
   "autonomous_candidate_status": "CANDIDATE_MODE_IDENTIFIED_NOT_CERTIFIED",
-  "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_DRTID_FAILED_MBRSET_OR_STRONGER_MODEL_REQUIRED",
+  "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_RECOVERY_CANDIDATE_NEEDS_DIFFERENT_UNTOUCHED_CERTIFICATION",
   "best_development_autonomous_candidate": {
     "candidate": "logistic_c025_balanced",
     "certified_posthoc": false,
@@ -94,7 +94,13 @@
     "results/drtid_untouched_certification/certification_predictions.csv",
     "results/drtid_external_score_diagnostics.json",
     "results/drtid_domain_adaptation_recovery_diagnostic.json",
-    "docs/drtid_external_certification_report.md"
+    "docs/drtid_external_certification_report.md",
+    "src/active_retina/drtid_recovery_model_search.py",
+    "results/drtid_recovery_model_search/summary.json",
+    "results/drtid_recovery_model_search/candidate_table.csv",
+    "results/drtid_recovery_model_search/candidate_predictions.csv",
+    "models/active_retina_rc_drtid_recovery_candidate.joblib",
+    "models/active_retina_rc_drtid_recovery_candidate.metadata.json"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -136,6 +142,36 @@
     "runner": "src/active_retina/prepare_drtid_for_untouched_review.py",
     "smoke_test": "Passed: official-like tiny DRTiD folder prepared manifest and failed closed for too few positives.",
     "status": "PARALLEL_ACCESS_ROUTE_READY"
+  },
+  "drtid_recovery_model_search_result": {
+    "artifact": "models/active_retina_rc_drtid_recovery_candidate.joblib",
+    "best_candidate": {
+      "auroc": 0.7935292131036813,
+      "average_precision": 0.7761834702753595,
+      "balanced_accuracy_at_0_5": 0.7121918270854442,
+      "best_certified_coverage": 1.0,
+      "best_certified_misses": 0,
+      "best_certified_ucb95": 0.01266688791445393,
+      "best_useful_zero_miss_59_coverage": 0.15454545454545454,
+      "best_useful_zero_miss_59_decided_positive_patients": 65,
+      "best_useful_zero_miss_59_high": 0.6554050430736857,
+      "best_useful_zero_miss_59_low": 0.2995880110412063,
+      "best_useful_zero_miss_59_specificity": 0.7,
+      "best_zero_miss_coverage": 1.0,
+      "best_zero_miss_decided_positive_patients": 235,
+      "best_zero_miss_ucb95": 0.01266688791445393,
+      "candidate": "extra_trees_depth6",
+      "development_boundary": "DRTiD is inspected and cannot be reused as final untouched certification after this search.",
+      "test_split": "drtid_testing_inspected_after_external_failure",
+      "train_split": "drtid_training"
+    },
+    "boundary": "Selected after inspecting DRTiD test results; must be certified on a different untouched cohort.",
+    "candidate_table": "results/drtid_recovery_model_search/candidate_table.csv",
+    "interpretation": "DRTiD external failure is partially recoverable after using DRTiD as inspected development evidence; final autonomous claim now requires a different untouched cohort.",
+    "metadata": "models/active_retina_rc_drtid_recovery_candidate.metadata.json",
+    "predictions": "results/drtid_recovery_model_search/candidate_predictions.csv",
+    "status": "RECOVERY_CANDIDATE_NOT_UNTOUCHED_CERTIFIED",
+    "summary": "results/drtid_recovery_model_search/summary.json"
   },
   "expanded_cohort_development_result": {
     "best_balanced_candidate": {
@@ -198,8 +234,8 @@
   },
   "go_claim": [
     "GO for clinician-reviewed computational product: frozen model artifact, local station/API, reports, hashes, audit logs, and fail-closed gateway are present.",
-    "GO for a stronger IEEE/arXiv computational-system paper with external DRTiD failure evidence and mBRSET certification route.",
-    "NO-GO for autonomous diagnosis on DRTiD: frozen candidate missed 118 decided positive IDs; stronger model and/or mBRSET certification required."
+    "GO for a stronger IEEE/arXiv computational-system paper with external DRTiD failure evidence and DRTiD recovery analysis.",
+    "NO-GO for autonomous diagnosis today: the original frozen candidate failed DRTiD, and the recovery candidate was selected after DRTiD inspection, so it requires a different untouched certification cohort such as mBRSET."
   ],
   "ieee_status": "CONDITIONAL_GO_REQUIRES_STRONGER_DEEPDRID_ONLY_RISK_CONTROL",
   "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_EVALUATED",
@@ -239,7 +275,7 @@
       "validation_eyes": 78
     }
   ],
-  "status": "GO_DEEPDRID_ARXIV_BENCHMARK_CONDITIONAL_IEEE",
+  "status": "GO_COMPUTATIONAL_SYSTEM_PAPER_NO_GO_AUTONOMOUS_UNTIL_DIFFERENT_UNTOUCHED_CERTIFICATION",
   "untouched_certification_guardrail": {
     "attestation_template": "configs/untouched_attestation_template.json",
     "online_validation_smoke": "results/online_cohort_untouched_validation.json",
