@@ -2,7 +2,7 @@
   "analysis_api_status": "VERIFIED_LOCAL_API",
   "arxiv_status": "GO_AS_TRANSPARENT_REPRODUCIBLE_BENCHMARK_PREPRINT",
   "autonomous_candidate_status": "CANDIDATE_MODE_IDENTIFIED_NOT_CERTIFIED",
-  "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_INSUFFICIENT_FINITE_SAMPLE_CERTIFICATE",
+  "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_UNTOUCHED_CERTIFICATION_STILL_REQUIRED",
   "best_development_autonomous_candidate": {
     "candidate": "logistic_c025_balanced",
     "certified_posthoc": false,
@@ -61,7 +61,10 @@
     "results/model_upgrade_harness_summary.json",
     "results/model_upgrade_harness_table.csv",
     "results/model_upgrade_harness_predictions.csv",
-    "results/deepdrid_online_resnet50_features.npz"
+    "results/deepdrid_online_resnet50_features.npz",
+    "src/active_retina/expanded_cohort_development_analysis.py",
+    "results/expanded_cohort_development_summary.json",
+    "results/expanded_cohort_development_table.csv"
   ],
   "conditional_ieee_blockers": [
     "DeepDRiD suffix-to-anatomy mapping is not officially resolved in reviewed public metadata.",
@@ -70,6 +73,23 @@
     "The conservative acquisition policy trades lower observed missed referable DR for lower coverage, higher imaging, and higher deferral versus confidence triage."
   ],
   "core_hypothesis": "Acquisition must improve the risk-coverage-cost frontier over confidence triage on independent patient-disjoint data.",
+  "expanded_cohort_development_result": {
+    "best_balanced_candidate": {
+      "certifies_5_percent_95_confidence_if_prospective": true,
+      "coverage_patients": 0.6129032258064516,
+      "decided_positive_patients": 181,
+      "high": 0.9,
+      "low": 0.00025252211213228293,
+      "minimum_specificity": 0.8,
+      "misses": 0,
+      "patient_missed_risk_ucb_95": 0.016414791655192464,
+      "specificity_decided_negative_patients": 0.8017241379310345
+    },
+    "boundary": "Uses inspected/development predictions; cannot be called an untouched autonomous certificate.",
+    "combined_patients": 496,
+    "combined_positive_patients": 247
+  },
+  "expanded_cohort_development_status": "SAMPLE_SIZE_MATH_CLEARS_IN_DEVELOPMENT_NOT_CERTIFICATION",
   "go_claim": [
     "The paper is a GO as a reproducible DeepDRiD-only benchmark and methods preprint with a working clinician-reviewed station and quantified autonomous-certification gap.",
     "A development-only autonomous candidate has been identified, but it is not a certified autonomous diagnostic product until a frozen artifact achieves zero misses on an untouched cohort with at least 59 positive patients, preferably 80-120."

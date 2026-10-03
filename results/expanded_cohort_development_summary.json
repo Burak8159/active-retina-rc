@@ -1,0 +1,96 @@
+{
+  "best_zero_miss_by_specificity": [
+    {
+      "certifies_5_percent_95_confidence_if_prospective": true,
+      "coverage_patients": 0.8326612903225806,
+      "decided_negative_patients": 172,
+      "decided_positive_patients": 234,
+      "false_positive_patients": 86,
+      "high": 0.04729204590755577,
+      "low": 0.00025252211213228293,
+      "minimum_specificity": 0.5,
+      "misses": 0,
+      "n_patients": 496,
+      "negative_patients": 249,
+      "patient_missed_risk": 0.0,
+      "patient_missed_risk_ucb_95": 0.012720674150193349,
+      "positive_patients": 247,
+      "specificity_decided_negative_patients": 0.5
+    },
+    {
+      "certifies_5_percent_95_confidence_if_prospective": true,
+      "coverage_patients": 0.7016129032258065,
+      "decided_negative_patients": 134,
+      "decided_positive_patients": 208,
+      "false_positive_patients": 43,
+      "high": 0.5772100344300274,
+      "low": 0.00025252211213228293,
+      "minimum_specificity": 0.67,
+      "misses": 0,
+      "n_patients": 496,
+      "negative_patients": 249,
+      "patient_missed_risk": 0.0,
+      "patient_missed_risk_ucb_95": 0.01429933829614204,
+      "positive_patients": 247,
+      "specificity_decided_negative_patients": 0.6791044776119404
+    },
+    {
+      "certifies_5_percent_95_confidence_if_prospective": true,
+      "coverage_patients": 0.6129032258064516,
+      "decided_negative_patients": 116,
+      "decided_positive_patients": 181,
+      "false_positive_patients": 23,
+      "high": 0.9,
+      "low": 0.00025252211213228293,
+      "minimum_specificity": 0.8,
+      "misses": 0,
+      "n_patients": 496,
+      "negative_patients": 249,
+      "patient_missed_risk": 0.0,
+      "patient_missed_risk_ucb_95": 0.016414791655192464,
+      "positive_patients": 247,
+      "specificity_decided_negative_patients": 0.8017241379310345
+    },
+    {
+      "certifies_5_percent_95_confidence_if_prospective": true,
+      "coverage_patients": 0.4717741935483871,
+      "decided_negative_patients": 103,
+      "decided_positive_patients": 129,
+      "false_positive_patients": 10,
+      "high": 0.9918384552001953,
+      "low": 0.00025252211213228293,
+      "minimum_specificity": 0.9,
+      "misses": 0,
+      "n_patients": 496,
+      "negative_patients": 249,
+      "patient_missed_risk": 0.0,
+      "patient_missed_risk_ucb_95": 0.022955158445512647,
+      "positive_patients": 247,
+      "specificity_decided_negative_patients": 0.9029126213592233
+    }
+  ],
+  "interpretation": "If a row has certifies_5_percent_95_confidence_if_prospective=true, the sample-size math is satisfied on this expanded development pool, but a real claim still requires freezing the artifact and repeating once on an untouched cohort.",
+  "sources": {
+    "combined": {
+      "eyes": 992,
+      "patients": 496,
+      "positive_patients": 247,
+      "referable_eyes": 430
+    },
+    "deepdrid_full_cv_crossfit": {
+      "eyes": 792,
+      "patients": 396,
+      "positive_patients": 199,
+      "referable_eyes": 348
+    },
+    "deepdrid_online_inspected_candidate": {
+      "eyes": 200,
+      "patients": 100,
+      "positive_patients": 48,
+      "referable_eyes": 82
+    }
+  },
+  "status": "EXPANDED_DEVELOPMENT_COHORT_ANALYZED_NOT_CERTIFICATION",
+  "table": "results/expanded_cohort_development_table.csv",
+  "warning": "This combines cross-validated development predictions and inspected online predictions. It increases evidence size for stress testing only; it is not an untouched product certificate."
+}

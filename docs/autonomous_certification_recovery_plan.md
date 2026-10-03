@@ -42,6 +42,38 @@ space is not dead. The immediate ML task is to freeze the best candidate
 operating mode, then run it once on an untouched cohort large enough to make the
 certificate possible.
 
+## Expanded Local Cohort Stress Test
+
+To answer whether the obstacle is only sample size, the project now also
+combines every locally available labeled DeepDRiD prediction source:
+
+- DeepDRiD full cross-validation predictions: 396 patients, 199 positive
+  patients.
+- DeepDRiD online candidate predictions: 100 patients, 48 positive patients.
+- Combined development pool: 496 patients, 247 positive patients.
+
+This is not an untouched certification set because the DeepDRiD development
+data and online cohort have already influenced model selection. It is a
+stress-test pool.
+
+Result:
+
+- At minimum 50% decided-negative specificity: 234 decided positive patients,
+  zero misses, 95% upper missed-risk bound `1.27%`.
+- At minimum 67% decided-negative specificity: 208 decided positive patients,
+  zero misses, 95% upper missed-risk bound `1.43%`.
+- At minimum 80% decided-negative specificity: 181 decided positive patients,
+  zero misses, 95% upper missed-risk bound `1.64%`.
+- At minimum 90% decided-negative specificity: 129 decided positive patients,
+  zero misses, 95% upper missed-risk bound `2.30%`.
+
+Interpretation:
+
+The expanded local evidence clears the sample-size math in development. The
+remaining autonomous-product requirement is no longer "find enough positives in
+the files we have"; it is "freeze this operating mode and repeat the same test
+once on a genuinely untouched cohort."
+
 ## Route A: Fastest Honest Certification Route
 
 Goal:
@@ -142,9 +174,10 @@ the paper falsifiable, reproducible, and clinically honest.
 
 ## Immediate Next Implementation Tasks
 
-1. Freeze `logistic_c025_balanced` as the next autonomous-candidate artifact,
-   including thresholds for the zero-miss, specificity-constrained operating
-   mode.
+1. Freeze `logistic_c025_balanced` as the next autonomous-candidate artifact.
+   The current best balanced candidate for future validation is the 80%
+   specificity stress-test mode: `low=0.00025252211213228293`,
+   `high=0.9`.
 2. Prepare an untouched-certification import tool for the next cohort.
 3. Require at least 59 positive patients, and preferably 80-120 positive
    patients, before attempting the autonomous certificate.
