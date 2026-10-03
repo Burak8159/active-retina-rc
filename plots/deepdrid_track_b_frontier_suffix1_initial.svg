@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="520" viewBox="0 0 760 520">
+<rect width="100%" height="100%" fill="white"/>
+<text x="380.0" y="25" text-anchor="middle" font-family="Arial" font-size="16">DeepDRiD Track-B acquisition frontier: suffix1_initial</text>
+<line x1="70" y1="460" x2="735" y2="460" stroke="black"/>
+<line x1="70" y1="45" x2="70" y2="460" stroke="black"/>
+<line x1="70.0" y1="460" x2="70.0" y2="465" stroke="black"/><text x="70.0" y="482" text-anchor="middle" font-family="Arial" font-size="11">1.00</text>
+<line x1="65" y1="460.0" x2="70" y2="460.0" stroke="black"/><text x="62" y="464.0" text-anchor="end" font-family="Arial" font-size="11">0.848</text>
+<line x1="203.0" y1="460" x2="203.0" y2="465" stroke="black"/><text x="203.0" y="482" text-anchor="middle" font-family="Arial" font-size="11">1.20</text>
+<line x1="65" y1="377.0" x2="70" y2="377.0" stroke="black"/><text x="62" y="381.0" text-anchor="end" font-family="Arial" font-size="11">0.859</text>
+<line x1="336.0" y1="460" x2="336.0" y2="465" stroke="black"/><text x="336.0" y="482" text-anchor="middle" font-family="Arial" font-size="11">1.40</text>
+<line x1="65" y1="294.0" x2="70" y2="294.0" stroke="black"/><text x="62" y="298.0" text-anchor="end" font-family="Arial" font-size="11">0.870</text>
+<line x1="469.0" y1="460" x2="469.0" y2="465" stroke="black"/><text x="469.0" y="482" text-anchor="middle" font-family="Arial" font-size="11">1.60</text>
+<line x1="65" y1="211.0" x2="70" y2="211.0" stroke="black"/><text x="62" y="215.0" text-anchor="end" font-family="Arial" font-size="11">0.881</text>
+<line x1="602.0" y1="460" x2="602.0" y2="465" stroke="black"/><text x="602.0" y="482" text-anchor="middle" font-family="Arial" font-size="11">1.80</text>
+<line x1="65" y1="128.0" x2="70" y2="128.0" stroke="black"/><text x="62" y="132.0" text-anchor="end" font-family="Arial" font-size="11">0.892</text>
+<line x1="735.0" y1="460" x2="735.0" y2="465" stroke="black"/><text x="735.0" y="482" text-anchor="middle" font-family="Arial" font-size="11">2.00</text>
+<line x1="65" y1="45.0" x2="70" y2="45.0" stroke="black"/><text x="62" y="49.0" text-anchor="end" font-family="Arial" font-size="11">0.904</text>
+<text x="380.0" y="505" text-anchor="middle" font-family="Arial" font-size="13">Mean acquired views</text>
+<text transform="translate(18 260.0) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="13">Referable DR AUROC</text>
+<circle cx="70.0" cy="460.0" r="3" fill="#1b6ca8" opacity="0.85"/>
+<circle cx="565" cy="45" r="4" fill="#1b6ca8"/><text x="575" y="49" font-family="Arial" font-size="11">always_stop</text>
+<circle cx="735.0" cy="97.1" r="3" fill="#c0392b" opacity="0.85"/>
+<circle cx="565" cy="63" r="4" fill="#c0392b"/><text x="575" y="67" font-family="Arial" font-size="11">always_acquire</text>
+<polyline points="103.6,410.6 135.5,387.2 167.4,358.2 202.7,294.8 231.2,274.8 258.1,262.2 294.2,232.5 332.8,213.6 353.0,191.1 402.5,172.5 402.5,172.5 461.3,150.2 487.3,136.4 567.1,64.0 597.3,70.1 635.1,52.5 652.7,45.0 700.6,65.5" fill="none" stroke="#2e7d32" stroke-width="1.4" opacity="0.65"/>
+<circle cx="700.6" cy="65.5" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="652.7" cy="45.0" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="635.1" cy="52.5" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="597.3" cy="70.1" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="567.1" cy="64.0" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="487.3" cy="136.4" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="461.3" cy="150.2" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="402.5" cy="172.5" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="402.5" cy="172.5" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="353.0" cy="191.1" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="332.8" cy="213.6" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="294.2" cy="232.5" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="258.1" cy="262.2" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="231.2" cy="274.8" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="202.7" cy="294.8" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="167.4" cy="358.2" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="135.5" cy="387.2" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="103.6" cy="410.6" r="3" fill="#2e7d32" opacity="0.85"/>
+<circle cx="565" cy="81" r="4" fill="#2e7d32"/><text x="575" y="85" font-family="Arial" font-size="11">trained_value_policy</text>
+<polyline points="84.3,439.1 111.1,445.8 129.6,417.9 149.8,398.1 164.0,388.9 178.3,374.5 192.6,356.6 210.2,341.0 230.4,336.1 241.3,331.1 256.4,298.3 270.7,297.2 290.8,280.4 305.9,264.8 328.6,230.0 363.9,223.5 408.4,210.6" fill="none" stroke="#8e44ad" stroke-width="1.4" opacity="0.65"/>
+<circle cx="408.4" cy="210.6" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="363.9" cy="223.5" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="328.6" cy="230.0" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="305.9" cy="264.8" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="290.8" cy="280.4" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="270.7" cy="297.2" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="256.4" cy="298.3" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="241.3" cy="331.1" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="230.4" cy="336.1" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="210.2" cy="341.0" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="192.6" cy="356.6" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="178.3" cy="374.5" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="164.0" cy="388.9" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="149.8" cy="398.1" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="129.6" cy="417.9" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="111.1" cy="445.8" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="84.3" cy="439.1" r="3" fill="#8e44ad" opacity="0.85"/>
+<circle cx="565" cy="99" r="4" fill="#8e44ad"/><text x="575" y="103" font-family="Arial" font-size="11">entropy_acquire</text>
+<polyline points="78.4,444.6 87.6,443.2 90.2,444.1 98.5,452.6 104.4,452.0 111.1,445.8 118.7,436.2 129.6,417.9 138.0,412.7 153.1,392.0 162.4,386.2 175.8,378.2 187.6,366.5 203.5,348.1 227.0,338.5 242.1,331.2 265.6,300.7 297.5,270.4 338.7,230.4" fill="none" stroke="#e67e22" stroke-width="1.4" opacity="0.65"/>
+<circle cx="338.7" cy="230.4" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="297.5" cy="270.4" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="265.6" cy="300.7" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="242.1" cy="331.2" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="227.0" cy="338.5" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="203.5" cy="348.1" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="187.6" cy="366.5" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="175.8" cy="378.2" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="162.4" cy="386.2" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="153.1" cy="392.0" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="138.0" cy="412.7" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="129.6" cy="417.9" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="118.7" cy="436.2" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="111.1" cy="445.8" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="104.4" cy="452.0" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="98.5" cy="452.6" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="90.2" cy="444.1" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="87.6" cy="443.2" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="78.4" cy="444.6" r="3" fill="#e67e22" opacity="0.85"/>
+<circle cx="565" cy="117" r="4" fill="#e67e22"/><text x="575" y="121" font-family="Arial" font-size="11">uncertainty_acquire</text>
+<polyline points="87.6,443.2 90.2,444.1 98.5,452.6 104.4,452.0 111.1,445.8 118.7,436.2 129.6,417.9 138.0,412.7 153.1,392.0 162.4,386.2 175.8,378.2 187.6,366.5 203.5,348.1 227.0,338.5 242.1,331.2 265.6,300.7 297.5,270.4" fill="none" stroke="#34495e" stroke-width="1.4" opacity="0.65"/>
+<circle cx="297.5" cy="270.4" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="265.6" cy="300.7" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="242.1" cy="331.2" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="227.0" cy="338.5" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="203.5" cy="348.1" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="187.6" cy="366.5" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="175.8" cy="378.2" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="162.4" cy="386.2" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="153.1" cy="392.0" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="138.0" cy="412.7" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="129.6" cy="417.9" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="118.7" cy="436.2" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="111.1" cy="445.8" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="104.4" cy="452.0" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="98.5" cy="452.6" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="90.2" cy="444.1" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="87.6" cy="443.2" r="3" fill="#34495e" opacity="0.85"/>
+<circle cx="565" cy="135" r="4" fill="#34495e"/><text x="575" y="139" font-family="Arial" font-size="11">risk_band_acquire</text>
+</svg>

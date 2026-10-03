@@ -1,0 +1,161 @@
+{
+  "artifacts": {
+    "policy_frontier": "results/deepdrid_track_b_policy_frontier.csv",
+    "source_predictions": "results/deepdrid_full_cv_predictions.csv",
+    "value_rows": "results/deepdrid_track_b_second_view_value.csv"
+  },
+  "backbone_role": "Frozen ResNet-50 ImageNet embeddings are frozen as Track-B diagnostic infrastructure; backbone hunting is no longer the flagship task.",
+  "branches": {
+    "suffix1_initial": {
+      "delta_brier_reduction": {
+        "by_grade": {
+          "0": {
+            "fraction_helped": 0.6193181818181818,
+            "mean_delta": 0.02813829523628174,
+            "n": 352
+          },
+          "1": {
+            "fraction_helped": 0.5978260869565217,
+            "mean_delta": 0.05222916719556111,
+            "n": 92
+          },
+          "2": {
+            "fraction_helped": 0.5403726708074534,
+            "mean_delta": 0.041823848963831206,
+            "n": 161
+          },
+          "3": {
+            "fraction_helped": 0.6170212765957447,
+            "mean_delta": 0.05917531258183071,
+            "n": 141
+          },
+          "4": {
+            "fraction_helped": 0.5434782608695652,
+            "mean_delta": 0.02460585460099407,
+            "n": 46
+          }
+        },
+        "fraction_near_zero_abs_lt_0_01": 0.5997474747474747,
+        "fraction_negative": 0.4015151515151515,
+        "fraction_positive": 0.5959595959595959,
+        "mean": 0.03903913052275691,
+        "median": 6.426916122928068e-07,
+        "p10": -0.03746665804227101,
+        "p90": 0.274179107873071
+      },
+      "first_view": {
+        "auprc": {
+          "ci_high": 0.8697409008109457,
+          "ci_low": 0.7844211725726776,
+          "observed": 0.8280434714220919
+        },
+        "auroc": {
+          "ci_high": 0.8784188329913593,
+          "ci_low": 0.8195670179634306,
+          "observed": 0.8483742363052708
+        },
+        "brier": {
+          "ci_high": 0.20433320637805016,
+          "ci_low": 0.1542567747009032,
+          "observed": 0.18017081695333373
+        }
+      },
+      "n_validation_eyes": 792,
+      "two_view": {
+        "auprc": {
+          "ci_high": 0.9158297273537624,
+          "ci_low": 0.8487314094092179,
+          "observed": 0.8841252086118714
+        },
+        "auroc": {
+          "ci_high": 0.9285455033087168,
+          "ci_low": 0.8807497963585015,
+          "observed": 0.9046675986331157
+        },
+        "brier": {
+          "ci_high": 0.16345429972883468,
+          "ci_low": 0.1184675709491497,
+          "observed": 0.1411316864305768
+        }
+      }
+    },
+    "suffix2_initial": {
+      "delta_brier_reduction": {
+        "by_grade": {
+          "0": {
+            "fraction_helped": 0.5625,
+            "mean_delta": 0.013022812071151624,
+            "n": 352
+          },
+          "1": {
+            "fraction_helped": 0.4891304347826087,
+            "mean_delta": -0.017162185403659148,
+            "n": 92
+          },
+          "2": {
+            "fraction_helped": 0.5093167701863354,
+            "mean_delta": 0.01648267794483319,
+            "n": 161
+          },
+          "3": {
+            "fraction_helped": 0.5531914893617021,
+            "mean_delta": 0.029734667616963414,
+            "n": 141
+          },
+          "4": {
+            "fraction_helped": 0.45652173913043476,
+            "mean_delta": 0.05984169776814719,
+            "n": 46
+          }
+        },
+        "fraction_near_zero_abs_lt_0_01": 0.6275252525252525,
+        "fraction_negative": 0.4621212121212121,
+        "fraction_positive": 0.5353535353535354,
+        "mean": 0.015914300722668542,
+        "median": 7.493420879376448e-09,
+        "p10": -0.1068000101457109,
+        "p90": 0.19580386485074178
+      },
+      "first_view": {
+        "auprc": {
+          "ci_high": 0.9023284913653036,
+          "ci_low": 0.8292501876820514,
+          "observed": 0.8680629876791919
+        },
+        "auroc": {
+          "ci_high": 0.9137753784835284,
+          "ci_low": 0.8591669187577667,
+          "observed": 0.8874326913120016
+        },
+        "brier": {
+          "ci_high": 0.18168955928194822,
+          "ci_low": 0.132968534756981,
+          "observed": 0.15704598715324536
+        }
+      },
+      "n_validation_eyes": 792,
+      "two_view": {
+        "auprc": {
+          "ci_high": 0.9158297273537624,
+          "ci_low": 0.8487314094092179,
+          "observed": 0.8841252086118714
+        },
+        "auroc": {
+          "ci_high": 0.9285455033087168,
+          "ci_low": 0.8807497963585015,
+          "observed": 0.9046675986331157
+        },
+        "brier": {
+          "ci_high": 0.16345429972883468,
+          "ci_low": 0.1184675709491497,
+          "observed": 0.1411316864305768
+        }
+      }
+    }
+  },
+  "mapping_branches": {
+    "suffix1_initial": "swapped sensitivity mapping: suffix_1=macula, suffix_2=optic_disc; first view is macula",
+    "suffix2_initial": "current visual-audit mapping: suffix_1=optic_disc, suffix_2=macula; first view is macula"
+  },
+  "status": "DEEPDRID_TRACK_B_RESCUE_COMPLETE"
+}
