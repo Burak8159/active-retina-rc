@@ -63,4 +63,10 @@
 <text x="203.0" y="420.9" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">specificity300_resnet_dino</text>
 <circle cx="165.8" cy="465.2" r="5.5" fill="#2f6f73"/>
 <text x="173.8" y="457.2" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">specificity300_three_encoder_ensemble</text>
+<circle cx="212.5" cy="451.9" r="5.5" fill="#2f6f73"/>
+<text x="220.5" y="443.9" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">specificity300_dino_mlp</text>
+<circle cx="255.4" cy="440.1" r="5.5" fill="#2f6f73"/>
+<text x="263.4" y="432.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">specificity300_ensemble_mlp</text>
+<circle cx="158.0" cy="465.2" r="5.5" fill="#2f6f73"/>
+<text x="166.0" y="457.2" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">specificity300_ensemble_mlp_conservative</text>
 </svg>

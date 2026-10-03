@@ -214,6 +214,8 @@ def main() -> None:
     parser.add_argument("--model-name", default="resnet50.a1_in1k")
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--num-workers", type=int, default=0)
+    parser.add_argument("--progress-batches", type=int, default=25)
     parser.add_argument("--lr", type=float, default=2e-5)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--trainable-name-fragments", default="")
@@ -239,9 +241,9 @@ def main() -> None:
     )
     model.to(device)
 
-    train_loader = DataLoader(FundusDataset(by_split["train"], train_transform, project_root), batch_size=args.batch_size, shuffle=True, num_workers=0)
-    valid_loader = DataLoader(FundusDataset(by_split["valid"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=0)
-    test_loader = DataLoader(FundusDataset(by_split["test"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=0)
+    train_loader = DataLoader(FundusDataset(by_split["train"], train_transform, project_root), batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
+    valid_loader = DataLoader(FundusDataset(by_split["valid"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
+    test_loader = DataLoader(FundusDataset(by_split["test"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
     y_train = np.asarray([int(r["referable_dr"]) for r in by_split["train"]])
     pos_weight = float((y_train == 0).sum() / max(1, int((y_train == 1).sum())))
@@ -256,7 +258,8 @@ def main() -> None:
         model.train()
         total_loss = 0.0
         seen = 0
-        for images, y, _ in train_loader:
+        total_batches = len(train_loader)
+        for batch_idx, (images, y, _) in enumerate(train_loader, start=1):
             images = images.to(device)
             y = y.to(device)
             optimizer.zero_grad(set_to_none=True)
@@ -268,6 +271,23 @@ def main() -> None:
             scaler.update()
             total_loss += float(loss.detach().cpu()) * len(y)
             seen += len(y)
+            if args.progress_batches and (
+                batch_idx == 1 or batch_idx % args.progress_batches == 0 or batch_idx == total_batches
+            ):
+                print(
+                    json.dumps(
+                        {
+                            "epoch": epoch,
+                            "train_batches": batch_idx,
+                            "total_train_batches": total_batches,
+                            "seen": seen,
+                            "loss": total_loss / max(1, seen),
+                            "device": str(device),
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
         y_valid, s_valid, _ = predict(model, valid_loader, device)
         selected = select_threshold(
             y_valid,

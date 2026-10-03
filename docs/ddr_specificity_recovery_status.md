@@ -117,6 +117,24 @@ Larger DDR specificity300 check:
   - specificity 8.4%.
 - Conclusion: adding more immediate DDR images improved statistical power and representation metrics, but it still did not recover clinically useful all-case autonomous specificity.
 
+Supervised head and fine-tuning check:
+
+- Larger-slice DINO MLP:
+  - validation specificity 19.2% with zero validation misses,
+  - test specificity 13.3%,
+  - 1 missed test positive.
+- Larger-slice three-encoder MLP:
+  - validation specificity 23.5% with zero validation misses,
+  - test specificity 17.8%,
+  - 2 missed test positives.
+- Conservative three-encoder MLP:
+  - restored zero test misses,
+  - test specificity fell to 7.6%.
+- A ResNet-50 layer4 image fine-tune was instrumented and started on RTX, but aborted at the user's request because the first epochs were refer-all / near-refer-all:
+  - epoch 1 validation specificity 0.0%,
+  - epoch 2 validation specificity 0.2%.
+- Conclusion: feature-head learning can raise specificity only by allowing test misses; conservative zero-miss operation collapses back toward refer-all. Naive image fine-tuning did not show a promising early trend.
+
 Partial expanded-train shortcut:
 
 - Used extra DDR train images that had downloaded before the full 100-per-grade run completed.

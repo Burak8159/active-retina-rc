@@ -23,6 +23,9 @@ DEFAULT_RUNS = {
     "specificity300_convnext_tiny": "results/ddr_open_autonomy_specificity300_convnext_tiny/summary.json",
     "specificity300_resnet_dino": "results/ddr_open_autonomy_specificity300_resnet_dino/summary.json",
     "specificity300_three_encoder_ensemble": "results/ddr_open_autonomy_specificity300_ensemble/summary.json",
+    "specificity300_dino_mlp": "results/ddr_feature_mlp_specificity300_dino_h512_d50/summary.json",
+    "specificity300_ensemble_mlp": "results/ddr_feature_mlp_specificity300_ensemble_h512_d50/summary.json",
+    "specificity300_ensemble_mlp_conservative": "results/ddr_feature_mlp_specificity300_ensemble_h512_d50_conservative/summary.json",
 }
 
 
