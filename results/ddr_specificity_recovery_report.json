@@ -1,0 +1,82 @@
+{
+  "best_run": {
+    "candidate": "extra_trees_depth8",
+    "missed_positive": 0,
+    "precision_referable_action": 0.6779661016949152,
+    "referable_action_rate": 0.9833333333333333,
+    "run": "results/ddr_open_autonomy_cert_subset/summary.json",
+    "specificity": 0.05,
+    "specificity_recovery_decision": "NO_GO_SPECIFICITY",
+    "status": "GO_OPEN_DDR_SINGLE_IMAGE_AUTONOMOUS_REFERABLE_CERTIFICATE",
+    "test_auroc": 0.8488888888888888,
+    "test_average_precision": 0.9221389427217421,
+    "test_positive": 120,
+    "threshold": 0.3797156428751645,
+    "ucb95": 0.024655401055656376
+  },
+  "interpretation": "Fuller single-image autonomy requires both the finite-sample zero-miss certificate and clinically useful specificity. A zero-miss refer-all solution remains a safety stress-test pass but fails product usefulness.",
+  "min_specificity_target": 0.7,
+  "runs": [
+    {
+      "candidate": "extra_trees_depth8",
+      "missed_positive": 0,
+      "precision_referable_action": 0.6779661016949152,
+      "referable_action_rate": 0.9833333333333333,
+      "run": "results/ddr_open_autonomy_cert_subset/summary.json",
+      "specificity": 0.05,
+      "specificity_recovery_decision": "NO_GO_SPECIFICITY",
+      "status": "GO_OPEN_DDR_SINGLE_IMAGE_AUTONOMOUS_REFERABLE_CERTIFICATE",
+      "test_auroc": 0.8488888888888888,
+      "test_average_precision": 0.9221389427217421,
+      "test_positive": 120,
+      "threshold": 0.3797156428751645,
+      "ucb95": 0.024655401055656376
+    },
+    {
+      "candidate": "logistic_c10_balanced",
+      "missed_positive": 4,
+      "precision_referable_action": 0.7073170731707317,
+      "referable_action_rate": 0.9111111111111111,
+      "run": "results/ddr_open_autonomy_specificity_grid/summary.json",
+      "specificity": 0.2,
+      "specificity_recovery_decision": "NO_GO_MISSED_RISK",
+      "status": "NO_GO_OPEN_DDR_SINGLE_IMAGE_AUTONOMY",
+      "test_auroc": 0.7596527777777778,
+      "test_average_precision": 0.869614467591542,
+      "test_positive": 120,
+      "threshold": 0.018061967566609383,
+      "ucb95": 0.07716943865883791
+    },
+    {
+      "candidate": "logistic_c10_balanced",
+      "missed_positive": 4,
+      "precision_referable_action": 0.703030303030303,
+      "referable_action_rate": 0.9166666666666666,
+      "run": "results/ddr_open_autonomy_robust_grid/summary.json",
+      "specificity": 0.18333333333333332,
+      "specificity_recovery_decision": "NO_GO_MISSED_RISK",
+      "status": "NO_GO_OPEN_DDR_SINGLE_IMAGE_AUTONOMY",
+      "test_auroc": 0.7596527777777778,
+      "test_average_precision": 0.869614467591542,
+      "test_positive": 120,
+      "threshold": 0.016255770809948444,
+      "ucb95": 0.07716943865883791
+    },
+    {
+      "candidate": "logistic_c01_balanced",
+      "missed_positive": 0,
+      "precision_referable_action": 0.6703910614525139,
+      "referable_action_rate": 0.9944444444444445,
+      "run": "results/ddr_open_autonomy_hybrid_expanded_train/summary.json",
+      "specificity": 0.016666666666666666,
+      "specificity_recovery_decision": "NO_GO_SPECIFICITY",
+      "status": "GO_OPEN_DDR_SINGLE_IMAGE_AUTONOMOUS_REFERABLE_CERTIFICATE",
+      "test_auroc": 0.38333333333333336,
+      "test_average_precision": 0.6200484090912659,
+      "test_positive": 120,
+      "threshold": 6.160839254119171e-13,
+      "ucb95": 0.024655401055656376
+    }
+  ],
+  "status": "NO_GO_SPECIFICITY"
+}

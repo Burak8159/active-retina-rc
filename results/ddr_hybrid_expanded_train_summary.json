@@ -1,0 +1,21 @@
+{
+  "boundary": "Expanded train uses whatever DDR images have already downloaded; validation and test are fixed from the 30-per-grade subset.",
+  "grade_counts": {
+    "0": 160,
+    "1": 160,
+    "2": 96,
+    "3": 60,
+    "4": 60,
+    "5": 60
+  },
+  "n_positive": 276,
+  "n_rows": 596,
+  "n_train": 236,
+  "n_valid_test": 360,
+  "split_counts": {
+    "ddr_test": 180,
+    "ddr_train": 236,
+    "ddr_valid": 180
+  },
+  "status": "DDR_HYBRID_MANIFEST_READY"
+}

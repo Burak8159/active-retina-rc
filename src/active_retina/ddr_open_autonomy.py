@@ -18,7 +18,7 @@ from typing import Any
 
 import joblib
 import numpy as np
-from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesClassifier, HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, balanced_accuracy_score, roc_auc_score
 from sklearn.pipeline import make_pipeline
@@ -72,23 +72,83 @@ def candidate_models(seed: int) -> dict[str, Any]:
             StandardScaler(),
             LogisticRegression(C=1.0, class_weight="balanced", max_iter=4000, random_state=seed + 1),
         ),
+        "logistic_c10_balanced": make_pipeline(
+            StandardScaler(),
+            LogisticRegression(C=10.0, class_weight="balanced", max_iter=4000, random_state=seed + 2),
+        ),
         "extra_trees_depth8": ExtraTreesClassifier(
             n_estimators=800,
             max_depth=8,
             min_samples_leaf=3,
             class_weight="balanced",
-            random_state=seed + 2,
+            random_state=seed + 3,
             n_jobs=-1,
+        ),
+        "extra_trees_depth16": ExtraTreesClassifier(
+            n_estimators=1200,
+            max_depth=16,
+            min_samples_leaf=2,
+            class_weight="balanced",
+            random_state=seed + 4,
+            n_jobs=-1,
+        ),
+        "extra_trees_unlimited": ExtraTreesClassifier(
+            n_estimators=1200,
+            max_depth=None,
+            min_samples_leaf=2,
+            class_weight="balanced",
+            random_state=seed + 5,
+            n_jobs=-1,
+        ),
+        "random_forest_depth16": RandomForestClassifier(
+            n_estimators=800,
+            max_depth=16,
+            min_samples_leaf=2,
+            class_weight="balanced_subsample",
+            random_state=seed + 6,
+            n_jobs=-1,
+        ),
+        "hist_gradient_boosting_l2": HistGradientBoostingClassifier(
+            learning_rate=0.04,
+            max_iter=250,
+            l2_regularization=1.0,
+            random_state=seed + 7,
         ),
     }
 
 
-def select_threshold(y: np.ndarray, scores: np.ndarray, min_positive: int) -> dict[str, Any] | None:
+def threshold_candidates(
+    scores: np.ndarray,
+    y: np.ndarray,
+    safety_factors: list[float],
+    include_observed: bool,
+) -> list[tuple[str, float]]:
+    candidates = []
+    if include_observed:
+        candidates.extend((f"observed_{i}", float(x)) for i, x in enumerate(sorted(set(float(v) for v in scores))))
+    positive_scores = scores[y == 1]
+    if len(positive_scores):
+        floor = float(np.min(positive_scores))
+        for factor in safety_factors:
+            candidates.append((f"positive_floor_x{factor:g}", max(0.0, floor * factor)))
+    dedup: dict[float, str] = {}
+    for name, threshold in candidates:
+        dedup.setdefault(threshold, name)
+    return [(name, threshold) for threshold, name in sorted(dedup.items())]
+
+
+def select_threshold(
+    y: np.ndarray,
+    scores: np.ndarray,
+    min_positive: int,
+    safety_factors: list[float],
+    include_observed: bool,
+) -> dict[str, Any] | None:
     # Autonomous diagnosis in this immediate-open mode is intentionally one-sided:
     # scores >= threshold are autonomously referable; all other cases defer.
     # This avoids unsafe autonomous nonreferable clearance unless separately certified.
     best: dict[str, Any] | None = None
-    for threshold in sorted(set(float(x) for x in scores)):
+    for threshold_name, threshold in threshold_candidates(scores, y, safety_factors, include_observed):
         decided = scores >= threshold
         decided_pos = int(((y == 1) & decided).sum())
         misses = int(((y == 1) & (~decided)).sum())
@@ -99,6 +159,7 @@ def select_threshold(y: np.ndarray, scores: np.ndarray, min_positive: int) -> di
         ucb = binomial_upper(misses, decided_pos, 0.05)
         row = {
             "threshold": threshold,
+            "threshold_name": threshold_name,
             "decided_positive": decided_pos,
             "misses": misses,
             "false_positive": false_pos,
@@ -110,9 +171,10 @@ def select_threshold(y: np.ndarray, scores: np.ndarray, min_positive: int) -> di
         }
         # Prefer the safest useful operating point: keep zero misses, then
         # maximize nonreferable cases spared from autonomous referral.
-        if best is None or (row["specificity"], row["decided_positive"]) > (
+        if best is None or (row["specificity"], row["decided_positive"], -row["referable_action_rate"]) > (
             best["specificity"],
             best["decided_positive"],
+            -best["referable_action_rate"],
         ):
             best = row
     return best
@@ -154,10 +216,21 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--seed", type=int, default=20261003)
     parser.add_argument("--min-validation-positive", type=int, default=59)
+    parser.add_argument(
+        "--threshold-safety-factors",
+        default="1.0,0.9,0.75,0.5,0.25",
+        help="Multipliers of the weakest validation-positive score to consider as robust lower thresholds.",
+    )
+    parser.add_argument(
+        "--include-observed-thresholds",
+        action="store_true",
+        help="Diagnostic only: also search all observed validation scores, which may overfit the validation edge.",
+    )
     args = parser.parse_args()
 
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
+    safety_factors = [float(x) for x in args.threshold_safety_factors.split(",") if x.strip()]
     rows = read_manifest(Path(args.manifest))
     features = extract_features(rows, Path(args.feature_cache), args.model_name, True, args.batch_size, args.device)
     by_split = {
@@ -174,7 +247,13 @@ def main() -> None:
         model.fit(x_train, y_train)
         valid_scores = model.predict_proba(x_valid)[:, 1]
         test_scores = model.predict_proba(x_test)[:, 1]
-        selected = select_threshold(y_valid, valid_scores, args.min_validation_positive)
+        selected = select_threshold(
+            y_valid,
+            valid_scores,
+            args.min_validation_positive,
+            safety_factors,
+            args.include_observed_thresholds,
+        )
         valid_auc = roc_auc_score(y_valid, valid_scores) if len(set(y_valid)) == 2 else float("nan")
         test_auc = roc_auc_score(y_test, test_scores) if len(set(y_test)) == 2 else float("nan")
         valid_ap = average_precision_score(y_valid, valid_scores) if len(set(y_valid)) == 2 else float("nan")
@@ -196,12 +275,19 @@ def main() -> None:
             "test_average_precision": test_ap,
             "test_balanced_accuracy_at_0_5": test_bacc,
             "selected_threshold": selected["threshold"] if selected else "",
+            "selected_threshold_name": selected["threshold_name"] if selected else "",
             "valid_decided_positive": valid_cert.get("decided_positive", ""),
             "valid_missed_positive": valid_cert.get("missed_positive", ""),
             "valid_ucb95": valid_cert.get("missed_risk_ucb95", ""),
+            "valid_specificity": valid_cert.get("specificity", ""),
+            "valid_precision_referable_action": valid_cert.get("precision_referable_action", ""),
+            "valid_referable_action_rate": valid_cert.get("referable_action_rate", ""),
             "test_decided_positive": test_cert.get("decided_positive", ""),
             "test_missed_positive": test_cert.get("missed_positive", ""),
             "test_ucb95": test_cert.get("missed_risk_ucb95", ""),
+            "test_specificity": test_cert.get("specificity", ""),
+            "test_precision_referable_action": test_cert.get("precision_referable_action", ""),
+            "test_referable_action_rate": test_cert.get("referable_action_rate", ""),
             "test_certifies": test_cert.get("certifies_5_percent_95_confidence", False),
             "boundary": "Immediate-open DDR single-image autonomous referable action; not paired-view acquisition certification.",
         }
@@ -216,14 +302,18 @@ def main() -> None:
             "test_cert": test_cert,
             "row": row,
         }
+        # Candidate selection is validation-only. Test metrics are recorded but
+        # must not decide which artifact is frozen.
         if best_payload is None or (
-            bool(row["test_certifies"]),
-            float(row["test_decided_positive"] or -1),
-            float(row["test_auroc"]),
+            bool(valid_cert.get("certifies_5_percent_95_confidence", False)),
+            float(valid_cert.get("specificity", -1)),
+            float(valid_cert.get("precision_referable_action", -1)),
+            float(valid_ap),
         ) > (
-            bool(best_payload["row"]["test_certifies"]),
-            float(best_payload["row"]["test_decided_positive"] or -1),
-            float(best_payload["row"]["test_auroc"]),
+            bool(best_payload["valid_cert"].get("certifies_5_percent_95_confidence", False)),
+            float(best_payload["valid_cert"].get("specificity", -1)),
+            float(best_payload["valid_cert"].get("precision_referable_action", -1)),
+            float(best_payload["row"]["valid_average_precision"]),
         ):
             best_payload = payload
 
