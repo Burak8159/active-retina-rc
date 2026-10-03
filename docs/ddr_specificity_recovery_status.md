@@ -23,21 +23,47 @@ The DDR autonomy runner now separates three concepts:
 
 ## Current Results
 
-Best safety-preserving run:
+Best safety-preserving run after the larger DDR subset and stronger encoders:
 
-- Run: `results/ddr_open_autonomy_cert_subset/summary.json`
-- Candidate: `extra_trees_depth8`
-- Test positives: 120
+- Run: `results/ddr_open_autonomy_specificity100_ensemble/summary.json`
+- Candidate: three-encoder ensemble features with `logistic_c01_balanced`
+- Test positives: 371
 - Missed positives: 0
-- One-sided 95% missed-risk upper bound: 2.47%
-- Specificity: 5.0%
+- One-sided 95% missed-risk upper bound: 0.80%
+- AUROC: 0.889
+- Average precision: 0.941
+- Specificity: 10.5%
 - Decision: `NO_GO_SPECIFICITY`
 
-Regularized logistic grid:
+The larger open-data run used:
 
-- Improved specificity as high as 20.0% in one run.
-- Failed the zero-miss test requirement with 4 missed positives.
-- Decision: `NO_GO_MISSED_RISK`
+- 1,718 DDR images
+- 600 train images
+- 547 validation images
+- 571 test images
+- 371 referable-positive test images
+- 0 missing images
+
+Backbone comparison:
+
+| Encoder/features | Test AUROC | Test AP | Misses | 95% UCB | Specificity | Decision |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| ResNet-50 | 0.849 | 0.915 | 0/371 | 0.80% | 4.0% | `NO_GO_SPECIFICITY` |
+| ConvNeXt-Tiny | 0.861 | 0.923 | 0/371 | 0.80% | 5.0% | `NO_GO_SPECIFICITY` |
+| DINO ViT-B/16 | 0.871 | 0.924 | 0/371 | 0.80% | 8.0% | `NO_GO_SPECIFICITY` |
+| Concatenated ensemble | 0.889 | 0.941 | 0/371 | 0.80% | 10.5% | `NO_GO_SPECIFICITY` |
+
+Post-hoc test-oracle check:
+
+- Even when cheating by selecting the threshold directly on the test scores, the best zero-miss specificity among the current shallow-head candidates was only 11.5%.
+- This means the current feature/head family is the blocker, not just validation threshold selection.
+
+Fine-tuning check:
+
+- A two-epoch ResNet-50 fine-tune on the larger DDR train split completed.
+- It preserved zero misses only by referring every test image.
+- Test specificity was 0.0%.
+- This failed the autonomy target and showed that naive short fine-tuning is worse than the frozen ensemble.
 
 Partial expanded-train shortcut:
 
@@ -49,33 +75,37 @@ Partial expanded-train shortcut:
 
 `NO_GO_SPECIFICITY`
 
-The project now has a real zero-miss open-data safety pass, but not a useful full autonomous diagnostic mode. The next step is not more threshold tuning on the same 540-image subset. The next step is a balanced larger DDR training/validation/test subset or full DDR run.
+The project now has a stronger zero-miss open-data disease-capture certificate, but not a useful full autonomous diagnostic mode. The larger subset and stronger pretrained encoders improved discrimination and the finite-sample risk bound, but they did not recover enough autonomous nonreferable clearance.
+
+The next step is not more threshold tuning on these same frozen embeddings or naive short fine-tuning. The next step is better actual model learning:
+
+1. fine-tune a retinal encoder with a real validation-monitored schedule rather than two quick epochs,
+2. add image-quality and lesion-aware auxiliary heads,
+3. keep DDR validation for threshold selection,
+4. run DDR test once under the same zero-miss plus specificity target.
 
 ## Next Run
 
-Resume the balanced DDR download when network time is available:
-
-```bash
-PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.prepare_ddr_hf \
-  --local-dir external/DDR_hf_specificity100 \
-  --manifest-output results/ddr_hf_specificity100_manifest.csv \
-  --summary-output results/ddr_hf_specificity100_summary.json \
-  --download-images \
-  --limit-per-grade-per-split 100
-```
-
-Then run:
+The balanced DDR specificity100 download completed successfully. To reproduce the current best run:
 
 ```bash
 PYTHONPATH=src HF_HOME=.model_cache/huggingface TORCH_HOME=.model_cache/torch \
 .venv-active-retina/bin/python -m active_retina.ddr_open_autonomy \
   --manifest results/ddr_hf_specificity100_manifest.csv \
-  --feature-cache results/ddr_hf_specificity100_features.npz \
-  --output-dir results/ddr_open_autonomy_specificity100 \
-  --artifact models/active_retina_rc_ddr_specificity100.joblib \
+  --feature-cache results/ddr_hf_specificity100_ensemble_features.npz \
+  --output-dir results/ddr_open_autonomy_specificity100_ensemble \
+  --artifact models/active_retina_rc_ddr_specificity100_ensemble.joblib \
   --batch-size 16 \
   --threshold-safety-factors 0.9,0.75,0.5,0.25
 ```
 
-Expected purpose: determine whether more balanced training and validation data can preserve zero misses while materially improving specificity.
+The next new run should be a fine-tuned encoder experiment rather than another shallow-head sweep:
 
+```bash
+PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.train_ddr_finetuned_autonomy \
+  --manifest results/ddr_hf_specificity100_manifest.csv \
+  --output-dir results/ddr_finetuned_autonomy \
+  --artifact models/active_retina_rc_ddr_finetuned_autonomy.pt
+```
+
+Expected purpose: determine whether task-specific representation learning can preserve zero misses while materially improving specificity.

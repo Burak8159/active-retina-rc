@@ -1,0 +1,101 @@
+{
+  "artifact": "models/active_retina_rc_ddr_finetuned_resnet50_e2.pt",
+  "boundary": "Fine-tuned DDR single-image autonomy; not paired-view acquisition certification.",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.46342674175898235,
+      "valid_selected": {
+        "certifies_5_percent_95_confidence": true,
+        "decided": 547,
+        "decided_positive": 347,
+        "false_positive": 200,
+        "missed_positive": 0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "positive": 347,
+        "precision_referable_action": 0.6343692870201096,
+        "referable_action_rate": 1.0,
+        "specificity": 0.0,
+        "threshold": 0.39819114804267886,
+        "threshold_name": "positive_floor_x0.9",
+        "true_negative": 0
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.46036145051320393,
+      "valid_selected": {
+        "certifies_5_percent_95_confidence": true,
+        "decided": 547,
+        "decided_positive": 347,
+        "false_positive": 200,
+        "missed_positive": 0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "positive": 347,
+        "precision_referable_action": 0.6343692870201096,
+        "referable_action_rate": 1.0,
+        "specificity": 0.0,
+        "threshold": 0.4036241233348847,
+        "threshold_name": "positive_floor_x0.9",
+        "true_negative": 0
+      }
+    }
+  ],
+  "manifest": "results/ddr_hf_specificity100_manifest.csv",
+  "model_name": "resnet50.a1_in1k",
+  "predictions": "results/ddr_finetuned_autonomy_resnet50_e2/predictions.csv",
+  "selected_threshold": {
+    "certifies_5_percent_95_confidence": true,
+    "decided": 547,
+    "decided_positive": 347,
+    "false_positive": 200,
+    "missed_positive": 0,
+    "missed_risk_ucb95": 0.00859607486323134,
+    "n": 547,
+    "negative": 200,
+    "positive": 347,
+    "precision_referable_action": 0.6343692870201096,
+    "referable_action_rate": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.4036241233348847,
+    "threshold_name": "positive_floor_x0.9",
+    "true_negative": 0
+  },
+  "status": "NO_GO_FINETUNED_SINGLE_IMAGE_AUTONOMY",
+  "test_certificate": {
+    "certifies_5_percent_95_confidence": true,
+    "decided": 571,
+    "decided_positive": 371,
+    "false_positive": 200,
+    "missed_positive": 0,
+    "missed_risk_ucb95": 0.008042236840099592,
+    "n": 571,
+    "negative": 200,
+    "positive": 371,
+    "precision_referable_action": 0.649737302977233,
+    "referable_action_rate": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.4036241233348847,
+    "true_negative": 0
+  },
+  "valid_certificate": {
+    "certifies_5_percent_95_confidence": true,
+    "decided": 547,
+    "decided_positive": 347,
+    "false_positive": 200,
+    "missed_positive": 0,
+    "missed_risk_ucb95": 0.00859607486323134,
+    "n": 547,
+    "negative": 200,
+    "positive": 347,
+    "precision_referable_action": 0.6343692870201096,
+    "referable_action_rate": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.4036241233348847,
+    "true_negative": 0
+  }
+}
