@@ -1,0 +1,157 @@
+{
+  "ddr_single_image_autonomy": {
+    "best_99_sensitivity_test_specificity": {
+      "model": "mlp_ensemble",
+      "target_sensitivity": 0.99,
+      "test_coverage": 1.0,
+      "test_fn": 13,
+      "test_fp": 299,
+      "test_sensitivity": 0.9862579281183932,
+      "test_specificity": 0.3885480572597137,
+      "test_threshold": 0.08584718,
+      "test_tn": 190,
+      "test_tp": 933,
+      "valid_coverage": 1.0,
+      "valid_fn": 7,
+      "valid_fp": 229,
+      "valid_sensitivity": 0.9907773386034255,
+      "valid_specificity": 0.4624413145539906,
+      "valid_target_sensitivity": 0.99,
+      "valid_threshold": 0.08584718,
+      "valid_tn": 197,
+      "valid_tp": 752
+    },
+    "best_selective_policy": {
+      "model": "mlp_ensemble",
+      "status": "OK",
+      "test_abstention_rate": 0.3121951219512195,
+      "test_auto_negative_clearance": 0.37014314928425357,
+      "test_auto_refer_rate": 0.554006968641115,
+      "test_coverage": 0.6878048780487804,
+      "test_false_negative_count": 11,
+      "test_high": 0.46704987,
+      "test_low": 0.08123278,
+      "test_referable_abstention_rate": 0.18816067653276955,
+      "test_sensitivity_all_cases_clear_is_negative": 0.9883720930232558,
+      "test_specificity_auto_clear_vs_refer": 0.8264840182648402,
+      "valid_abstention_rate": 0.3367088607594937,
+      "valid_auto_negative_clearance": 0.43661971830985913,
+      "valid_auto_refer_rate": 0.5004219409282701,
+      "valid_coverage": 0.6632911392405063,
+      "valid_false_negative_count": 7,
+      "valid_high": 0.46704987,
+      "valid_low": 0.08123278,
+      "valid_referable_abstention_rate": 0.233201581027668,
+      "valid_sensitivity_all_cases_clear_is_negative": 0.9907773386034255,
+      "valid_specificity_auto_clear_vs_refer": 0.9117647058823529
+    },
+    "false_negative_counts_at_valid99": [
+      {
+        "false_negatives": 13,
+        "model": "resnet50",
+        "threshold": 0.0509141,
+        "threshold_source": "valid_99_sensitivity"
+      },
+      {
+        "false_negatives": 5,
+        "model": "dino_vit",
+        "threshold": 0.02599347,
+        "threshold_source": "valid_99_sensitivity"
+      },
+      {
+        "false_negatives": 11,
+        "model": "convnext_tiny",
+        "threshold": 0.04423626,
+        "threshold_source": "valid_99_sensitivity"
+      },
+      {
+        "false_negatives": 3,
+        "model": "feature_ensemble",
+        "threshold": 0.03215982,
+        "threshold_source": "valid_99_sensitivity"
+      },
+      {
+        "false_negatives": 13,
+        "model": "mlp_ensemble",
+        "threshold": 0.08584718,
+        "threshold_source": "valid_99_sensitivity"
+      },
+      {
+        "false_negatives": 13,
+        "model": "mlp_ensemble_conservative",
+        "threshold": 0.08584718,
+        "threshold_source": "valid_99_sensitivity"
+      }
+    ],
+    "frontier_plot": "plots/autonomy_frontier_ddr.svg",
+    "frontier_table": "results/autonomy_frontier_ddr.csv",
+    "max_pairwise_fn_jaccard_excluding_duplicate_mlp": 0.3333333333333333,
+    "mean_pairwise_fn_jaccard_excluding_duplicate_mlp": 0.1199025064571283,
+    "models": [
+      "convnext_tiny",
+      "dino_vit",
+      "feature_ensemble",
+      "mlp_ensemble",
+      "mlp_ensemble_conservative",
+      "resnet50"
+    ],
+    "n_common_test_images": 1435,
+    "n_test_positive": 946,
+    "persistent_case_table": "results/autonomy_persistent_false_negative_cases_ddr.csv",
+    "persistent_false_negatives_missed_by_all_models": 0
+  },
+  "decision": {
+    "category": "ACTIVE_SELECTIVE_FUSION_REQUIRED_BEFORE_AUTONOMY_GO",
+    "concrete_next_model": {
+      "components": [
+        "multi-model fusion of complementary DDR predictors",
+        "paired-view fusion on datasets with same-eye views",
+        "asymmetric loss or constrained optimization that heavily penalizes false nonreferable clearance",
+        "CLEAR / REFER / ABSTAIN policy trained against specificity, sensitivity, and coverage together",
+        "hard-example mining from calibration/development folds only"
+      ],
+      "name": "ActiveRetina-Autonomy-v2",
+      "success_criterion": "held-out or cross-fitted test result with >=90% specificity and zero false-negative autonomous clearances, plus reported coverage"
+    },
+    "current_autonomy_status": "NO_GO_90_SPECIFICITY_ZERO_MISS",
+    "rationale": [
+      "Existing single-image model families do not reach the requested 90%+ specificity with zero misses on the held-out DDR test split.",
+      "False negatives are not a single impossible shared set: no referable image is missed by every model at the valid-99 operating point.",
+      "Low pairwise false-negative overlap means the next model should fuse complementary evidence instead of rerunning one backbone family.",
+      "DeepDRiD paired-view analysis shows the second view rescues 75-80% of first-view false negatives at high sensitivity.",
+      "The next autonomy system should be active plus selective: acquire another view when first-view evidence is unsafe, fuse the views/models, and abstain or refer if risk remains uncertain."
+    ],
+    "retraining_decision": "TARGETED_FUSION_AND_POLICY_TRAINING_JUSTIFIED"
+  },
+  "deepdrid_active_acquisition_rescue": {
+    "multiview_rescue_table": "results/deepdrid_multiview_fn_rescue.csv",
+    "rows": [
+      {
+        "branch": "suffix1_initial",
+        "first_auc_proxy": NaN,
+        "first_view_false_negatives_at_fold99": 4,
+        "fn_rescue_rate": 0.75,
+        "mean_views_always_one": 1.0,
+        "mean_views_always_two": 2.0,
+        "n_validation_eyes": 792,
+        "referable_eyes": 348,
+        "rescued_by_two_view": 3,
+        "still_missed_after_two_view": 1
+      },
+      {
+        "branch": "suffix2_initial",
+        "first_auc_proxy": NaN,
+        "first_view_false_negatives_at_fold99": 5,
+        "fn_rescue_rate": 0.8,
+        "mean_views_always_one": 1.0,
+        "mean_views_always_two": 2.0,
+        "n_validation_eyes": 792,
+        "referable_eyes": 348,
+        "rescued_by_two_view": 4,
+        "still_missed_after_two_view": 1
+      }
+    ]
+  },
+  "governing_question": "What information or decision process is required to prevent remaining false negatives?",
+  "status": "AUTONOMY_FAILURE_ANALYSIS_COMPLETE"
+}

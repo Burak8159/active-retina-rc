@@ -1,0 +1,3 @@
+branch,first_auc_proxy,first_view_false_negatives_at_fold99,fn_rescue_rate,mean_views_always_one,mean_views_always_two,n_validation_eyes,referable_eyes,rescued_by_two_view,still_missed_after_two_view
+suffix1_initial,nan,4,0.75,1.0,2.0,792,348,3,1
+suffix2_initial,nan,5,0.8,1.0,2.0,792,348,4,1

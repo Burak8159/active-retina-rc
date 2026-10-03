@@ -1,0 +1,7 @@
+false_negatives,model,threshold,threshold_source
+13,resnet50,0.0509141,valid_99_sensitivity
+5,dino_vit,0.02599347,valid_99_sensitivity
+11,convnext_tiny,0.04423626,valid_99_sensitivity
+3,feature_ensemble,0.03215982,valid_99_sensitivity
+13,mlp_ensemble,0.08584718,valid_99_sensitivity
+13,mlp_ensemble_conservative,0.08584718,valid_99_sensitivity

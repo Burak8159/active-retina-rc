@@ -1,0 +1,16 @@
+intersection,jaccard,model_a,model_b,union
+1,0.058823529411764705,dino_vit,resnet50,17
+2,0.3333333333333333,dino_vit,feature_ensemble,6
+1,0.058823529411764705,dino_vit,mlp_ensemble,17
+1,0.058823529411764705,dino_vit,mlp_ensemble_conservative,17
+2,0.09090909090909091,convnext_tiny,resnet50,22
+0,0.0,convnext_tiny,dino_vit,16
+0,0.0,convnext_tiny,feature_ensemble,14
+3,0.14285714285714285,convnext_tiny,mlp_ensemble,21
+3,0.14285714285714285,convnext_tiny,mlp_ensemble_conservative,21
+2,0.14285714285714285,feature_ensemble,resnet50,14
+2,0.14285714285714285,feature_ensemble,mlp_ensemble,14
+2,0.14285714285714285,feature_ensemble,mlp_ensemble_conservative,14
+4,0.18181818181818182,mlp_ensemble,resnet50,22
+13,1.0,mlp_ensemble,mlp_ensemble_conservative,13
+4,0.18181818181818182,mlp_ensemble_conservative,resnet50,22
