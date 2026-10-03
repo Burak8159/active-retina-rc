@@ -1,7 +1,18 @@
 {
   "analysis_api_status": "VERIFIED_LOCAL_API",
   "arxiv_status": "GO_AS_TRANSPARENT_REPRODUCIBLE_BENCHMARK_PREPRINT",
+  "autonomous_candidate_status": "CANDIDATE_MODE_IDENTIFIED_NOT_CERTIFIED",
   "autonomous_diagnosis_status": "NO_GO_AUTONOMOUS_DIAGNOSIS_INSUFFICIENT_FINITE_SAMPLE_CERTIFICATE",
+  "best_development_autonomous_candidate": {
+    "candidate": "logistic_c025_balanced",
+    "certified_posthoc": false,
+    "online_auroc_dev_only": 0.9418664737494833,
+    "online_average_precision_dev_only": 0.9000149801415982,
+    "reason_not_certified": "Inspected online cohort has only 48 positive patients; 59 zero-miss positive patients are required for a 95% one-sided 5% certificate.",
+    "zero_miss_positive_patients_dev_only": 48,
+    "zero_miss_specificity_ge_50_specificity": 0.6730769230769231,
+    "zero_miss_specificity_ge_50_ucb95": 0.0605034093488943
+  },
   "certification_gap_report": "docs/certification_gap_report.md",
   "clinical_workflow_software_status": "GO_CLINICIAN_REVIEWED_ACQUISITION_ASSISTANT",
   "completed_artifacts": [
@@ -48,7 +59,9 @@
     "docs/autonomous_certification_recovery_plan.md",
     "src/active_retina/model_upgrade_harness.py",
     "results/model_upgrade_harness_summary.json",
-    "results/model_upgrade_harness_table.csv"
+    "results/model_upgrade_harness_table.csv",
+    "results/model_upgrade_harness_predictions.csv",
+    "results/deepdrid_online_resnet50_features.npz"
   ],
   "conditional_ieee_blockers": [
     "DeepDRiD suffix-to-anatomy mapping is not officially resolved in reviewed public metadata.",
@@ -58,11 +71,11 @@
   ],
   "core_hypothesis": "Acquisition must improve the risk-coverage-cost frontier over confidence triage on independent patient-disjoint data.",
   "go_claim": [
-    "The paper is a GO as a reproducible DeepDRiD-only benchmark and methods preprint: it has real paired-view predictions, five-fold patient-level cross-validation, binary referable-DR and five-class grading endpoints, inner-calibrated policy evaluation, risk-coverage-cost baselines, bootstrap uncertainty, mapping sensitivity, mechanism diagnostics, generated figures, and exact calibration-set risk upper bounds.",
-    "The paper is not a GO for an unqualified clinical or IEEE-journal superiority claim until the DeepDRiD-only ML stack can provide stronger prespecified finite-sample risk control and calibration."
+    "The paper is a GO as a reproducible DeepDRiD-only benchmark and methods preprint with a working clinician-reviewed station and quantified autonomous-certification gap.",
+    "A development-only autonomous candidate has been identified, but it is not a certified autonomous diagnostic product until a frozen artifact achieves zero misses on an untouched cohort with at least 59 positive patients, preferably 80-120."
   ],
   "ieee_status": "CONDITIONAL_GO_REQUIRES_STRONGER_DEEPDRID_ONLY_RISK_CONTROL",
-  "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_READY",
+  "model_upgrade_status": "DEVELOPMENT_ONLY_MODEL_UPGRADE_HARNESS_EVALUATED",
   "online_certification_status": "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED_ON_ONLINE_COHORT",
   "recovery_plan": "docs/autonomous_certification_recovery_plan.md",
   "risk_certificate_feasibility": "results/risk_certificate_feasibility.json",

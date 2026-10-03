@@ -1,6 +1,6 @@
 # ActiveRetina-RC Autonomous Certification Recovery Plan
 
-Status: `RECOVERY_PLAN_READY`
+Status: `RECOVERY_PLAN_WITH_DEVELOPMENT_MODEL_UPGRADE_RESULTS`
 
 The clinician-reviewed product is usable as a supervised acquisition assistant.
 The autonomous diagnostic claim is blocked by two separate problems:
@@ -13,6 +13,34 @@ The autonomous diagnostic claim is blocked by two separate problems:
 Both must be fixed. More data alone is not enough if the model continues to miss
 referable patients. Better thresholds alone are not enough if the certification
 cohort remains below 59 positive patients.
+
+## Development Harness Result
+
+The model-upgrade harness now trains real candidate heads over the frozen
+ResNet-50 paired-view embeddings and evaluates them on the already inspected
+DeepDRiD online cohort. This is development evidence only, not a prospective
+certificate.
+
+Best development candidate:
+
+- Candidate: `logistic_c025_balanced`
+- Online cohort AUROC: `0.9419`
+- Average precision: `0.9000`
+- Default 0.5 threshold: 11 missed positive patients among 48 decided positive
+  patients.
+- Best zero-miss mode with at least 50% decided-negative specificity: 48/48
+  positive patients decided with zero misses.
+- Specificity in that zero-miss mode: `67.3%` among decided negative patients.
+- 95% one-sided missed-risk upper bound: `6.05%`.
+- Certification status: `NO_GO`, because 48 zero-miss positive patients remain
+  below the 59-patient minimum for a 95%/5% certificate.
+
+Interpretation:
+
+The old locked artifact is not the right autonomous mode, but the embedding
+space is not dead. The immediate ML task is to freeze the best candidate
+operating mode, then run it once on an untouched cohort large enough to make the
+certificate possible.
 
 ## Route A: Fastest Honest Certification Route
 
@@ -114,12 +142,12 @@ the paper falsifiable, reproducible, and clinically honest.
 
 ## Immediate Next Implementation Tasks
 
-1. Build a model-upgrade harness that trains several frozen-head alternatives on
-   development data.
-2. Evaluate those alternatives on the already inspected online cohort as
-   development failure analysis.
-3. Pick one candidate operating mode and freeze it.
-4. Prepare an untouched-certification import tool for the next cohort.
-5. Keep the current clinical station/API stable while model work happens behind
-   a new artifact version.
-
+1. Freeze `logistic_c025_balanced` as the next autonomous-candidate artifact,
+   including thresholds for the zero-miss, specificity-constrained operating
+   mode.
+2. Prepare an untouched-certification import tool for the next cohort.
+3. Require at least 59 positive patients, and preferably 80-120 positive
+   patients, before attempting the autonomous certificate.
+4. Run the frozen artifact once on that cohort without threshold repair.
+5. Keep the current clinical station/API stable while candidate autonomy remains
+   behind a separate artifact version and explicit gate.

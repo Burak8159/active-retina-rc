@@ -171,15 +171,23 @@ def search_modes(items: list[dict[str, Any]], scores: np.ndarray) -> dict[str, A
                 continue
             candidates.append(patient_stats(items, scores, low, high))
     zero_miss = [c for c in candidates if c["misses"] == 0]
-    zero_miss_useful = [
-        c for c in zero_miss if c["specificity_decided_negative_patients"] >= 0.5 or math.isnan(c["specificity_decided_negative_patients"])
+    zero_miss_specificity_ge_50 = [
+        c for c in zero_miss if c["decided_negative_patients"] > 0 and c["specificity_decided_negative_patients"] >= 0.5
+    ]
+    zero_miss_specificity_ge_80 = [
+        c for c in zero_miss if c["decided_negative_patients"] > 0 and c["specificity_decided_negative_patients"] >= 0.8
     ]
     certified = [c for c in candidates if c["certifies_5_percent_95_confidence"]]
     return {
         "n_candidates": len(candidates),
         "best_zero_miss": max(zero_miss, key=lambda c: (c["decided_positive_patients"], c["coverage_patients"]), default=None),
         "best_zero_miss_specificity_ge_50": max(
-            zero_miss_useful,
+            zero_miss_specificity_ge_50,
+            key=lambda c: (c["decided_positive_patients"], c["coverage_patients"], c["specificity_decided_negative_patients"]),
+            default=None,
+        ),
+        "best_zero_miss_specificity_ge_80": max(
+            zero_miss_specificity_ge_80,
             key=lambda c: (c["decided_positive_patients"], c["coverage_patients"], c["specificity_decided_negative_patients"]),
             default=None,
         ),
@@ -208,7 +216,8 @@ def main() -> None:
         default_stats = default_threshold_stats(online_items, scores)
         mode_search = search_modes(online_items, scores)
         best_zero = mode_search["best_zero_miss"] or {}
-        best_useful = mode_search["best_zero_miss_specificity_ge_50"] or {}
+        best_spec50 = mode_search["best_zero_miss_specificity_ge_50"] or {}
+        best_spec80 = mode_search["best_zero_miss_specificity_ge_80"] or {}
         rows.append(
             {
                 "candidate": name,
@@ -221,8 +230,14 @@ def main() -> None:
                 "best_zero_miss_ucb95": best_zero.get("patient_missed_risk_ucb_95", ""),
                 "best_zero_miss_coverage_patients": best_zero.get("coverage_patients", ""),
                 "best_zero_miss_specificity": best_zero.get("specificity_decided_negative_patients", ""),
-                "best_zero_miss_specificity_ge_50_decided_positive_patients": best_useful.get("decided_positive_patients", ""),
-                "best_zero_miss_specificity_ge_50_ucb95": best_useful.get("patient_missed_risk_ucb_95", ""),
+                "best_zero_miss_specificity_ge_50_decided_positive_patients": best_spec50.get("decided_positive_patients", ""),
+                "best_zero_miss_specificity_ge_50_ucb95": best_spec50.get("patient_missed_risk_ucb_95", ""),
+                "best_zero_miss_specificity_ge_50_coverage": best_spec50.get("coverage_patients", ""),
+                "best_zero_miss_specificity_ge_50_specificity": best_spec50.get("specificity_decided_negative_patients", ""),
+                "best_zero_miss_specificity_ge_80_decided_positive_patients": best_spec80.get("decided_positive_patients", ""),
+                "best_zero_miss_specificity_ge_80_ucb95": best_spec80.get("patient_missed_risk_ucb_95", ""),
+                "best_zero_miss_specificity_ge_80_coverage": best_spec80.get("coverage_patients", ""),
+                "best_zero_miss_specificity_ge_80_specificity": best_spec80.get("specificity_decided_negative_patients", ""),
                 "certified_posthoc": bool(mode_search["best_certified"]),
                 "note": "development-only; online cohort has been inspected and cannot certify a frozen product",
             }
