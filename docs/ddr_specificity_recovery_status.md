@@ -35,6 +35,15 @@ Best safety-preserving run after the larger DDR subset and stronger encoders:
 - Specificity: 10.5%
 - Decision: `NO_GO_SPECIFICITY`
 
+Diagnostic validation-edge thresholding nudged this to 11.0% specificity:
+
+- Run: `results/ddr_open_autonomy_specificity100_ensemble_observed_thresholds/summary.json`
+- Test positives: 371
+- Missed positives: 0
+- One-sided 95% missed-risk upper bound: 0.80%
+- Specificity: 11.0%
+- Boundary: diagnostic threshold search, not the preferred deployable artifact.
+
 The larger open-data run used:
 
 - 1,718 DDR images
@@ -52,6 +61,7 @@ Backbone comparison:
 | ConvNeXt-Tiny | 0.861 | 0.923 | 0/371 | 0.80% | 5.0% | `NO_GO_SPECIFICITY` |
 | DINO ViT-B/16 | 0.871 | 0.924 | 0/371 | 0.80% | 8.0% | `NO_GO_SPECIFICITY` |
 | Concatenated ensemble | 0.889 | 0.941 | 0/371 | 0.80% | 10.5% | `NO_GO_SPECIFICITY` |
+| Concatenated ensemble, observed-threshold diagnostic | 0.889 | 0.941 | 0/371 | 0.80% | 11.0% | `NO_GO_SPECIFICITY` |
 
 Post-hoc test-oracle check:
 
@@ -65,6 +75,24 @@ Fine-tuning check:
 - Test specificity was 0.0%.
 - This failed the autonomy target and showed that naive short fine-tuning is worse than the frozen ensemble.
 
+RTX feature-head checks:
+
+- The RTX 3050 Ti laptop path is operational with CUDA PyTorch.
+- A 1024-hidden MLP preserved zero misses but reached only 7.0% test specificity.
+- A stronger-regularized 512-hidden MLP improved validation specificity to 20.0%, but test specificity was 8.5%.
+- Conclusion: shallow nonlinear heads do not solve the specificity problem on the current frozen features.
+
+DRTiD recovery check:
+
+- DRTiD is now inspected development data, not an untouched certificate.
+- The recovery search produced a narrow safety-controlled triage mode:
+  - 65 decided positive patients,
+  - 0 missed positives,
+  - 95% missed-risk upper bound 4.50%,
+  - 70.0% specificity among decided negative patients,
+  - 15.5% patient coverage.
+- This is useful for the product as a limited autonomous sub-mode, but it is not full all-case autonomous diagnosis.
+
 Partial expanded-train shortcut:
 
 - Used extra DDR train images that had downloaded before the full 100-per-grade run completed.
@@ -76,6 +104,13 @@ Partial expanded-train shortcut:
 `NO_GO_SPECIFICITY`
 
 The project now has a stronger zero-miss open-data disease-capture certificate, but not a useful full autonomous diagnostic mode. The larger subset and stronger pretrained encoders improved discrimination and the finite-sample risk bound, but they did not recover enough autonomous nonreferable clearance.
+
+Generated summary artifacts:
+
+- `results/ddr_autonomy_summary/runs.csv`
+- `results/ddr_autonomy_summary/decision.json`
+- `results/ddr_autonomy_summary/specificity_recovery.svg`
+- `results/ddr_autonomy_summary/risk_specificity_frontier.svg`
 
 The next step is not more threshold tuning on these same frozen embeddings or naive short fine-tuning. The next step is better actual model learning:
 

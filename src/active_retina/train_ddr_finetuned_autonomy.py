@@ -38,22 +38,39 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
 
 
 class FundusDataset(Dataset):
-    def __init__(self, rows: list[dict[str, Any]], transform: Any) -> None:
+    def __init__(self, rows: list[dict[str, Any]], transform: Any, project_root: Path) -> None:
         self.rows = rows
         self.transform = transform
+        self.project_root = project_root
 
     def __len__(self) -> int:
         return len(self.rows)
 
     def __getitem__(self, idx: int):
         row = self.rows[idx]
-        with Image.open(row["image_path"]) as img:
+        image_path = self.resolve_image_path(row["image_path"])
+        with Image.open(image_path) as img:
             image = img.convert("RGB")
         return (
             self.transform(image),
             torch.tensor(float(row["referable_dr"]), dtype=torch.float32),
             row["image_id"],
         )
+
+    def resolve_image_path(self, raw_path: str) -> Path:
+        path = Path(raw_path)
+        if path.exists():
+            return path
+        normalized = raw_path.replace("\\", "/")
+        marker = "/external/"
+        if marker in normalized:
+            candidate = self.project_root / "external" / normalized.split(marker, 1)[1]
+            if candidate.exists():
+                return candidate
+        candidate = self.project_root / raw_path
+        if candidate.exists():
+            return candidate
+        return path
 
 
 def device_for(name: str) -> torch.device:
@@ -211,6 +228,7 @@ def main() -> None:
     set_seed(args.seed)
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
+    project_root = Path.cwd()
     rows = read_manifest(Path(args.manifest))
     by_split = split_rows(rows)
     device = device_for(args.device)
@@ -221,9 +239,9 @@ def main() -> None:
     )
     model.to(device)
 
-    train_loader = DataLoader(FundusDataset(by_split["train"], train_transform), batch_size=args.batch_size, shuffle=True, num_workers=0)
-    valid_loader = DataLoader(FundusDataset(by_split["valid"], eval_transform), batch_size=args.batch_size, shuffle=False, num_workers=0)
-    test_loader = DataLoader(FundusDataset(by_split["test"], eval_transform), batch_size=args.batch_size, shuffle=False, num_workers=0)
+    train_loader = DataLoader(FundusDataset(by_split["train"], train_transform, project_root), batch_size=args.batch_size, shuffle=True, num_workers=0)
+    valid_loader = DataLoader(FundusDataset(by_split["valid"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=0)
+    test_loader = DataLoader(FundusDataset(by_split["test"], eval_transform, project_root), batch_size=args.batch_size, shuffle=False, num_workers=0)
 
     y_train = np.asarray([int(r["referable_dr"]) for r in by_split["train"]])
     pos_weight = float((y_train == 0).sum() / max(1, int((y_train == 1).sum())))

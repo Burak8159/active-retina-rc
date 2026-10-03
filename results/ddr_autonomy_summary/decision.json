@@ -1,0 +1,34 @@
+{
+  "best_specificity_run": {
+    "candidate": "logistic_c01_balanced",
+    "meets_specificity70": false,
+    "run": "ensemble_observed_threshold_diagnostic",
+    "source": "results/ddr_open_autonomy_specificity100_ensemble_observed_thresholds/summary.json",
+    "status": "GO_OPEN_DDR_SINGLE_IMAGE_AUTONOMOUS_REFERABLE_CERTIFICATE",
+    "test_auroc": 0.8888611859838274,
+    "test_average_precision": 0.9409924126096727,
+    "test_certifies_5pct_95conf": true,
+    "test_missed_positive": 0,
+    "test_missed_risk_ucb95": 0.008042236840099592,
+    "test_positive": 371,
+    "test_precision_referable_action": 0.6757741347905283,
+    "test_referable_action_rate": 0.9614711033274956,
+    "test_specificity": 0.11,
+    "valid_auroc": 0.9073487031700287,
+    "valid_average_precision": 0.9499933102237484,
+    "valid_missed_positive": 0,
+    "valid_missed_risk_ucb95": 0.00859607486323134,
+    "valid_positive": 347,
+    "valid_precision_referable_action": 0.6871287128712872,
+    "valid_referable_action_rate": 0.923217550274223,
+    "valid_specificity": 0.21
+  },
+  "best_zero_miss_deployable_currently": "single-image autonomous referable action only; nonreferable clearance remains deferred",
+  "figures": [
+    "/Users/burakaksu/Documents/Codex/2026-10-01/referenced-chatgpt-conversation-this-is-an/work/active_retina/results/ddr_autonomy_summary/specificity_recovery.svg",
+    "/Users/burakaksu/Documents/Codex/2026-10-01/referenced-chatgpt-conversation-this-is-an/work/active_retina/results/ddr_autonomy_summary/risk_specificity_frontier.svg"
+  ],
+  "output_table": "/Users/burakaksu/Documents/Codex/2026-10-01/referenced-chatgpt-conversation-this-is-an/work/active_retina/results/ddr_autonomy_summary/runs.csv",
+  "specificity_target": 0.7,
+  "status": "NO_GO_FULL_AUTONOMOUS_DIAGNOSIS"
+}

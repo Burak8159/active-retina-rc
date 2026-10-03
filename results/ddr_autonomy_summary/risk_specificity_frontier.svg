@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="560" viewBox="0 0 840 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="24.0" y="30.0" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="start" fill="#1f2933">Risk-specificity frontier</text>
+<text x="420.0" y="536.0" font-size="13" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">Test specificity (%)</text>
+<text x="22" y="280.0" font-size="13" font-family="Arial, Helvetica, sans-serif" fill="#1f2933" transform="rotate(-90 22 280.0)" text-anchor="middle">95% upper missed-risk bound (%)</text>
+<line x1="86.0" y1="56" x2="86.0" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="86.0" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0</text>
+<line x1="181.2" y1="56" x2="181.2" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="181.2" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">10</text>
+<line x1="276.4" y1="56" x2="276.4" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="276.4" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">20</text>
+<line x1="371.6" y1="56" x2="371.6" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="371.6" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">30</text>
+<line x1="466.8" y1="56" x2="466.8" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="466.8" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">40</text>
+<line x1="562.0" y1="56" x2="562.0" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="562.0" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">50</text>
+<line x1="657.2" y1="56" x2="657.2" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="657.2" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">60</text>
+<line x1="752.4" y1="56" x2="752.4" y2="488" stroke="#d7dde3" stroke-width="1"/>
+<text x="752.4" y="510.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">70</text>
+<line x1="86" y1="488.0" x2="800" y2="488.0" stroke="#e7ebef" stroke-width="1"/>
+<text x="78.0" y="492.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="end" fill="#1f2933">0</text>
+<line x1="86" y1="416.0" x2="800" y2="416.0" stroke="#e7ebef" stroke-width="1"/>
+<text x="78.0" y="420.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="end" fill="#1f2933">1</text>
+<line x1="86" y1="344.0" x2="800" y2="344.0" stroke="#e7ebef" stroke-width="1"/>
+<text x="78.0" y="348.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="end" fill="#1f2933">2</text>
+<line x1="86" y1="272.0" x2="800" y2="272.0" stroke="#e7ebef" stroke-width="1"/>
+<text x="78.0" y="276.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="end" fill="#1f2933">3</text>
+<line x1="86" y1="200.0" x2="800" y2="200.0" stroke="#e7ebef" stroke-width="1"/>
+<text x="78.0" y="204.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="end" fill="#1f2933">4</text>
+<line x1="86" y1="128.0" x2="800" y2="128.0" stroke="#e7ebef" stroke-width="1"/>
+<text x="78.0" y="132.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="end" fill="#1f2933">5</text>
+<line x1="86" y1="56.0" x2="800" y2="56.0" stroke="#e7ebef" stroke-width="1"/>
+<text x="78.0" y="60.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="end" fill="#1f2933">6</text>
+<line x1="86" y1="128.0" x2="800" y2="128.0" stroke="#222" stroke-dasharray="5 5" stroke-width="1.5"/>
+<line x1="752.4" y1="56" x2="752.4" y2="488" stroke="#222" stroke-dasharray="2 5" stroke-width="1.5"/>
+<circle cx="124.1" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="132.1" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">resnet50_frozen</text>
+<circle cx="133.6" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="141.6" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">convnext_tiny_frozen</text>
+<circle cx="162.2" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="170.2" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">dino_vit_frozen</text>
+<circle cx="186.0" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="194.0" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">ensemble_frozen</text>
+<circle cx="190.7" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="198.7" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">ensemble_observed_threshold_diagnostic</text>
+<circle cx="86.0" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="94.0" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">resnet50_finetune_e2</text>
+<circle cx="152.6" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="160.6" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">feature_mlp_h1024</text>
+<circle cx="166.9" cy="430.1" r="5.5" fill="#2f6f73"/>
+<text x="174.9" y="422.1" font-size="9" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">feature_mlp_h512_d60_wd1e3</text>
+</svg>

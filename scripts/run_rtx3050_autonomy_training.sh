@@ -9,15 +9,19 @@ export TORCH_HOME="${TORCH_HOME:-.model_cache/torch}"
 
 MANIFEST="${MANIFEST:-results/ddr_hf_specificity100_manifest.csv}"
 STAMP="$(date +%Y%m%d_%H%M%S)"
+PYTHON="${PYTHON:-.venv-active-retina/bin/python}"
+if [[ ! -x "$PYTHON" && -x ".venv-active-retina/Scripts/python.exe" ]]; then
+  PYTHON=".venv-active-retina/Scripts/python.exe"
+fi
 
 echo "[ActiveRetina] CUDA check"
-.venv-active-retina/bin/python - <<'PY'
+"$PYTHON" - <<'PY'
 import torch
 print({"cuda": torch.cuda.is_available(), "device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "none"})
 PY
 
 echo "[ActiveRetina] Fast head-only ConvNeXt run"
-.venv-active-retina/bin/python -m active_retina.train_ddr_finetuned_autonomy \
+"$PYTHON" -m active_retina.train_ddr_finetuned_autonomy \
   --manifest "$MANIFEST" \
   --output-dir "results/rtx3050_convnext_head_${STAMP}" \
   --artifact "models/active_retina_rc_rtx3050_convnext_head_${STAMP}.pt" \
@@ -33,7 +37,7 @@ echo "[ActiveRetina] Fast head-only ConvNeXt run"
   --min-specificity 0.70
 
 echo "[ActiveRetina] Fine-tune ConvNeXt all parameters"
-.venv-active-retina/bin/python -m active_retina.train_ddr_finetuned_autonomy \
+"$PYTHON" -m active_retina.train_ddr_finetuned_autonomy \
   --manifest "$MANIFEST" \
   --output-dir "results/rtx3050_convnext_full_${STAMP}" \
   --artifact "models/active_retina_rc_rtx3050_convnext_full_${STAMP}.pt" \
@@ -48,7 +52,7 @@ echo "[ActiveRetina] Fine-tune ConvNeXt all parameters"
   --min-specificity 0.70
 
 echo "[ActiveRetina] Fine-tune DINO ViT all parameters"
-.venv-active-retina/bin/python -m active_retina.train_ddr_finetuned_autonomy \
+"$PYTHON" -m active_retina.train_ddr_finetuned_autonomy \
   --manifest "$MANIFEST" \
   --output-dir "results/rtx3050_vit_dino_full_${STAMP}" \
   --artifact "models/active_retina_rc_rtx3050_vit_dino_full_${STAMP}.pt" \
