@@ -105,7 +105,8 @@
     "results/drtid_recovery_candidate_inspected_test_run/manifest_summary.json",
     "results/drtid_recovery_candidate_inspected_test_run/features.npz",
     "results/drtid_recovery_candidate_inspected_test_run/predictions.csv",
-    "results/drtid_recovery_candidate_inspected_test_run/summary.json"
+    "results/drtid_recovery_candidate_inspected_test_run/summary.json",
+    "docs/drcr_protocol_aa_public_audit.md"
   ],
   "computational_product_status": "DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING",
   "conditional_ieee_blockers": [
@@ -115,6 +116,20 @@
     "The conservative acquisition policy trades lower observed missed referable DR for lower coverage, higher imaging, and higher deferral versus confidence triage."
   ],
   "core_hypothesis": "Acquisition must improve the risk-coverage-cost frontier over confidence triage on independent patient-disjoint data.",
+  "drcr_protocol_aa_public_audit": {
+    "decision": "NO_GO_AS_IMAGE_CERTIFICATION_COHORT_GO_AS_TABLE_LEVEL_CLINICAL_GRADING_EVIDENCE",
+    "download": "/Users/burakaksu/Downloads/Protocol_AA.zip",
+    "dr_severity_rows": 11628,
+    "etdrs_fields_present": true,
+    "image_log_rows": 14508,
+    "local_root": "external/DRCR_AA_public/unpacked",
+    "patients": 388,
+    "reading_center_grading_rows": 1126265,
+    "report": "docs/drcr_protocol_aa_public_audit.md",
+    "source": "https://public.jaeb.org/drcrnet/stdy/239",
+    "status": "PUBLIC_TABLES_AVAILABLE_IMAGES_NOT_INCLUDED",
+    "uwf_grading_present": true
+  },
   "drtid_external_certification_result": {
     "cohort": {
       "images": 3100,
