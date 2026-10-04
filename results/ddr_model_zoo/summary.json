@@ -1,0 +1,11 @@
+{
+  "figures": [
+    "results/ddr_model_zoo/model_zoo_metric_heatmap.svg",
+    "results/ddr_model_zoo/feature_ensemble_score_distribution.svg",
+    "results/ddr_model_zoo/feature_mlp_score_distribution.svg"
+  ],
+  "metrics": "results/ddr_model_zoo/model_zoo_metrics.csv",
+  "n_models": 9,
+  "report": "results/ddr_model_zoo/model_zoo_report.md",
+  "status": "MODEL_ZOO_REPORT_READY"
+}

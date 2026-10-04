@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="440" viewBox="0 0 1040 440">
+<rect width="100%" height="100%" fill="#fff"/>
+<text x="24.0" y="32.0" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="start" fill="#1f2933">DDR model zoo: held-out test metrics</text>
+<text x="312.0" y="52.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#1f2933">AUROC</text>
+<text x="416.0" y="52.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#1f2933">AUPRC</text>
+<text x="520.0" y="52.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#1f2933">Recall</text>
+<text x="624.0" y="52.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#1f2933">Specificity</text>
+<text x="728.0" y="52.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#1f2933">F1</text>
+<text x="832.0" y="52.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle" fill="#1f2933">MCC</text>
+<text x="24.0" y="92.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">resnet50_frozen</text>
+<rect x="260" y="70" width="100" height="30" fill="rgb(78,164,164)" rx="3"/>
+<text x="310.0" y="90.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.92</text>
+<rect x="364" y="70" width="100" height="30" fill="rgb(72,161,161)" rx="3"/>
+<text x="414.0" y="90.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.96</text>
+<rect x="468" y="70" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="90.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="70" width="100" height="30" fill="rgb(224,240,242)" rx="3"/>
+<text x="622.0" y="90.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.07</text>
+<rect x="676" y="70" width="100" height="30" fill="rgb(99,175,175)" rx="3"/>
+<text x="726.0" y="90.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.81</text>
+<rect x="780" y="70" width="100" height="30" fill="rgb(133,192,193)" rx="3"/>
+<text x="830.0" y="90.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.21</text>
+<text x="24.0" y="126.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">dino_vit_frozen</text>
+<rect x="260" y="104" width="100" height="30" fill="rgb(76,163,163)" rx="3"/>
+<text x="310.0" y="124.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.94</text>
+<rect x="364" y="104" width="100" height="30" fill="rgb(71,160,160)" rx="3"/>
+<text x="414.0" y="124.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.97</text>
+<rect x="468" y="104" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="124.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="104" width="100" height="30" fill="rgb(213,234,235)" rx="3"/>
+<text x="622.0" y="124.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.13</text>
+<rect x="676" y="104" width="100" height="30" fill="rgb(97,174,174)" rx="3"/>
+<text x="726.0" y="124.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.82</text>
+<rect x="780" y="104" width="100" height="30" fill="rgb(125,188,189)" rx="3"/>
+<text x="830.0" y="124.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.30</text>
+<text x="24.0" y="160.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">convnext_tiny_frozen</text>
+<rect x="260" y="138" width="100" height="30" fill="rgb(76,163,163)" rx="3"/>
+<text x="310.0" y="158.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.94</text>
+<rect x="364" y="138" width="100" height="30" fill="rgb(71,160,160)" rx="3"/>
+<text x="414.0" y="158.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.97</text>
+<rect x="468" y="138" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="158.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="138" width="100" height="30" fill="rgb(231,243,245)" rx="3"/>
+<text x="622.0" y="158.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.02</text>
+<rect x="676" y="138" width="100" height="30" fill="rgb(100,175,176)" rx="3"/>
+<text x="726.0" y="158.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.80</text>
+<rect x="780" y="138" width="100" height="30" fill="rgb(143,197,198)" rx="3"/>
+<text x="830.0" y="158.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.09</text>
+<text x="24.0" y="194.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">feature_ensemble</text>
+<rect x="260" y="172" width="100" height="30" fill="rgb(75,162,162)" rx="3"/>
+<text x="310.0" y="192.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.94</text>
+<rect x="364" y="172" width="100" height="30" fill="rgb(70,160,160)" rx="3"/>
+<text x="414.0" y="192.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.97</text>
+<rect x="468" y="172" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="192.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="172" width="100" height="30" fill="rgb(221,238,240)" rx="3"/>
+<text x="622.0" y="192.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.08</text>
+<rect x="676" y="172" width="100" height="30" fill="rgb(98,174,175)" rx="3"/>
+<text x="726.0" y="192.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.81</text>
+<rect x="780" y="172" width="100" height="30" fill="rgb(130,191,192)" rx="3"/>
+<text x="830.0" y="192.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.24</text>
+<text x="24.0" y="228.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">feature_mlp</text>
+<rect x="260" y="206" width="100" height="30" fill="rgb(76,163,163)" rx="3"/>
+<text x="310.0" y="226.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.94</text>
+<rect x="364" y="206" width="100" height="30" fill="rgb(71,160,160)" rx="3"/>
+<text x="414.0" y="226.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.97</text>
+<rect x="468" y="206" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="226.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="206" width="100" height="30" fill="rgb(205,230,231)" rx="3"/>
+<text x="622.0" y="226.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.18</text>
+<rect x="676" y="206" width="100" height="30" fill="rgb(95,173,173)" rx="3"/>
+<text x="726.0" y="226.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.82</text>
+<rect x="780" y="206" width="100" height="30" fill="rgb(121,186,187)" rx="3"/>
+<text x="830.0" y="226.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.35</text>
+<text x="24.0" y="262.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">feature_mlp_conservative</text>
+<rect x="260" y="240" width="100" height="30" fill="rgb(76,163,163)" rx="3"/>
+<text x="310.0" y="260.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.94</text>
+<rect x="364" y="240" width="100" height="30" fill="rgb(71,160,160)" rx="3"/>
+<text x="414.0" y="260.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.97</text>
+<rect x="468" y="240" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="260.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="240" width="100" height="30" fill="rgb(223,239,241)" rx="3"/>
+<text x="622.0" y="260.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.08</text>
+<rect x="676" y="240" width="100" height="30" fill="rgb(98,174,175)" rx="3"/>
+<text x="726.0" y="260.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.81</text>
+<rect x="780" y="240" width="100" height="30" fill="rgb(131,192,192)" rx="3"/>
+<text x="830.0" y="260.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.23</text>
+<text x="24.0" y="296.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">finetuned_resnet50_e2</text>
+<rect x="260" y="274" width="100" height="30" fill="rgb(116,184,184)" rx="3"/>
+<text x="310.0" y="294.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.70</text>
+<rect x="364" y="274" width="100" height="30" fill="rgb(100,176,176)" rx="3"/>
+<text x="414.0" y="294.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.79</text>
+<rect x="468" y="274" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="294.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="274" width="100" height="30" fill="rgb(236,246,248)" rx="3"/>
+<text x="622.0" y="294.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.00</text>
+<rect x="676" y="274" width="100" height="30" fill="rgb(102,176,177)" rx="3"/>
+<text x="726.0" y="294.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.79</text>
+<rect x="780" y="274" width="100" height="30" fill="rgb(151,202,203)" rx="3"/>
+<text x="830.0" y="294.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.00</text>
+<text x="24.0" y="330.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">regenerated_resnet50</text>
+<rect x="260" y="308" width="100" height="30" fill="rgb(81,165,165)" rx="3"/>
+<text x="310.0" y="328.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.91</text>
+<rect x="364" y="308" width="100" height="30" fill="rgb(73,161,162)" rx="3"/>
+<text x="414.0" y="328.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.95</text>
+<rect x="468" y="308" width="100" height="30" fill="rgb(66,158,158)" rx="3"/>
+<text x="518.0" y="328.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">1.00</text>
+<rect x="572" y="308" width="100" height="30" fill="rgb(220,237,239)" rx="3"/>
+<text x="622.0" y="328.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.09</text>
+<rect x="676" y="308" width="100" height="30" fill="rgb(98,174,175)" rx="3"/>
+<text x="726.0" y="328.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.81</text>
+<rect x="780" y="308" width="100" height="30" fill="rgb(131,191,192)" rx="3"/>
+<text x="830.0" y="328.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.23</text>
+<text x="24.0" y="364.0" font-size="11" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="start" fill="#1f2933">clearance_ranker</text>
+<rect x="260" y="342" width="100" height="30" fill="rgb(84,167,167)" rx="3"/>
+<text x="310.0" y="362.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.89</text>
+<rect x="364" y="342" width="100" height="30" fill="rgb(76,163,163)" rx="3"/>
+<text x="414.0" y="362.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.94</text>
+<rect x="468" y="342" width="100" height="30" fill="rgb(67,158,158)" rx="3"/>
+<text x="518.0" y="362.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.99</text>
+<rect x="572" y="342" width="100" height="30" fill="rgb(214,234,236)" rx="3"/>
+<text x="622.0" y="362.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.13</text>
+<rect x="676" y="342" width="100" height="30" fill="rgb(97,174,174)" rx="3"/>
+<text x="726.0" y="362.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.81</text>
+<rect x="780" y="342" width="100" height="30" fill="rgb(128,190,191)" rx="3"/>
+<text x="830.0" y="362.0" font-size="10" font-family="Arial, Helvetica, sans-serif" font-weight="400" text-anchor="middle" fill="#1f2933">0.26</text>
+</svg>
