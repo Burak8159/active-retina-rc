@@ -1,10 +1,10 @@
 # ActiveRetina Paper Evidence Register
 
-Decision: `GO_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS`
+Decision: `GO_AUGMENTED_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS`
 
-Central supported claim: Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output; every-image binary autonomous diagnosis is not supported by current score, meta-model, or cached-feature families.
+Central supported claim: Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output. Adding a public EfficientNet fundus signal improves the diagnostic coverage frontier from 43.8% to 65.0% while preserving zero false-negative clearances and meeting >=90% diagnostic specificity. Every-image binary autonomous diagnosis remains unsupported by current score, meta-model, or cached-feature families.
 
-Next required model gate: Train a representation-changing image-level model and pass zero validation misses with >=90% specificity before one-shot test.
+Next required model gate: Train and freeze an explicit learned fusion model over the augmented signal family, then pass zero validation misses with >=90% specificity before one-shot test or external certification.
 
 ## Evidence Items
 
@@ -98,3 +98,21 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: n_models=9; metrics=results/ddr_model_zoo/model_zoo_metrics.csv
 - Paper use: Paper-ready model comparison block.
 
+### E11. Public EfficientNet fundus signal improves the autonomous triage frontier when added to the ensemble.
+
+- Status: `GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY`
+- Dataset: DDR public subset
+- Evidence files: `results/autonomy_extra_signal_clementp_efficientnet_b5_random600/summary.json`; `results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/summary.json`
+- Primary endpoint: improved diagnostic decision rate while preserving zero false-negative clearances and >=90% specificity among diagnostic decisions
+- Key result: max-coverage mode test FN clearances=0; diagnostic-decision specificity=90.0%; diagnostic decision rate=65.0%; insufficient-evidence rate=35.0%; negative-clearance rate=36.8%
+- Conservative mode: test FN clearances=0; diagnostic-decision specificity=93.1%; diagnostic decision rate=54.4%; insufficient-evidence rate=45.6%; negative-clearance rate=27.6%
+- Paper use: Positive model-improvement result; shows the autonomy frontier can be improved with external retinal pretrained signal diversity.
+
+### E12. Learned fusion over augmented signals improves coverage but fails the safety gate.
+
+- Status: `NO_GO_AUGMENTED_LEARNED_FUSION`
+- Dataset: DDR public subset
+- Evidence files: `results/autonomy_augmented_learned_fusion_clementp_efficientnet_b5/summary.json`; `results/autonomy_augmented_learned_fusion_clementp_efficientnet_b5_spec99/summary.json`
+- Primary endpoint: learned fusion trained on inner validation-train, calibrated on held-out validation-calibration, and reported once on test
+- Key result: best high-specificity learned mode reached 52.5% diagnostic decision rate and 98.1% specificity, but introduced 2 false-negative clearances
+- Paper use: Negative model-selection evidence; learned fusion is not accepted despite attractive coverage/specificity because zero-miss safety is mandatory.

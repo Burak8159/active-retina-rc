@@ -10,7 +10,13 @@ Current full-data baseline: zero false-negative clearances, 94.7% specificity am
 | RETFound_DR_IDRID_balanced_smoke | `NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY` | 48/72 | 0 | 100.0% | 6.9% | safe smoke, compare coverage |
 | FundusDRGrading_DINOv2_balanced_smoke | `NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY` | 48/72 | 0 | 20.0% | 58.3% | zero misses but poor specificity |
 | FundusDRGrading_DINOv2_inverted_balanced_smoke | `NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY` | 48/72 | 0 | 0.0% | 0.0% | zero misses but poor specificity |
+| ClementP/FundusDRGrading-resnet50_balanced_smoke | `NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY` | 48/72 | 0 | 0.0% | 0.0% | standard Transformers head exposes one scalar label; no valid policy |
+| ClementP/FundusDRGrading-tf_efficientnet_b5_balanced_smoke | `NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY` | 48/72 | 0 | 0.0% | 44.4% | safe clearance fails on test negatives |
+| ClementP/FundusDRGrading-tf_efficientnet_b5_full | `NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY` | 946/1435 | 0 | 0.0% | 0.0% | standalone policy cannot select a valid full validation rule |
+| Augmented ensemble with ClementP EfficientNet B5 | `GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY` | 946/1435 | 0 | 92.3% | 52.5% | useful as an added signal, not as a standalone policy |
+| Augmented random-mixture max-coverage mode | `GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY` | 946/1435 | 0 | 90.0% | 65.0% | current highest safe diagnostic coverage, exactly at specificity floor |
+| Augmented random-mixture conservative mode | `GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY` | 946/1435 | 0 | 93.1% | 54.4% | lower coverage but cleaner specificity margin |
 
 ## Conclusion
 
-RETFound and DINOv2 candidates are now connected to the autonomy evaluator. On balanced smoke subsets, neither improves the current baseline. RETFound is very conservative; DINOv2 increases decisions but loses specificity. The next credible step is not declaring failure of foundation models, but running additional compatible checkpoints and then full validation/test only for candidates that pass a balanced smoke with positives.
+RETFound, DINOv2, and ClementP fundus classifiers are now connected to the autonomy evaluator. Direct replacement models did not improve the current baseline. The useful result is signal-level: adding the ClementP EfficientNet B5 score to the existing ensemble improved held-out diagnostic decision rate from 43.8% to 65.0% while preserving zero false-negative clearances and meeting the 90% specificity floor. A conservative augmented mode reaches 54.4% diagnostic decisions at 93.1% specificity. The learned fusion head did not pass because it introduced false-negative clearances, so the current product frontier should use the validation-selected augmented score-mixture policies rather than the learned fusion head.

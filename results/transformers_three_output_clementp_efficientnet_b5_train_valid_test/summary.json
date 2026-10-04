@@ -1,0 +1,72 @@
+{
+  "baseline_test_triage_metrics": {
+    "autonomous_output_rate": 1.0,
+    "diagnostic_decision_rate": 0.43832752613240417,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 4,
+    "insufficient_evidence_rate": 0.5616724738675958,
+    "n": 1435,
+    "negative": 489,
+    "negative_clearance_rate": 0.147239263803681,
+    "positive": 946,
+    "referable_autonomous_referral_rate": 0.5845665961945031,
+    "sensitivity_if_insufficient_is_not_negative": 1.0,
+    "specificity_among_diagnostic_decisions": 0.9473684210526315,
+    "true_negative_clearances": 72,
+    "true_positive_referrals": 553
+  },
+  "config_id2label": {
+    "0": "LABEL_0"
+  },
+  "grayscale_triplicate": false,
+  "improved_over_baseline": false,
+  "invert_score": false,
+  "model_id": "ClementP/FundusDRGrading-tf_efficientnet_b5",
+  "positive_indices": [
+    2,
+    3,
+    4
+  ],
+  "prediction_splits": [
+    "train",
+    "valid",
+    "test"
+  ],
+  "predictions": "results/transformers_three_output_clementp_efficientnet_b5_train_valid_test/predictions.csv",
+  "selected_policy": {
+    "status": "NO_VALID_THREE_OUTPUT_POLICY"
+  },
+  "status": "NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY",
+  "test_triage_metrics": {
+    "autonomous_output_rate": 1.0,
+    "diagnostic_decision_rate": 0.0,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 0,
+    "insufficient_evidence_rate": 1.0,
+    "n": 1435,
+    "negative": 489,
+    "negative_clearance_rate": 0.0,
+    "positive": 946,
+    "referable_autonomous_referral_rate": 0.0,
+    "sensitivity_if_insufficient_is_not_negative": 1.0,
+    "specificity_among_diagnostic_decisions": 0.0,
+    "true_negative_clearances": 0,
+    "true_positive_referrals": 0
+  },
+  "valid_triage_metrics": {
+    "autonomous_output_rate": 1.0,
+    "diagnostic_decision_rate": 0.0,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 0,
+    "insufficient_evidence_rate": 1.0,
+    "n": 1185,
+    "negative": 426,
+    "negative_clearance_rate": 0.0,
+    "positive": 759,
+    "referable_autonomous_referral_rate": 0.0,
+    "sensitivity_if_insufficient_is_not_negative": 1.0,
+    "specificity_among_diagnostic_decisions": 0.0,
+    "true_negative_clearances": 0,
+    "true_positive_referrals": 0
+  }
+}

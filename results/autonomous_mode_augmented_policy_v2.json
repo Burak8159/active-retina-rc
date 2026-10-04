@@ -1,0 +1,49 @@
+{
+  "policy_id": "ActiveRetina-DDR-augmented-selective-fusion-v2",
+  "status": "GO_AUGMENTED_THREE_OUTPUT_AUTONOMOUS_TRIAGE",
+  "boundary": "Every image receives an autonomous workflow output: AUTONOMOUS_NONREFERABLE, AUTONOMOUS_REFERABLE, or AUTONOMOUS_INSUFFICIENT_EVIDENCE_REACQUIRE. This is not every-image binary diagnosis.",
+  "dataset_scope": "DDR public subset held-out test, common set n=1435 with 946 referable and 489 nonreferable images.",
+  "score_family": [
+    "clementp_efficientnet_b5",
+    "convnext_tiny",
+    "dino_vit",
+    "feature_ensemble",
+    "mlp_ensemble",
+    "mlp_ensemble_conservative",
+    "resnet50"
+  ],
+  "score_preprocessing": "rank-normalize each candidate score within split before weighted mixture for accepted random-mixture modes",
+  "operating_modes": {
+    "max_coverage": {
+      "candidate": "random_weight_0538_clem0.45_feat0.17_mlp_0.13_mlp_0.13_ranknorm",
+      "low_threshold": 0.125,
+      "high_threshold": 0.4750000000000001,
+      "test_false_negative_clearances": 0,
+      "test_specificity_among_diagnostic_decisions": 0.9,
+      "test_diagnostic_decision_rate": 0.6501742160278746,
+      "test_insufficient_evidence_rate": 0.34982578397212544,
+      "test_negative_clearance_rate": 0.36809815950920244,
+      "test_referable_autonomous_referral_rate": 0.7748414376321353,
+      "summary": "results/autonomy_extra_signal_clementp_efficientnet_b5_random600/summary.json",
+      "predictions": "results/autonomy_extra_signal_clementp_efficientnet_b5_random600/best_predictions.csv"
+    },
+    "conservative": {
+      "candidate": "random_weight_0160_clem0.20_dino0.46_feat0.11_mlp_0.13_mlp_0.07_ranknorm",
+      "low_threshold": 0.09375,
+      "high_threshold": 0.55,
+      "test_false_negative_clearances": 0,
+      "test_specificity_among_diagnostic_decisions": 0.9310344827586207,
+      "test_diagnostic_decision_rate": 0.5442508710801394,
+      "test_insufficient_evidence_rate": 0.45574912891986064,
+      "test_negative_clearance_rate": 0.27607361963190186,
+      "test_referable_autonomous_referral_rate": 0.6723044397463002,
+      "summary": "results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/summary.json",
+      "predictions": "results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/best_predictions.csv"
+    }
+  },
+  "selection_protocol": "Thresholds selected on validation under zero false-negative clearance and specificity constraints; held-out test read once for reported metrics.",
+  "rejected_models": {
+    "standalone_public_classifiers": "Did not improve the baseline as direct replacement policies.",
+    "learned_augmented_fusion": "Rejected because learned fusion introduced false-negative clearances on held-out test despite higher nominal coverage."
+  }
+}
