@@ -27,15 +27,15 @@ This run tests whether the public `ClementP/FundusDRGrading-tf_efficientnet_b5` 
 
 ## Augmented Random-Mixture Max-Coverage Result
 
-- Candidate: `random_weight_1067_clem0.53_conv0.14_dino0.07_feat0.09_mlp_0.09_ranknorm`
-- Validation-selected low threshold: `0.129223`
+- Candidate: `random_weight_4389_clem0.49_conv0.09_dino0.15_mlp_0.07_mlp_0.15_ranknorm`
+- Validation-selected low threshold: `0.130068`
 - Validation-selected high threshold: `0.4625`
 - Test false-negative clearances: `0`
-- Test specificity among diagnostic decisions: `90.3%`
-- Test diagnostic decision rate: `66.7%`
-- Test insufficient-evidence/reacquire rate: `33.3%`
-- Test negative-clearance rate: `38.0%`
-- Test referable autonomous referral rate: `79.4%`
+- Test specificity among diagnostic decisions: `90.8%`
+- Test diagnostic decision rate: `66.8%`
+- Test insufficient-evidence/reacquire rate: `33.2%`
+- Test negative-clearance rate: `38.2%`
+- Test referable autonomous referral rate: `79.5%`
 
 ## Augmented Random-Mixture Conservative Result
 
@@ -55,6 +55,6 @@ The public EfficientNet model failed as a standalone policy, but it adds useful 
 
 `nonreferable / referable / insufficient-evidence-reacquire`
 
-This is still not every-image binary diagnosis. It is a stronger completed autonomous triage subsystem with higher diagnostic coverage. The max-coverage mode reaches 66.7% diagnostic coverage at 90.3% specificity; the conservative mode trades coverage for a 93.1% specificity margin.
+This is still not every-image binary diagnosis. It is a stronger completed autonomous triage subsystem with higher diagnostic coverage. The max-coverage mode reaches 66.8% diagnostic coverage at 90.8% specificity; the conservative mode trades coverage for a 93.1% specificity margin.
 
 Frontier figure: `results/autonomy_extra_signal_clementp_efficientnet_b5/frontier.svg`

@@ -2,7 +2,7 @@
 
 Decision: `GO_AUGMENTED_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS`
 
-Central supported claim: Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output. Adding a public EfficientNet fundus signal improves the diagnostic coverage frontier from 43.8% to 66.7% while preserving zero false-negative clearances and meeting >=90% diagnostic specificity. Every-image binary autonomous diagnosis remains unsupported by current score, meta-model, or cached-feature families.
+Central supported claim: Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output. Adding a public EfficientNet fundus signal improves the diagnostic coverage frontier from 43.8% to 66.8% while preserving zero false-negative clearances and meeting >=90% diagnostic specificity. Every-image binary autonomous diagnosis remains unsupported by current score, meta-model, or cached-feature families.
 
 Next required model gate: Train and freeze an explicit learned fusion model over the augmented signal family, then pass zero validation misses with >=90% specificity before one-shot test or external certification.
 
@@ -102,9 +102,9 @@ Next required model gate: Train and freeze an explicit learned fusion model over
 
 - Status: `GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY`
 - Dataset: DDR public subset
-- Evidence files: `results/autonomy_extra_signal_clementp_efficientnet_b5_random2000_fast/summary.json`; `results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/summary.json`
+- Evidence files: `results/autonomy_extra_signal_clementp_efficientnet_b5_random5000_fast/summary.json`; `results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/summary.json`
 - Primary endpoint: improved diagnostic decision rate while preserving zero false-negative clearances and >=90% specificity among diagnostic decisions
-- Key result: max-coverage mode test FN clearances=0; diagnostic-decision specificity=90.3%; diagnostic decision rate=66.7%; insufficient-evidence rate=33.3%; negative-clearance rate=38.0%
+- Key result: max-coverage mode test FN clearances=0; diagnostic-decision specificity=90.8%; diagnostic decision rate=66.8%; insufficient-evidence rate=33.2%; negative-clearance rate=38.2%
 - Conservative mode: test FN clearances=0; diagnostic-decision specificity=93.1%; diagnostic decision rate=54.4%; insufficient-evidence rate=45.6%; negative-clearance rate=27.6%
 - Paper use: Positive model-improvement result; shows the autonomy frontier can be improved with external retinal pretrained signal diversity.
 

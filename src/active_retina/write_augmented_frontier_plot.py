@@ -9,13 +9,14 @@ from pathlib import Path
 
 RUNS = {
     "baseline": Path("results/three_output_autonomous_triage/summary.json"),
-    "augmented_max_coverage": Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random2000_fast/summary.json"),
+    "augmented_max_coverage": Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random5000_fast/summary.json"),
     "augmented_conservative": Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/summary.json"),
 }
 TABLES = [
     Path("results/autonomy_extra_signal_clementp_efficientnet_b5/search_table.csv"),
     Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random600/search_table.csv"),
     Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/search_table.csv"),
+    Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random5000_fast/search_table.csv"),
 ]
 OUT = Path("results/autonomy_extra_signal_clementp_efficientnet_b5/frontier.svg")
 
