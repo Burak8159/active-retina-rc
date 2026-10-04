@@ -1,0 +1,23 @@
+{
+  "best": {
+    "candidate": "random_weight_1903_ranknorm",
+    "status": "NO_GO_FULL_BINARY",
+    "test_fn": 4,
+    "test_fp": 265,
+    "test_sensitivity": 0.9957716701902748,
+    "test_specificity": 0.45807770961145194,
+    "test_threshold": 0.1587837837827838,
+    "test_tn": 224,
+    "test_tp": 942,
+    "valid_fn": 0,
+    "valid_fp": 238,
+    "valid_sensitivity": 1.0,
+    "valid_specificity": 0.4413145539906103,
+    "valid_threshold": 0.1587837837827838,
+    "valid_tn": 188,
+    "valid_tp": 759
+  },
+  "n_candidates": 4026,
+  "status": "NO_GO_FULL_BINARY_90_0",
+  "table": "results/augmented_full_binary_gap/full_binary_gap_table.csv"
+}

@@ -116,3 +116,12 @@ Next required model gate: Train and freeze an explicit learned fusion model over
 - Primary endpoint: learned fusion trained on inner validation-train, calibrated on held-out validation-calibration, and reported once on test
 - Key result: best high-specificity learned mode reached 52.5% diagnostic decision rate and 98.1% specificity, but introduced 2 false-negative clearances
 - Paper use: Negative model-selection evidence; learned fusion is not accepted despite attractive coverage/specificity because zero-miss safety is mandatory.
+
+### E13. Augmented score family still cannot support every-image binary autonomous diagnosis.
+
+- Status: `NO_GO_FULL_BINARY_90_0`
+- Dataset: DDR public subset
+- Evidence file: `results/augmented_full_binary_gap/summary.json`
+- Primary endpoint: every image receives a binary nonreferable/referable diagnosis with zero false negatives and >=90% specificity
+- Key result: best validation-zero-miss augmented candidate on test has 4 false negatives and 45.8% specificity
+- Paper use: Falsification result; the accepted product claim must remain three-output selective autonomy, not unrestricted binary diagnosis.
