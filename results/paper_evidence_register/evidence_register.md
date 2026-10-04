@@ -4,7 +4,7 @@ Decision: `GO_AUGMENTED_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY
 
 Central supported claim: Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output. Adding a public EfficientNet fundus signal improves the diagnostic coverage frontier from 43.8% to 66.8% while preserving zero false-negative clearances and meeting >=90% diagnostic specificity. Every-image binary autonomous diagnosis remains unsupported by current score, meta-model, or cached-feature families.
 
-Next required model gate: Train and freeze an explicit learned fusion model over the augmented signal family, then pass zero validation misses with >=90% specificity before one-shot test or external certification.
+Next required model gate: Train a hard-case model that specifically separates abstained/false-positive nonreferable images from hard referable images, then pass zero validation false-negative clearances with >=90% specificity before one-shot test or external certification.
 
 ## Evidence Items
 
@@ -125,3 +125,12 @@ Next required model gate: Train and freeze an explicit learned fusion model over
 - Primary endpoint: every image receives a binary nonreferable/referable diagnosis with zero false negatives and >=90% specificity
 - Key result: best validation-zero-miss augmented candidate on test has 4 false negatives and 45.8% specificity
 - Paper use: Falsification result; the accepted product claim must remain three-output selective autonomy, not unrestricted binary diagnosis.
+
+### E14. Accepted augmented policy exposes the concrete remaining error burden.
+
+- Status: `GAP_ANALYSIS_READY`
+- Dataset: DDR public subset
+- Evidence files: `results/augmented_autonomy_gap_analysis/report.md`; `results/augmented_autonomy_gap_analysis/test_abstentions.csv`; `results/augmented_autonomy_gap_analysis/test_false_positive_referrals.csv`
+- Primary endpoint: characterize what still blocks every-image binary autonomy after the accepted augmented selective policy
+- Key result: held-out test abstentions=477/1435; abstained positives=194; abstained negatives=283; false-positive nonreferable referrals=19; false-negative clearances=0
+- Paper use: Mechanism/next-target analysis; the next model must recover abstained nonreferable images and reduce false-positive referrals without clearing any referable images.
