@@ -2,12 +2,18 @@
 
 Status: `GO_CLINICIAN_REVIEWED_ACQUISITION_ASSISTANT`
 
+Additional computational status: `GO_AUGMENTED_THREE_OUTPUT_AUTONOMOUS_TRIAGE`
+
 This package now has a software-side clinical workflow: a locked model artifact,
 real image/case input handling, local browser station, JSON output, HTML case
 reporting, audit hashes, hardware-enclosure runbook, and fail-closed decision
-gating. It is ready as a clinician-reviewed acquisition assistant prototype. It
-is still not an autonomous diagnosis system because the current DeepDRiD model
-does not certify a 5% missed-referable-DR risk target.
+gating. It is ready as a clinician-reviewed acquisition assistant prototype.
+Separately, the DDR augmented selective-autonomy layer now reaches zero
+false-negative clearances, 90.8% specificity among automatic decisions, and
+66.8% automatic coverage on held-out evaluation. It is still not an unrestricted
+autonomous diagnosis system because uncertain cases must return
+`AUTONOMOUS_INSUFFICIENT_EVIDENCE_REACQUIRE` rather than receiving a forced
+binary diagnosis.
 
 ## Completed software-side controls
 
@@ -38,13 +44,16 @@ does not certify a 5% missed-referable-DR risk target.
 - Reproducible full DeepDRiD cross-validation evidence.
 - Formal calibration risk-bound audit.
 - Software smoke tests for the gateway and clinician report.
+- Frozen augmented selective-autonomy policy artifact:
+  `results/autonomous_mode_augmented_policy_v2.json`.
+- Real autonomy frontier plot:
+  `results/autonomy_extra_signal_clementp_efficientnet_b5/frontier.svg`.
 
 ## Autonomous-use blockers
 
-- No 5% missed-referable-DR finite-sample certificate. The current exact audit
-  requires at least 59 automatically decided positive-patient calibration cases
-  with zero misses; the best current zero-miss candidate has 21 and a 13.3%
-  upper bound.
+- No unrestricted every-image binary diagnostic mode. The current accepted
+  autonomous layer is three-output: nonreferable, referable, or insufficient
+  evidence/reacquire.
 - No regulatory clearance.
 - No clinical site validation.
 - No verified DeepDRiD suffix-to-anatomy mapping for field-named claims.

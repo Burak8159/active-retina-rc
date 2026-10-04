@@ -18,17 +18,18 @@ NO_GO_EVERY_IMAGE_AUTONOMY
 
 The project has a real selective autonomous subsystem:
 
-- policy: `ActiveRetina-DDR-selective-fusion-90-0-v1`
+- policy: `ActiveRetina-DDR-augmented-selective-fusion-v2`
 - action space: `CLEAR / REFER / ABSTAIN`
 - held-out DDR false-negative clearances: `0`
-- held-out specificity among automatic decisions: `94.7%`
-- held-out automatic coverage: `46.3%`
+- held-out specificity among automatic decisions: `90.8%`
+- held-out automatic coverage: `66.8%`
+- held-out insufficient-evidence/reacquire rate: `33.2%`
 
-This is a valid high-confidence autonomous subsystem, but it is not every-image diagnosis because it abstains on `53.7%` of held-out images.
+This is a valid high-confidence autonomous subsystem, but it is not every-image diagnosis because it abstains on `33.2%` of held-out images. A stricter specificity-margin mode remains available with `94.7%` specificity and `46.3%` coverage.
 
 ## What failed for every-image autonomy
 
-Three direct repair attempts were run.
+Four direct repair attempts were run.
 
 1. Full-coverage meta-model over current score family:
    - best zero-miss test result: `0` false negatives
@@ -47,6 +48,11 @@ Three direct repair attempts were run.
    - test nonreferable clearance specificity: `12.9%`
    - conclusion: hard-case feature training did not generalize to safe every-image clearance.
 
+4. Augmented full-binary score-family search:
+   - added a public EfficientNet fundus signal and searched augmented forced-binary candidates
+   - best current held-out result: `4` false negatives and `45.8%` specificity
+   - conclusion: augmented scores improve selective autonomy but still do not support every-image binary diagnosis.
+
 ## Product interpretation
 
 The safe product boundary is currently:
@@ -56,7 +62,7 @@ GO_SELECTIVE_AUTONOMOUS_CLEAR_REFER_WITH_ABSTAIN
 NO_GO_EVERY_IMAGE_AUTONOMOUS_DIAGNOSIS
 ```
 
-Every-image autonomy cannot be honestly unlocked by thresholding, report wording, or score-level ensembling. It requires one of:
+Every-image binary autonomy cannot be honestly unlocked by thresholding, report wording, or the score-level families tested so far. It requires one of:
 
 1. a stronger image model trained end-to-end on hard cases with sufficient compute,
 2. additional independent evidence per case, such as paired/multi-view images or image-quality gated reacquisition,
