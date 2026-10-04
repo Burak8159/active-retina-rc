@@ -15,7 +15,7 @@ from typing import Any
 
 import numpy as np
 
-from active_retina.autonomy_zero_miss_90_search import metrics, ranknorm, read_model_rows, select_policy
+from active_retina.autonomy_zero_miss_90_search import metrics, ranknorm, read_model_rows
 from active_retina.three_output_autonomous_triage import triage_metrics
 
 
@@ -56,6 +56,34 @@ def triage_rows(image_ids: list[str], splits: list[str], y: np.ndarray, scores: 
             }
         )
     return rows
+
+
+def select_policy_fast(valid_y: np.ndarray, valid_s: np.ndarray, min_spec: float, grid_size: int = 81) -> dict[str, Any]:
+    pos_scores = valid_s[valid_y == 1]
+    if len(pos_scores) == 0:
+        return {"status": "NO_POSITIVES"}
+    max_safe_low = float(np.min(pos_scores)) - 1e-12
+    quantiles = np.quantile(valid_s, np.linspace(0, 1, grid_size))
+    low_grid = sorted({float(x) for x in quantiles if float(x) <= max_safe_low} | {float(np.min(valid_s)) - 1e-9, max_safe_low})
+    high_grid = sorted({float(x) for x in quantiles} | {float(np.max(valid_s)) + 1e-9})
+    best: tuple[tuple[float, float, float], dict[str, Any]] | None = None
+    for low in low_grid:
+        for high in high_grid:
+            if low >= high:
+                continue
+            row = metrics(valid_y, valid_s, low, high)
+            if row["false_negative_clearances"] != 0:
+                continue
+            if row["specificity_among_auto_decisions"] < min_spec:
+                continue
+            key = (
+                row["coverage"],
+                row["negative_clearance_rate"],
+                row["specificity_among_auto_decisions"],
+            )
+            if best is None or key > best[0]:
+                best = (key, row)
+    return best[1] if best else {"status": "NO_VALID_ZERO_MISS_90_POLICY"}
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -114,7 +142,7 @@ def main() -> None:
     rows: list[dict[str, Any]] = []
     best: dict[str, Any] | None = None
     for name, scores in candidates.items():
-        selected = select_policy(y[valid_mask], scores[valid_mask], min_spec=args.min_specificity)
+        selected = select_policy_fast(y[valid_mask], scores[valid_mask], min_spec=args.min_specificity)
         if "status" in selected:
             rows.append({"candidate": name, "status": selected["status"]})
             continue

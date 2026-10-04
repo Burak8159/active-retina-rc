@@ -9,7 +9,7 @@ from pathlib import Path
 
 RUNS = {
     "baseline": Path("results/three_output_autonomous_triage/summary.json"),
-    "augmented_max_coverage": Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random600/summary.json"),
+    "augmented_max_coverage": Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random2000_fast/summary.json"),
     "augmented_conservative": Path("results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/summary.json"),
 }
 TABLES = [

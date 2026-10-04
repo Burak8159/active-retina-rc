@@ -15,17 +15,17 @@
   "score_preprocessing": "rank-normalize each candidate score within split before weighted mixture for accepted random-mixture modes",
   "operating_modes": {
     "max_coverage": {
-      "candidate": "random_weight_0538_clem0.45_feat0.17_mlp_0.13_mlp_0.13_ranknorm",
-      "low_threshold": 0.125,
-      "high_threshold": 0.4750000000000001,
+      "candidate": "random_weight_1067_clem0.53_conv0.14_dino0.07_feat0.09_mlp_0.09_ranknorm",
+      "low_threshold": 0.12922297297197297,
+      "high_threshold": 0.4625000000000001,
       "test_false_negative_clearances": 0,
-      "test_specificity_among_diagnostic_decisions": 0.9,
-      "test_diagnostic_decision_rate": 0.6501742160278746,
-      "test_insufficient_evidence_rate": 0.34982578397212544,
-      "test_negative_clearance_rate": 0.36809815950920244,
-      "test_referable_autonomous_referral_rate": 0.7748414376321353,
-      "summary": "results/autonomy_extra_signal_clementp_efficientnet_b5_random600/summary.json",
-      "predictions": "results/autonomy_extra_signal_clementp_efficientnet_b5_random600/best_predictions.csv"
+      "test_specificity_among_diagnostic_decisions": 0.9029126213592233,
+      "test_diagnostic_decision_rate": 0.6668989547038328,
+      "test_insufficient_evidence_rate": 0.33310104529616724,
+      "test_negative_clearance_rate": 0.3803680981595092,
+      "test_referable_autonomous_referral_rate": 0.7938689217758985,
+      "summary": "results/autonomy_extra_signal_clementp_efficientnet_b5_random2000_fast/summary.json",
+      "predictions": "results/autonomy_extra_signal_clementp_efficientnet_b5_random2000_fast/best_predictions.csv"
     },
     "conservative": {
       "candidate": "random_weight_0160_clem0.20_dino0.46_feat0.11_mlp_0.13_mlp_0.07_ranknorm",

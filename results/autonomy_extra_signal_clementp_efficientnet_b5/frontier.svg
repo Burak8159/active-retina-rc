@@ -2531,8 +2531,8 @@
 <circle cx="433.0" cy="87.5" r="3.2" fill="#b8c2cc" fill-opacity="0.28"><title>random_weight_0599_conv0.20_dino0.06_mlp_0.23_mlp_0.46_ranknorm: coverage=43.8%, specificity=91.0%, misses=1</title></circle>
 <circle cx="433.5" cy="71.2" r="7" fill="#111827"/>
 <text x="425.5" y="59.2" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#111827">Baseline</text>
-<circle cx="603.4" cy="92.0" r="7" fill="#0b7a3b"/>
-<text x="611.4" y="80.0" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#0b7a3b">Augmented max coverage</text>
+<circle cx="616.9" cy="90.7" r="7" fill="#0b7a3b"/>
+<text x="624.9" y="78.7" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#0b7a3b">Augmented max coverage</text>
 <circle cx="518.5" cy="78.3" r="7" fill="#7c3aed"/>
 <text x="526.5" y="96.3" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#7c3aed">Augmented conservative</text>
 <text x="82" y="535" font-family="Arial, sans-serif" font-size="11" fill="#4b5563">Blue points are zero-false-clearance candidate policies; gray points had at least one false nonreferable clearance.</text>
