@@ -1,0 +1,402 @@
+{
+  "artifact": "models/clearance_ranker_hardmined_v2_ensemble_local.pt",
+  "best_epoch": {
+    "epoch": 24,
+    "train_loss": 0.865329319636027,
+    "valid_clearance": {
+      "clearance_coverage": 0.025594149908592323,
+      "false_nonreferable_clearance": 0,
+      "missed_referable_rate": 0.0,
+      "missed_risk_ucb95": 0.00859607486323134,
+      "n": 547,
+      "negative": 200,
+      "nonreferable_clearance_specificity": 0.07,
+      "positive": 347,
+      "threshold": 0.09510262148284912,
+      "true_nonreferable_cleared": 14,
+      "zero_miss": true
+    }
+  },
+  "feature_cache": "results/ddr_hf_specificity100_ensemble_features.npz",
+  "history_tail": [
+    {
+      "epoch": 81,
+      "train_loss": 0.08700331926345825,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.09483542131090164,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 82,
+      "train_loss": 0.13231766988833746,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.09310513572597504,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 83,
+      "train_loss": 0.08530081023772558,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.0913589506020546,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 84,
+      "train_loss": 0.08913427392641703,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.08940842585468292,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 85,
+      "train_loss": 0.09261284450689952,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.08659004257822037,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 86,
+      "train_loss": 0.08332965642213822,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.08357049362564087,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 87,
+      "train_loss": 0.08461111625035604,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.08053282486104965,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 88,
+      "train_loss": 0.0806399362285932,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.07758020447397232,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 89,
+      "train_loss": 0.07496267090241114,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.07456199662590027,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 90,
+      "train_loss": 0.07519146367907524,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.07173461304807663,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 91,
+      "train_loss": 0.09439729561408361,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.06834579841995239,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 92,
+      "train_loss": 0.08949827402830124,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.0653448908200264,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 93,
+      "train_loss": 0.08287532409032186,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.06288949983024597,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 94,
+      "train_loss": 0.07717748552560806,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.060972286628723144,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 95,
+      "train_loss": 0.0847488820552826,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.05921948911452293,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 96,
+      "train_loss": 0.07384800463914871,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.057763139026403426,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 97,
+      "train_loss": 0.08266466438770294,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.056000387536525725,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 98,
+      "train_loss": 0.0710521552960078,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.05400312902235985,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 99,
+      "train_loss": 0.08015937050183614,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.05235958309674263,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    },
+    {
+      "epoch": 100,
+      "train_loss": 0.08278388410806656,
+      "valid_clearance": {
+        "clearance_coverage": 0.02010968921389397,
+        "false_nonreferable_clearance": 0,
+        "missed_referable_rate": 0.0,
+        "missed_risk_ucb95": 0.00859607486323134,
+        "n": 547,
+        "negative": 200,
+        "nonreferable_clearance_specificity": 0.055,
+        "positive": 347,
+        "threshold": 0.05007130117917061,
+        "true_nonreferable_cleared": 11,
+        "zero_miss": true
+      }
+    }
+  ],
+  "manifest": "results/ddr_hf_specificity100_manifest.csv",
+  "predictions": "results/clearance_ranker_hardmined_v2_ensemble_local/predictions.csv",
+  "status": "NO_GO_CLEARANCE_RANKER_90_SPECIFICITY_ZERO_MISS",
+  "target_specificity": 0.9,
+  "test_grade_probability_shape": [
+    571,
+    6
+  ],
+  "test_metrics": {
+    "clearance_coverage": 0.01576182136602452,
+    "false_nonreferable_clearance": 0,
+    "missed_referable_rate": 0.0,
+    "missed_risk_ucb95": 0.008042236840099592,
+    "n": 571,
+    "negative": 200,
+    "nonreferable_clearance_specificity": 0.045,
+    "positive": 371,
+    "threshold": 0.09510262148284912,
+    "true_nonreferable_cleared": 9,
+    "zero_miss": true
+  },
+  "threshold_selected_on_validation": 0.09510262148284912,
+  "valid_grade_probability_shape": [
+    547,
+    6
+  ],
+  "valid_metrics": {
+    "clearance_coverage": 0.025594149908592323,
+    "false_nonreferable_clearance": 0,
+    "missed_referable_rate": 0.0,
+    "missed_risk_ucb95": 0.00859607486323134,
+    "n": 547,
+    "negative": 200,
+    "nonreferable_clearance_specificity": 0.07,
+    "positive": 347,
+    "threshold": 0.09510262148284912,
+    "true_nonreferable_cleared": 14,
+    "zero_miss": true
+  }
+}

@@ -82,6 +82,51 @@ def predict(model: nn.Module, x: np.ndarray, batch_size: int, device: torch.devi
     return np.concatenate(risks).astype(float), np.vstack(grade_probs).astype(float)
 
 
+def asymmetric_focal_bce(logits: torch.Tensor, y: torch.Tensor, pos_weight: float, gamma_pos: float, gamma_neg: float) -> torch.Tensor:
+    """Focal BCE that keeps referable misses expensive while mining hard negatives."""
+    bce = nn.functional.binary_cross_entropy_with_logits(
+        logits,
+        y,
+        pos_weight=torch.tensor(pos_weight, device=logits.device),
+        reduction="none",
+    )
+    p = torch.sigmoid(logits)
+    pt = torch.where(y == 1, p, 1.0 - p)
+    gamma = torch.where(y == 1, torch.tensor(gamma_pos, device=logits.device), torch.tensor(gamma_neg, device=logits.device))
+    return (((1.0 - pt).clamp_min(1e-6) ** gamma) * bce).mean()
+
+
+def hard_mining_weights(
+    y: np.ndarray,
+    grade: np.ndarray,
+    scores: np.ndarray | None,
+    pos_weight: float,
+    grade2_boost: float,
+    grade1_boost: float,
+    hard_fraction: float,
+    hard_boost: float,
+) -> np.ndarray:
+    weights = np.ones_like(y, dtype="float32")
+    weights[y == 1] = pos_weight
+    weights[(y == 1) & (grade == 2)] *= grade2_boost
+    weights[(y == 0) & (grade == 1)] *= grade1_boost
+    if scores is None or hard_fraction <= 0:
+        return weights
+    positives = np.where(y == 1)[0]
+    negatives = np.where(y == 0)[0]
+    if len(positives):
+        n = max(1, int(np.ceil(len(positives) * hard_fraction)))
+        # Dangerous positives are the ones with the lowest risk score.
+        hard_pos = positives[np.argsort(scores[positives])[:n]]
+        weights[hard_pos] *= hard_boost
+    if len(negatives):
+        n = max(1, int(np.ceil(len(negatives) * hard_fraction)))
+        # Useful hard negatives are the ones the model currently refuses to clear.
+        hard_neg = negatives[np.argsort(scores[negatives])[-n:]]
+        weights[hard_neg] *= hard_boost
+    return weights
+
+
 def clearance_metrics(y: np.ndarray, scores: np.ndarray, threshold: float) -> dict[str, Any]:
     clear = scores <= threshold
     positives = y == 1
@@ -163,8 +208,15 @@ def main() -> None:
     parser.add_argument("--lr", type=float, default=7e-4)
     parser.add_argument("--weight-decay", type=float, default=2e-3)
     parser.add_argument("--pos-weight", type=float, default=12.0)
+    parser.add_argument("--grade2-boost", type=float, default=3.0)
+    parser.add_argument("--grade1-boost", type=float, default=3.0)
+    parser.add_argument("--hard-fraction", type=float, default=0.25)
+    parser.add_argument("--hard-boost", type=float, default=8.0)
+    parser.add_argument("--hard-refresh-epochs", type=int, default=10)
     parser.add_argument("--rank-weight", type=float, default=3.0)
     parser.add_argument("--grade-weight", type=float, default=0.2)
+    parser.add_argument("--focal-gamma-pos", type=float, default=2.0)
+    parser.add_argument("--focal-gamma-neg", type=float, default=1.0)
     parser.add_argument("--margin", type=float, default=1.5)
     parser.add_argument("--safety-margin", type=float, default=1e-6)
     parser.add_argument("--target-specificity", type=float, default=0.90)
@@ -192,19 +244,18 @@ def main() -> None:
     x_test, y_test, g_test, test_ids = load_split(rows, features, "test")
     x_train, x_valid, x_test, mean, std = standardize(x_train, x_valid, x_test)
 
-    sample_weight = np.ones_like(y_train, dtype="float32")
-    sample_weight[y_train == 1] = args.pos_weight
-    sample_weight[(y_train == 1) & (g_train == 2)] = args.pos_weight * 3.0
-    sample_weight[(y_train == 0) & (g_train == 1)] = 3.0
-    sampler = WeightedRandomSampler(sample_weight, num_samples=len(sample_weight), replacement=True)
-    loader = DataLoader(
-        TensorDataset(torch.from_numpy(x_train), torch.from_numpy(y_train), torch.from_numpy(g_train)),
-        batch_size=args.batch_size,
-        sampler=sampler,
+    sample_weight = hard_mining_weights(
+        y_train,
+        g_train,
+        None,
+        args.pos_weight,
+        args.grade2_boost,
+        args.grade1_boost,
+        args.hard_fraction,
+        args.hard_boost,
     )
 
     model = ClearanceRanker(x_train.shape[1], args.hidden, args.dropout).to(device)
-    bce = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(args.pos_weight, device=device))
     ce = nn.CrossEntropyLoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
@@ -212,6 +263,25 @@ def main() -> None:
     best_epoch: dict[str, Any] | None = None
     history: list[dict[str, Any]] = []
     for epoch in range(1, args.epochs + 1):
+        if epoch == 1 or (args.hard_refresh_epochs > 0 and (epoch - 1) % args.hard_refresh_epochs == 0):
+            if epoch > 1:
+                train_scores, _ = predict(model, x_train, args.batch_size, device)
+                sample_weight = hard_mining_weights(
+                    y_train,
+                    g_train,
+                    train_scores,
+                    args.pos_weight,
+                    args.grade2_boost,
+                    args.grade1_boost,
+                    args.hard_fraction,
+                    args.hard_boost,
+                )
+            sampler = WeightedRandomSampler(sample_weight, num_samples=len(sample_weight), replacement=True)
+            loader = DataLoader(
+                TensorDataset(torch.from_numpy(x_train), torch.from_numpy(y_train), torch.from_numpy(g_train)),
+                batch_size=args.batch_size,
+                sampler=sampler,
+            )
         model.train()
         total = 0.0
         seen = 0
@@ -221,7 +291,13 @@ def main() -> None:
             gb = gb.to(device)
             optimizer.zero_grad(set_to_none=True)
             logits, grade_logits = model(xb)
-            loss = bce(logits, yb)
+            loss = asymmetric_focal_bce(
+                logits,
+                yb,
+                args.pos_weight,
+                args.focal_gamma_pos,
+                args.focal_gamma_neg,
+            )
             loss = loss + args.rank_weight * pairwise_margin_loss(logits, yb, gb, args.margin)
             loss = loss + args.grade_weight * ce(grade_logits, gb)
             loss.backward()
@@ -235,11 +311,13 @@ def main() -> None:
         if best_epoch is None or (
             int(valid_row["zero_miss"]),
             valid_row["nonreferable_clearance_specificity"],
-            -valid_row["clearance_coverage"],
+            valid_row["clearance_coverage"],
+            -valid_row["missed_risk_ucb95"],
         ) > (
             int(best_epoch["valid_clearance"]["zero_miss"]),
             best_epoch["valid_clearance"]["nonreferable_clearance_specificity"],
-            -best_epoch["valid_clearance"]["clearance_coverage"],
+            best_epoch["valid_clearance"]["clearance_coverage"],
+            -best_epoch["valid_clearance"]["missed_risk_ucb95"],
         ):
             best_epoch = row
             best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
