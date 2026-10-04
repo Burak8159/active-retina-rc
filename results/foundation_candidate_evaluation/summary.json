@@ -1,0 +1,20 @@
+{
+  "baseline": "results/three_output_autonomous_triage/summary.json",
+  "best_balanced_candidate": {
+    "diagnostic_decision_rate": 0.06944444444444445,
+    "false_negative_clearances": 0,
+    "improved_over_baseline": false,
+    "insufficient_evidence_rate": 0.9305555555555556,
+    "model_name": "hf_hub:bitfount/RETFound_DR_IDRID",
+    "n": 72,
+    "negative": 24,
+    "path": "results/timm_three_output_retfound_drid_balanced_smoke/summary.json",
+    "positive": 48,
+    "run": "RETFound_DR_IDRID_balanced_smoke",
+    "specificity_among_diagnostic_decisions": 1.0,
+    "status": "NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY"
+  },
+  "decision": "NO_FOUNDATION_SMOKE_IMPROVES_BASELINE_YET",
+  "n_runs": 4,
+  "status": "FOUNDATION_CANDIDATE_SMOKE_REPORT_READY"
+}

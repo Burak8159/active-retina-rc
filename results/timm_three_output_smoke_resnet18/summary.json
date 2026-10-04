@@ -1,0 +1,98 @@
+{
+  "baseline_test_triage_metrics": {
+    "autonomous_output_rate": 1.0,
+    "diagnostic_decision_rate": 0.43832752613240417,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 4,
+    "insufficient_evidence_rate": 0.5616724738675958,
+    "n": 1435,
+    "negative": 489,
+    "negative_clearance_rate": 0.147239263803681,
+    "positive": 946,
+    "referable_autonomous_referral_rate": 0.5845665961945031,
+    "sensitivity_if_insufficient_is_not_negative": 1.0,
+    "specificity_among_diagnostic_decisions": 0.9473684210526315,
+    "true_negative_clearances": 72,
+    "true_positive_referrals": 553
+  },
+  "data_config": {
+    "crop_mode": "center",
+    "crop_pct": 0.95,
+    "input_size": [
+      3,
+      224,
+      224
+    ],
+    "interpolation": "bicubic",
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "grayscale_triplicate": false,
+  "improved_over_baseline": false,
+  "model_name": "resnet18",
+  "positive_indices": [
+    2,
+    3,
+    4
+  ],
+  "predictions": "results/timm_three_output_smoke_resnet18/predictions.csv",
+  "selected_policy": {
+    "autonomous_output_rate": 1.0,
+    "diagnostic_decision_rate": 1.0,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 0,
+    "high": 0.0028865116869488954,
+    "insufficient_evidence_rate": 0.0,
+    "low": 0.0028865106869488955,
+    "n": 16,
+    "negative": 16,
+    "negative_clearance_rate": 1.0,
+    "positive": 0,
+    "referable_autonomous_referral_rate": 0.0,
+    "sensitivity_if_insufficient_is_not_negative": 1.0,
+    "specificity_among_diagnostic_decisions": 1.0,
+    "true_negative_clearances": 16,
+    "true_positive_referrals": 0
+  },
+  "status": "NO_GO_IMPROVED_THREE_OUTPUT_AUTONOMY",
+  "test_triage_metrics": {
+    "autonomous_output_rate": 1.0,
+    "diagnostic_decision_rate": 1.0,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 5,
+    "insufficient_evidence_rate": 0.0,
+    "n": 16,
+    "negative": 16,
+    "negative_clearance_rate": 0.6875,
+    "positive": 0,
+    "referable_autonomous_referral_rate": 0.0,
+    "sensitivity_if_insufficient_is_not_negative": 1.0,
+    "specificity_among_diagnostic_decisions": 0.6875,
+    "true_negative_clearances": 11,
+    "true_positive_referrals": 0
+  },
+  "valid_triage_metrics": {
+    "autonomous_output_rate": 1.0,
+    "diagnostic_decision_rate": 1.0,
+    "false_negative_clearances": 0,
+    "false_positive_referrals": 0,
+    "insufficient_evidence_rate": 0.0,
+    "n": 16,
+    "negative": 16,
+    "negative_clearance_rate": 1.0,
+    "positive": 0,
+    "referable_autonomous_referral_rate": 0.0,
+    "sensitivity_if_insufficient_is_not_negative": 1.0,
+    "specificity_among_diagnostic_decisions": 1.0,
+    "true_negative_clearances": 16,
+    "true_positive_referrals": 0
+  }
+}
