@@ -1,0 +1,75 @@
+{
+  "artifact": "models/every_image_autonomy_hardboundary_smoke2.pt",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 31.93492603302002,
+      "valid": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 8,
+        "n": 16,
+        "negative": 8,
+        "positive": 8,
+        "refer_rate": 1.0,
+        "sensitivity": 1.0,
+        "specificity": 0.0,
+        "threshold": 0.6754555106163025,
+        "true_negative": 0,
+        "true_positive": 8
+      }
+    }
+  ],
+  "image_size": 96,
+  "manifest": "results/ddr_hf_specificity300_manifest.csv",
+  "model_name": "resnet18",
+  "n_test": 16,
+  "n_train": 16,
+  "n_valid": 16,
+  "predictions": "results/every_image_autonomy_hardboundary_smoke2/predictions.csv",
+  "pretrained": false,
+  "selected_threshold": {
+    "false_negative_clearance": 0,
+    "false_positive_referral": 8,
+    "n": 16,
+    "negative": 8,
+    "positive": 8,
+    "refer_rate": 1.0,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.6754555106163025,
+    "true_negative": 0,
+    "true_positive": 8
+  },
+  "status": "NO_GO_EVERY_IMAGE_AUTONOMY_80_0",
+  "target_specificity": 0.8,
+  "test_metrics": {
+    "false_negative_clearance": 0,
+    "false_positive_referral": 8,
+    "n": 16,
+    "negative": 8,
+    "positive": 8,
+    "refer_rate": 1.0,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.6754555106163025,
+    "true_negative": 0,
+    "true_positive": 8
+  },
+  "trainable_info": {
+    "mode": "all_parameters",
+    "trainable_parameters": 11179590
+  },
+  "valid_metrics": {
+    "false_negative_clearance": 0,
+    "false_positive_referral": 8,
+    "n": 16,
+    "negative": 8,
+    "positive": 8,
+    "refer_rate": 1.0,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.6754555106163025,
+    "true_negative": 0,
+    "true_positive": 8
+  }
+}

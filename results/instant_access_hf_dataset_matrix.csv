@@ -1,0 +1,10 @@
+priority,name,repo_id,status,active_retina_decision,role,total_size_mb_visible,n_files,n_image_files_visible,n_metadata_like_files,notes
+1,Retinal DR longitudinal,usama10/retinal-dr-longitudinal,ACCESSIBLE,GO_HIGH_PRIORITY_AUDIT_AND_PREP,patient_level_longitudinal_pair_evidence,2328.6,2435,2428,5,Best instant route for repeated-evidence logic if files are public and labels are usable.
+1,BRSET mirror / retina age analysis,ramankamran/retina-age-analysis,ACCESSIBLE,GO_HIGH_PRIORITY_AUDIT_AND_PREP,quality_anatomy_patient_level_robustness,9700.35,9867,9858,7,Useful for quality gate and controlled-input claim.
+2,DR grading Africa,macular/diabetic-retinopathy-grading-africa,ACCESSIBLE,GO_SECONDARY_TRAINING_OR_VALIDATION,external_domain_robustness,216.51,5,0,3,Good stress test for geographic/domain shift.
+2,DR screening benchmark Africa,macular/diabetic-retinopathy-screening-benchmark-africa,ACCESSIBLE,GO_SECONDARY_TRAINING_OR_VALIDATION,external_screening_robustness,216.54,5,0,3,Potential screening-specific external validation.
+3,EyePACS HF,ctmedtech/EYEPACS,ACCESSIBLE,GO_SECONDARY_TRAINING_OR_VALIDATION,large_scale_single_image_training,6180.6,7,3,1,"Large training diversity, but not enough for the acquisition claim."
+3,DDR HF,ctmedtech/DDR-dataset,ACCESSIBLE,GO_SECONDARY_TRAINING_OR_VALIDATION,single_image_training_and_lesion_stress,15144.04,19738,18976,3,Already partly used; audit confirms whether larger/full mirror can extend training.
+3,APTOS HF,OctoMed/Aptos,ACCESSIBLE,GO_SECONDARY_TRAINING_OR_VALIDATION,single_image_external_validation,6515.98,13,0,11,Useful for single-image external validation only.
+4,IDRiD VQA mirror,vermayuvraj/idrid-vqa,ACCESSIBLE,GO_SECONDARY_TRAINING_OR_VALIDATION,lesion_reasoning_auxiliary,1.17,3,0,1,"VQA wrapper can support paper explainability, not primary product certification."
+4,RFMiD HF,ctmedtech/RFMID,ACCESSIBLE,GO_SECONDARY_TRAINING_OR_VALIDATION,confounder_specificity,7815.79,3219,3203,10,Useful to reduce false referrals from non-DR disease confounders.

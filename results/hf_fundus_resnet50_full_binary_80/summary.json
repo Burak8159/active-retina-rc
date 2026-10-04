@@ -1,0 +1,57 @@
+{
+  "id2label": {
+    "0": "LABEL_0"
+  },
+  "invert_score": false,
+  "manifest": "results/ddr_hf_specificity300_manifest.csv",
+  "model_id": "ClementP/FundusDRGrading-resnet50",
+  "predictions": "results\\hf_fundus_resnet50_full_binary_80\\predictions.csv",
+  "referable_indices": [
+    0
+  ],
+  "selected_threshold": {
+    "certifies_5_percent_95_confidence": true,
+    "decided_positive": 759,
+    "false_positive": 426,
+    "missed_positive": 0,
+    "missed_risk_ucb95": 0.00393916738699313,
+    "n": 1185,
+    "negative": 426,
+    "positive": 759,
+    "referable_action_rate": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.2496337890625,
+    "threshold_name": "observed_0",
+    "true_negative": 0
+  },
+  "status": "NO_GO_HF_DR_MODEL_90_SPECIFICITY_ZERO_MISS",
+  "target_specificity": 0.8,
+  "test_metrics": {
+    "certifies_5_percent_95_confidence": true,
+    "decided_positive": 945,
+    "false_positive": 488,
+    "missed_positive": 1,
+    "missed_risk_ucb95": 0.005010029467161157,
+    "n": 1435,
+    "negative": 489,
+    "positive": 946,
+    "referable_action_rate": 0.9986062717770035,
+    "specificity": 0.002044989775051125,
+    "threshold": 0.2496337890625,
+    "true_negative": 1
+  },
+  "valid_metrics": {
+    "certifies_5_percent_95_confidence": true,
+    "decided_positive": 759,
+    "false_positive": 426,
+    "missed_positive": 0,
+    "missed_risk_ucb95": 0.00393916738699313,
+    "n": 1185,
+    "negative": 426,
+    "positive": 759,
+    "referable_action_rate": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.2496337890625,
+    "true_negative": 0
+  }
+}

@@ -1,0 +1,456 @@
+{
+  "n_accessible": 9,
+  "n_high_priority": 2,
+  "n_targets": 9,
+  "rows": [
+    {
+      "active_retina_decision": "GO_HIGH_PRIORITY_AUDIT_AND_PREP",
+      "downloads": 1069,
+      "image_files_sample": [
+        "2 year follow-up fundus images/1036_2.jpg",
+        "2 year follow-up fundus images/1036_4.jpg",
+        "2 year follow-up fundus images/1045_4.jpg",
+        "2 year follow-up fundus images/1045_6.jpg",
+        "2 year follow-up fundus images/1073_3.jpg",
+        "2 year follow-up fundus images/1073_7.jpg",
+        "2 year follow-up fundus images/1095_1.jpg",
+        "2 year follow-up fundus images/1095_3.jpg",
+        "2 year follow-up fundus images/1116_2.jpg",
+        "2 year follow-up fundus images/1116_5.jpg"
+      ],
+      "likes": 1,
+      "metadata_like_files_sample": [
+        "Organized_Data of Patients.xlsx",
+        "baseline fundus images/00194/._00194.txt",
+        "baseline fundus images/02668/02668.txt",
+        "baseline fundus images/02669/02669.txt",
+        "corrected_manifest.csv"
+      ],
+      "n_files": 2435,
+      "n_image_files_visible": 2428,
+      "n_metadata_like_files": 5,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "d6e13e91dae69f3080259afd478db92412c7f32d",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".csv": 1,
+        ".jpg": 2428,
+        ".md": 1,
+        ".txt": 3,
+        ".xlsx": 1,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "same_session_multifield_certification",
+          "four_field_planning"
+        ],
+        "expected_support": [
+          "patient_ids",
+          "paired_or_longitudinal_images",
+          "domain_robustness"
+        ],
+        "name": "Retinal DR longitudinal",
+        "notes": "Best instant route for repeated-evidence logic if files are public and labels are usable.",
+        "priority": 1,
+        "repo_id": "usama10/retinal-dr-longitudinal",
+        "role": "patient_level_longitudinal_pair_evidence"
+      },
+      "total_size_mb_visible": 2328.6
+    },
+    {
+      "active_retina_decision": "GO_HIGH_PRIORITY_AUDIT_AND_PREP",
+      "downloads": 953,
+      "image_files_sample": [
+        "images/img00001.jpg",
+        "images/img00002.jpg",
+        "images/img00003.jpg",
+        "images/img00004.jpg",
+        "images/img00005.jpg",
+        "images/img00006.jpg",
+        "images/img00007.jpg",
+        "images/img00008.jpg",
+        "images/img00009.jpg",
+        "images/img00010.jpg"
+      ],
+      "likes": 0,
+      "metadata_like_files_sample": [
+        "splits/split_statistics.json",
+        "splits/test.csv",
+        "splits/test_patients.txt",
+        "splits/train.csv",
+        "splits/train_patients.txt",
+        "splits/val.csv",
+        "splits/val_patients.txt"
+      ],
+      "n_files": 9867,
+      "n_image_files_visible": 9858,
+      "n_metadata_like_files": 7,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "ffdd3f490cb627f1a2e2b8d7d2864142228eb825",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".csv": 3,
+        ".jpg": 9857,
+        ".json": 1,
+        ".md": 1,
+        ".png": 1,
+        ".txt": 3,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "same_eye_multiview_acquisition_unless_view_columns_exist"
+        ],
+        "expected_support": [
+          "patient_ids",
+          "quality_labels",
+          "anatomy_labels",
+          "external_specificity"
+        ],
+        "name": "BRSET mirror / retina age analysis",
+        "notes": "Useful for quality gate and controlled-input claim.",
+        "priority": 1,
+        "repo_id": "ramankamran/retina-age-analysis",
+        "role": "quality_anatomy_patient_level_robustness"
+      },
+      "total_size_mb_visible": 9700.35
+    },
+    {
+      "active_retina_decision": "GO_SECONDARY_TRAINING_OR_VALIDATION",
+      "downloads": 232,
+      "image_files_sample": [],
+      "likes": 1,
+      "metadata_like_files_sample": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00001.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ],
+      "n_files": 5,
+      "n_image_files_visible": 0,
+      "n_metadata_like_files": 3,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "59ef01d111aadde0eec5da5eda7d2f931c41c1a4",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".md": 1,
+        ".parquet": 3,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "multiview_acquisition",
+          "case_level_reacquisition_certification"
+        ],
+        "expected_support": [
+          "single_image_external_validation",
+          "population_shift"
+        ],
+        "name": "DR grading Africa",
+        "notes": "Good stress test for geographic/domain shift.",
+        "priority": 2,
+        "repo_id": "macular/diabetic-retinopathy-grading-africa",
+        "role": "external_domain_robustness"
+      },
+      "total_size_mb_visible": 216.51
+    },
+    {
+      "active_retina_decision": "GO_SECONDARY_TRAINING_OR_VALIDATION",
+      "downloads": 48,
+      "image_files_sample": [],
+      "likes": 0,
+      "metadata_like_files_sample": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00001.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ],
+      "n_files": 5,
+      "n_image_files_visible": 0,
+      "n_metadata_like_files": 3,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "f5aef0b855f12281bd0d43e75a625dc953cb5e6c",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".md": 1,
+        ".parquet": 3,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "multiview_acquisition"
+        ],
+        "expected_support": [
+          "single_image_external_validation",
+          "screening_endpoint"
+        ],
+        "name": "DR screening benchmark Africa",
+        "notes": "Potential screening-specific external validation.",
+        "priority": 2,
+        "repo_id": "macular/diabetic-retinopathy-screening-benchmark-africa",
+        "role": "external_screening_robustness"
+      },
+      "total_size_mb_visible": 216.54
+    },
+    {
+      "active_retina_decision": "GO_SECONDARY_TRAINING_OR_VALIDATION",
+      "downloads": 527,
+      "image_files_sample": [
+        "rm_images/Merged_Fundus_Images_with_Caption.jpg",
+        "rm_images/left_preprocess_sample.jpg",
+        "rm_images/right_preprocess_sample.jpg"
+      ],
+      "likes": 2,
+      "metadata_like_files_sample": [
+        "trainLabels.csv"
+      ],
+      "n_files": 7,
+      "n_image_files_visible": 3,
+      "n_metadata_like_files": 1,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "e8c63bd722be06043a8fffbdced54f88d324a2de",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".csv": 1,
+        ".jpg": 3,
+        ".md": 1,
+        ".zip": 1,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "patient_level_certification_if_no_patient_ids",
+          "multiview_acquisition"
+        ],
+        "expected_support": [
+          "encoder_training",
+          "single_image_generalization"
+        ],
+        "name": "EyePACS HF",
+        "notes": "Large training diversity, but not enough for the acquisition claim.",
+        "priority": 3,
+        "repo_id": "ctmedtech/EYEPACS",
+        "role": "large_scale_single_image_training"
+      },
+      "total_size_mb_visible": 6180.6
+    },
+    {
+      "active_retina_decision": "GO_SECONDARY_TRAINING_OR_VALIDATION",
+      "downloads": 2034,
+      "image_files_sample": [
+        "DR_grading/test/007-2809-100.jpg",
+        "DR_grading/test/007-2811-100.jpg",
+        "DR_grading/test/007-2812-100.jpg",
+        "DR_grading/test/007-2814-100.jpg",
+        "DR_grading/test/007-2815-100.jpg",
+        "DR_grading/test/007-2823-100.jpg",
+        "DR_grading/test/007-2824-100.jpg",
+        "DR_grading/test/007-2830-100.jpg",
+        "DR_grading/test/007-2831-100.jpg",
+        "DR_grading/test/007-2834-100.jpg"
+      ],
+      "likes": 2,
+      "metadata_like_files_sample": [
+        "DR_grading/test.txt",
+        "DR_grading/train.txt",
+        "DR_grading/valid.txt"
+      ],
+      "n_files": 19738,
+      "n_image_files_visible": 18976,
+      "n_metadata_like_files": 3,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "50541319cfcdc963e3edc8b15508bc822d6b3ab5",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".jpg": 15191,
+        ".md": 1,
+        ".tif": 3785,
+        ".txt": 3,
+        ".xml": 757,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "multiview_acquisition"
+        ],
+        "expected_support": [
+          "encoder_training",
+          "single_image_validation"
+        ],
+        "name": "DDR HF",
+        "notes": "Already partly used; audit confirms whether larger/full mirror can extend training.",
+        "priority": 3,
+        "repo_id": "ctmedtech/DDR-dataset",
+        "role": "single_image_training_and_lesion_stress"
+      },
+      "total_size_mb_visible": 15144.04
+    },
+    {
+      "active_retina_decision": "GO_SECONDARY_TRAINING_OR_VALIDATION",
+      "downloads": 119,
+      "image_files_sample": [],
+      "likes": 0,
+      "metadata_like_files_sample": [
+        "data/test-00000-of-00003.parquet",
+        "data/test-00001-of-00003.parquet",
+        "data/test-00002-of-00003.parquet",
+        "data/train-00000-of-00008.parquet",
+        "data/train-00001-of-00008.parquet",
+        "data/train-00002-of-00008.parquet",
+        "data/train-00003-of-00008.parquet",
+        "data/train-00004-of-00008.parquet",
+        "data/train-00005-of-00008.parquet",
+        "data/train-00006-of-00008.parquet",
+        "data/train-00007-of-00008.parquet"
+      ],
+      "n_files": 13,
+      "n_image_files_visible": 0,
+      "n_metadata_like_files": 11,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "7b1b56ccb36c9964a2243644345552c4973604ca",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".md": 1,
+        ".parquet": 11,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "patient_level_multiview_acquisition"
+        ],
+        "expected_support": [
+          "single_image_validation",
+          "grade_scale_stress"
+        ],
+        "name": "APTOS HF",
+        "notes": "Useful for single-image external validation only.",
+        "priority": 3,
+        "repo_id": "OctoMed/Aptos",
+        "role": "single_image_external_validation"
+      },
+      "total_size_mb_visible": 6515.98
+    },
+    {
+      "active_retina_decision": "GO_SECONDARY_TRAINING_OR_VALIDATION",
+      "downloads": 29,
+      "image_files_sample": [],
+      "likes": 0,
+      "metadata_like_files_sample": [
+        "idrid_vqa.json"
+      ],
+      "n_files": 3,
+      "n_image_files_visible": 0,
+      "n_metadata_like_files": 1,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "40175cfe0efca8c92c9a47b5b198bbc288d786b5",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".json": 1,
+        ".md": 1,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "primary_binary_certification",
+          "multiview_acquisition"
+        ],
+        "expected_support": [
+          "lesion_reasoning",
+          "explainability"
+        ],
+        "name": "IDRiD VQA mirror",
+        "notes": "VQA wrapper can support paper explainability, not primary product certification.",
+        "priority": 4,
+        "repo_id": "vermayuvraj/idrid-vqa",
+        "role": "lesion_reasoning_auxiliary"
+      },
+      "total_size_mb_visible": 1.17
+    },
+    {
+      "active_retina_decision": "GO_SECONDARY_TRAINING_OR_VALIDATION",
+      "downloads": 1098,
+      "image_files_sample": [
+        "Evaluation_Set/Evaluation_Set/Validation/1.png",
+        "Evaluation_Set/Evaluation_Set/Validation/10.png",
+        "Evaluation_Set/Evaluation_Set/Validation/100.png",
+        "Evaluation_Set/Evaluation_Set/Validation/101.png",
+        "Evaluation_Set/Evaluation_Set/Validation/102.png",
+        "Evaluation_Set/Evaluation_Set/Validation/103.png",
+        "Evaluation_Set/Evaluation_Set/Validation/104.png",
+        "Evaluation_Set/Evaluation_Set/Validation/105.png",
+        "Evaluation_Set/Evaluation_Set/Validation/106.png",
+        "Evaluation_Set/Evaluation_Set/Validation/107.png"
+      ],
+      "likes": 2,
+      "metadata_like_files_sample": [
+        "Evaluation_Set/Evaluation_Set/RFMiD_Validation_Labels.csv",
+        "Evaluation_Set/Evaluation_Set/refine_labels_normal.ipynb",
+        "Test_Set/Test_Set/RFMiD_Testing_Labels.csv",
+        "Test_Set/Test_Set/RFMiD_uios_test.csv",
+        "Test_Set/Test_Set/refine_labels.ipynb",
+        "Test_Set/Test_Set/refine_labels_normal.ipynb",
+        "Test_Set/Test_Set/test.csv",
+        "Training_Set/Training_Set/RFMiD_Training_Labels.csv",
+        "Training_Set/Training_Set/refine_labels.ipynb",
+        "Training_Set/Training_Set/train.csv"
+      ],
+      "n_files": 3219,
+      "n_image_files_visible": 3203,
+      "n_metadata_like_files": 10,
+      "private": false,
+      "readme_files": [
+        "README.md"
+      ],
+      "sha": "16ee0cf528e9cb6ec38a6d7b1f3e4580172bc1da",
+      "status": "ACCESSIBLE",
+      "suffix_counts": {
+        ".csv": 6,
+        ".ipynb": 6,
+        ".jpg": 3,
+        ".md": 1,
+        ".png": 3200,
+        ".pth": 2,
+        "[no_suffix]": 1
+      },
+      "target": {
+        "cannot_support": [
+          "dr_grade_certification_unless_labels_map_cleanly"
+        ],
+        "expected_support": [
+          "multi_disease_specificity",
+          "non_dr_confounders"
+        ],
+        "name": "RFMiD HF",
+        "notes": "Useful to reduce false referrals from non-DR disease confounders.",
+        "priority": 4,
+        "repo_id": "ctmedtech/RFMID",
+        "role": "confounder_specificity"
+      },
+      "total_size_mb_visible": 7815.79
+    }
+  ],
+  "status": "INSTANT_ACCESS_HF_AUDIT_COMPLETE"
+}

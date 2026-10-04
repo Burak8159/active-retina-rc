@@ -1,0 +1,42 @@
+{
+  "boundary": "This is a development/training manifest. Certification still requires a sealed patient-level cohort not used for model selection.",
+  "dataset_counts": {
+    "ddr_hf_specificity300": 4238,
+    "drtid_paired": 3100
+  },
+  "grade_counts": {
+    "0": 2394,
+    "1": 895,
+    "2": 1712,
+    "3": 634,
+    "4": 873,
+    "5": 830
+  },
+  "inputs": [
+    {
+      "dataset": "ddr_hf_specificity300",
+      "manifest": "results/ddr_hf_specificity300_manifest.csv"
+    },
+    {
+      "dataset": "drtid_paired",
+      "manifest": "results/drtid_untouched_certification/certification_manifest.csv"
+    }
+  ],
+  "manifest_output": "results/autonomy_route_combined_manifest.csv",
+  "missing_images_sample": [],
+  "n_eyes": 5788,
+  "n_missing_images_dropped": 0,
+  "n_patients": 5788,
+  "n_rows": 7338,
+  "referable_counts": {
+    "0": 3289,
+    "1": 4049
+  },
+  "split_counts": {
+    "test": 2535,
+    "train": 3618,
+    "valid": 1185
+  },
+  "status": "AUTONOMY_ROUTE_MANIFEST_READY",
+  "unavailable_inputs": []
+}

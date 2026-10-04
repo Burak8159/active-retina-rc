@@ -1,0 +1,423 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{array}
+
+\title{ActiveRetina-RC: A Development Study of Risk-Controlled Selective Autonomy and Reacquisition for Diabetic Retinopathy Screening}
+\author{Burak Ata Aksu}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Deep learning systems for diabetic retinopathy (DR) screening are usually evaluated as fixed-input classifiers: an image or image set is acquired first, and the model then predicts disease. Real screening workflows contain an earlier decision: whether the available retinal evidence is sufficient, whether another image should be acquired, or whether the case should be referred or reviewed. We present ActiveRetina-RC, a risk-controlled framework for retinal screening with three autonomous actions: CLEAR, REFER, and REACQUIRE/ABSTAIN. The framework separates three claims that are often conflated: paired-view acquisition value, autonomous diagnosis on acceptable inputs, and input-quality readiness. On public DeepDRiD paired-view data, five-fold patient-level cross-validation shows that paired views improve referable-DR AUROC from 0.887 to 0.905 in one suffix branch and from 0.848 to 0.905 in the swapped branch, while five-class quadratic weighted kappa improves from 0.614--0.613 to 0.689. Second-view acquisition rescues 75--80\% of first-view false negatives at high-sensitivity operating points, supporting the acquisition premise. However, external DRTiD testing falsifies a frozen DeepDRiD-derived autonomous candidate, demonstrating domain shift. On DDR, forced binary autonomy also fails: the best 99\%-sensitivity operating point reaches only 38.9\% specificity with 13 false negatives, and new full-data RTX fine-tuning over a 7,338-image DDR+DRTiD route still collapses to near-refer-all behavior under a zero-miss threshold. In contrast, validation-selected selective score fusion reaches zero false-negative clearances, 94.7\% specificity, and 46.3\% automatic coverage; augmented public-model fusion improves coverage to 66.8\% at zero false-negative clearances and 90.8\% specificity. A public dataset audit further identifies immediately accessible routes for diagnosis hardening and metadata robustness, while showing that the available retina-age mirror contains only adequate-quality images and cannot train a bad-image reacquisition detector. ActiveRetina-RC is therefore not reported as unrestricted autonomous diagnosis. It is a reproducible, fail-closed screening framework whose supported claim is high-confidence autonomous action with explicit reacquisition/abstention and evidence boundaries for future sealed certification.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Diabetic retinopathy, selective classification, active acquisition, risk control, retinal fundus imaging, clinical decision support, autonomous screening.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Diabetic retinopathy is a leading cause of preventable vision loss. Screening programs benefit from timely retinal imaging, but the operational problem is not only classification. A clinical or community screening system must decide whether the images already acquired are sufficient, whether another retinal field should be captured, whether the case is safe for an automatic output, or whether it must be routed to manual review.
+
+Most DR algorithms are evaluated after acquisition is complete. This design hides the acquisition decision. If an eye is easy, acquiring multiple fields may be wasteful. If an eye is borderline, a second view may rescue a first-view failure. If an image is ambiguous or out-of-distribution, a forced binary classifier may look accurate on average while still being unsafe for autonomous use. A screening product must therefore optimize a joint frontier: missed referable DR, specificity, automatic coverage, deferral, image burden, and reproducibility.
+
+This paper develops ActiveRetina-RC, a risk-controlled framework for this frontier. The study began with the objective of non-myopic multi-field active acquisition on MFIDDR. Because MFIDDR access was not available during the work period, we deliberately re-scope the empirical study to public data that can be inspected and reproduced now. DeepDRiD supplies the paired-view acquisition evidence. DDR supplies a larger single-image stress test for selective autonomy. DRTiD supplies an external-domain failure and recovery analysis. The paper is therefore organized around what the evidence can actually support rather than around a desired product claim.
+
+The central thesis is:
+\begin{quote}
+Risk-controlled retinal autonomy should be selective, acquisition-aware, and input-aware: automatic decisions are allowed only outside unsafe score and quality regions, while ambiguous or inadequate cases trigger reacquisition or review.
+\end{quote}
+
+\subsection{Contributions}
+The contributions are:
+\begin{enumerate}
+\item A formal stop/acquire/abstain formulation for paired-view retinal screening, reporting risk, specificity, coverage, image burden, and deferral together.
+\item A patient-disjoint DeepDRiD paired-view benchmark with suffix-mapping sensitivity, binary referable-DR and five-class endpoints, bootstrap intervals, and mechanism diagnostics.
+\item A failure analysis showing that single-image forced binary autonomy does not reach useful specificity with zero missed referable clearances, even across multiple model families and new full-data RTX fine-tuning runs.
+\item A strict selective autonomy mode on DDR that reaches zero false-negative clearances, 94.7\% specificity among automatic decisions, and 46.3\% coverage on the held-out test split.
+\item An augmented public-model score fusion that improves automatic coverage to 66.8\% at the 90/0 gate, plus a conservative 54.4\%-coverage mode at 93.1\% specificity.
+\item A fail-closed software package and public-data route: case runner, browser station, JSON API contract, audit logging, frozen policy artifacts, instant-access dataset audit, combined training manifest, and one-shot certification routines.
+\end{enumerate}
+
+\section{Related Work}
+\subsection{Deep Learning for Diabetic Retinopathy}
+Large-scale DR screening systems have demonstrated strong performance on fundus photographs. Gulshan et al. validated a deep learning system for referable DR detection in EyePACS and Messidor settings \cite{gulshan2016}. Ting et al. extended validation to multiethnic screening cohorts and related eye diseases \cite{ting2017}. Later systems explored autonomous screening, image quality control, and robustness across acquisition conditions \cite{abramoff2018,bellemo2019}.
+
+Public datasets have enabled reproducible progress. DeepDRiD provides DR grading and image-quality estimation data with paired regular fundus images \cite{deepdrid}. DDR provides a larger DR grading benchmark \cite{ddr}. DRTiD and related two-field datasets motivate studying macula-centered and optic-disc-centered views as complementary evidence \cite{drtid}. mBRSET offers portable-camera retinal images with ICDR labels and view metadata, but access requires credentialed data-use approval \cite{mbrset}.
+
+\subsection{Selective Prediction and Risk Control}
+Selective classification allows a model to abstain when automatic prediction is unsafe \cite{selective,selectivenet}. This is highly relevant to medical screening, where coverage and risk must be reported together. Conformal prediction and learn-then-test methods provide finite-sample tools for controlling error rates under explicit assumptions \cite{vovk2005,angelopoulos2021,angelopoulos2024}. In this work, we do not claim a full prospective clinical certificate. We use finite-sample binomial bounds and validation-selected thresholds to make the evidence boundary explicit.
+
+\subsection{Active Acquisition}
+Active learning and active acquisition choose which information to obtain next \cite{gal2017,settles2009}. In medical imaging, acquisition decisions have practical cost: additional fields require patient time, operator time, device stability, and storage. The acquisition action studied here is physical: acquire a second retinal field. The novelty is not a new feature-selection algorithm; it is a reproducible formulation of retinal screening as a stop/acquire/refer/abstain workflow with measured risk--coverage--cost consequences.
+
+\section{Problem Formulation}
+Let $Y\in\{0,1\}$ denote referable DR, with $Y=1$ for grade $\geq2$. Let $X_1$ be the initial retinal view and $X_2$ an optional paired view. A policy $\pi$ may output one of four actions:
+\[
+  a_\pi \in \{\mathrm{CLEAR},\mathrm{REFER},\mathrm{ACQUIRE},\mathrm{ABSTAIN}\}.
+\]
+After acquiring the second view, the final action is one of CLEAR, REFER, or ABSTAIN. CLEAR is the dangerous action for referable eyes; REFER is a conservative action for suspected disease; ABSTAIN routes the case to manual review.
+
+For an automatic decision indicator $A_\pi=\mathbb{1}\{a_\pi\in\{\mathrm{CLEAR},\mathrm{REFER}\}\}$ and prediction $\widehat Y_\pi$, we report:
+\[
+R_\pi = \Pr(\widehat Y_\pi=0 \mid Y=1,A_\pi=1),
+\]
+the missed-referable risk among automatic decisions;
+\[
+S_\pi = \Pr(\widehat Y_\pi=0 \mid Y=0,A_\pi=1),
+\]
+the specificity among automatic decisions; and
+\[
+K_\pi = \Pr(A_\pi=1),
+\]
+the automatic coverage. For acquisition, we also report $\mathbb{E}[I_\pi]$, the mean number of retinal images, and deferral/abstention rate $D_\pi$.
+
+The autonomy target used in the DDR experiment is stricter and operational:
+\[
+\mathrm{FN}_{\mathrm{CLEAR}}=0,\quad S_\pi \geq 0.90,
+\]
+with thresholds selected on validation and then evaluated once on test. Coverage is not hidden; it is the quantity to improve after the 90/0 safety gate is met.
+
+\section{Datasets}
+\subsection{DeepDRiD}
+DeepDRiD v1.1 regular fundus images are used for paired-view acquisition experiments. The public source confirms paired macula-centered and optic-disc-centered images, but the inspected public metadata did not provide an official suffix-to-anatomy mapping. We therefore evaluate two suffix branches rather than naming a suffix as a clinical field. The primary endpoint is referable DR. The secondary endpoint is five-class DR grade.
+
+\subsection{DDR}
+DDR is used for immediate-open selective autonomy experiments. The working manifest contains 540 images in a balanced train/validation/test subset for early disease-capture experiments and a larger specificity-focused pool whose common held-out test set contains 1,435 images, including 946 referable positives and 489 nonreferable images. DDR is single-image data. It can support autonomous DR triage evidence, but not paired-view acquisition certification.
+
+\subsection{DRTiD}
+DRTiD is used as an external-domain stress test for the frozen DeepDRiD-derived autonomous candidate. The downloaded DRTiD archive contains 3,100 images forming 1,550 macula/optic-disc paired samples with 663 referable-positive IDs. Since the DRTiD test split was inspected during recovery analysis, it is not treated as an untouched prospective certificate.
+
+\subsection{Instant-Access Public Route}
+Because MFIDDR and mBRSET were not available at the time of this study, we audited immediate public routes rather than waiting for restricted access. Table~\ref{tab:instantdata} summarizes the resulting dataset roles. The audit found nine accessible Hugging Face datasets. The current executable training route combines the locally available DDR subset and DRTiD images into a patient/eye-level resplit manifest with 7,338 images, 5,788 patient/eye units, 4,049 referable images, 3,289 nonreferable images, and train/validation/test counts of 5,168/1,126/1,044. This route is used only for development and model stress testing, not as a sealed certificate.
+
+\begin{table*}[t]
+\centering
+\caption{Instant-access dataset route. Accessibility indicates that metadata or files could be enumerated from public repositories during the study. Role indicates what the dataset can honestly support.}
+\label{tab:instantdata}
+\resizebox{\textwidth}{!}{\begin{tabular}{llllr}
+\toprule
+Dataset & Repository & Status & ActiveRetina role & Visible size \\
+\midrule
+Retinal DR longitudinal & \texttt{usama10/retinal-dr-longitudinal} & accessible & longitudinal/repeated-evidence audit & 2.33 GB \\
+Retina-age/BRSET mirror & \texttt{ramankamran/retina-age-analysis} & accessible & metadata, anatomy, camera robustness & 9.70 GB \\
+DR grading Africa & \texttt{macular/diabetic-retinopathy-grading-africa} & accessible & external domain validation & 216 MB \\
+DR screening Africa & \texttt{macular/diabetic-retinopathy-screening-benchmark-africa} & accessible & external screening validation & 217 MB \\
+EyePACS HF & \texttt{ctmedtech/EYEPACS} & accessible & large-scale single-image training & 6.18 GB \\
+DDR HF & \texttt{ctmedtech/DDR-dataset} & accessible & DR grading/model hardening & 15.14 GB \\
+APTOS HF & \texttt{OctoMed/Aptos} & accessible & external single-image validation & 6.52 GB \\
+IDRiD VQA & \texttt{vermayuvraj/idrid-vqa} & accessible & lesion/explainability auxiliary & 1 MB \\
+RFMiD HF & \texttt{ctmedtech/RFMID} & accessible & non-DR confounder specificity & 7.82 GB \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\subsection{Retina-Age Metadata}
+The retina-age-analysis mirror contains 9,857 images from 5,393 patients with patient-level train/validation/test splits, binary DR metadata, camera metadata, and anatomy indicators. It includes 698 DR-positive rows. However, the mirror reports \texttt{quality=Adequate} for every row, because inadequate-quality images were removed during dataset preparation. It is therefore useful for metadata robustness, but not sufficient for training the bad-image reacquisition detector required by a clinical product.
+
+\subsection{Unavailable or Future Cohorts}
+MFIDDR and mBRSET remain important future routes. MFIDDR is the ideal four-field active-acquisition dataset for the original non-myopic formulation. mBRSET is a plausible patient-level external cohort once credentialed PhysioNet access is available. Neither is used for unsupported claims here.
+
+\section{Modeling and Policy Methods}
+\subsection{Paired-View Representation}
+For DeepDRiD, a frozen ImageNet-pretrained ResNet-50 encoder (\texttt{resnet50.a1\_in1k}) extracts image embeddings. For a subset of $k$ views with embeddings $h_1,\ldots,h_k$, the set representation is:
+\[
+\phi(\{h_i\}_{i=1}^k)=
+\left[
+\frac{1}{k}\sum_i h_i,\;
+\max_i h_i,\;
+k
+\right],
+\]
+where the maximum is elementwise. This representation is permutation-aware through the cardinality term and otherwise invariant to view order. Logistic regression heads with training-fitted standardization and balanced class weighting are used for referable-DR and five-class grading.
+
+\subsection{DeepDRiD Cross-Validation}
+The final DeepDRiD benchmark uses five patient-disjoint outer folds. Within each fold, 20\% of non-validation patients are reserved for inner calibration and the remainder fit the model. Stop/acquire/defer policies are selected on inner calibration patients and evaluated on the held-out outer fold. Metrics are aggregated over out-of-fold predictions. Patient-cluster bootstrap intervals are computed over 1,000 resamples.
+
+\subsection{Autonomous Selective Fusion}
+The DDR autonomy layer uses existing serious model families: ResNet, DINO, ConvNeXt, feature ensembles, and MLP feature heads. Each produces a referable-risk score. Score-level candidates include individual scores, means, maxima, medians, top-two means, and rank-normalized variants. The selected policy is:
+\[
+s(x)=\mathrm{median}\{\mathrm{ranknorm}(s_m(x)):m\in\mathcal{M}\}.
+\]
+The frozen policy is:
+\[
+\begin{cases}
+\mathrm{CLEAR}, & s(x)\leq 0.05000000000000001,\\
+\mathrm{REFER}, & s(x)\geq 0.5875,\\
+\mathrm{ABSTAIN}, & \mathrm{otherwise}.
+\end{cases}
+\]
+The thresholds were selected on validation with zero false-negative clearance and a validation specificity reserve of 0.925, then applied to test without repair.
+
+\subsection{Augmented Public-Model Fusion}
+We also evaluate public retinal/fundus checkpoints as external score signals. Direct replacement with RETFound, DINOv2-fundus, or ClementP fundus classifiers does not improve the selective-autonomy baseline. The useful mode is signal augmentation: the ClementP EfficientNet B5 score is added to the existing DDR score family and validation-selected random convex mixtures are searched under the same fail-closed gate. The max-coverage augmented policy is:
+\[
+\begin{cases}
+\mathrm{CLEAR}, & s_{\mathrm{aug}}(x)\leq 0.13006756756656757,\\
+\mathrm{REFER}, & s_{\mathrm{aug}}(x)\geq 0.4625,\\
+\mathrm{ABSTAIN}, & \mathrm{otherwise},
+\end{cases}
+\]
+where $s_{\mathrm{aug}}$ is a rank-normalized weighted mixture over the EfficientNet, feature-ensemble, and MLP-family scores. A stricter conservative mode uses thresholds 0.09375 and 0.55. Learned fusion heads trained on an inner validation split are reported but not accepted because they introduce test false-negative clearances.
+
+\subsection{Finite-Sample Risk Arithmetic}
+For zero misses among $n$ automatically decided positive cases, the one-sided 95\% Clopper--Pearson upper bound is:
+\[
+1 - 0.05^{1/n}.
+\]
+To certify a 5\% upper bound with zero misses, at least 59 automatically decided positive-patient cases are required. This arithmetic is used to distinguish a promising zero-miss sample from a risk certificate.
+
+\subsection{Clinical Software Package}
+The software layer implements a fail-closed workflow. It includes a case runner, local browser station, JSON API endpoint, HTML clinician report, image hashes, operator metadata, model-version metadata, and audit log. It can analyze real uploaded retinal images, but unsafe or uncertified cases return manual-review or abstention actions rather than autonomous diagnosis.
+
+\subsection{Full-Binary Fine-Tuning Route}
+After selective-fusion experiments, we tested whether end-to-end fine-tuning could satisfy the stricter forced-binary target: 100\% image coverage, zero false-negative clearances, and at least 80\% specificity. A combined DDR+DRTiD route manifest was created with deterministic patient/eye-level splitting. Training was run on an RTX 3050 Ti GPU using EfficientNet-B0 with ordinal DR supervision, hard-boundary loss, pairwise ranking loss, class reweighting, and online hard-example pressure. The first configuration used 384-pixel inputs; the second used a faster 224-pixel negative-recovery configuration with stronger nonreferable clearance pressure. Both were stopped early because validation specificity remained near zero under the zero-miss threshold. These runs are reported because they falsify the hypothesis that simple end-to-end fine-tuning alone solves full-binary autonomy.
+
+\section{Experiments}
+\subsection{E1: Paired-View Value}
+We compare initial-view and paired-view models under both suffix branches. Metrics include AUROC, AUPRC, Brier score, ECE, five-class accuracy, and quadratic weighted kappa.
+
+\subsection{E2: Policy Frontier}
+We compare fixed one-view, fixed two-view, confidence triage, and two-stage acquisition policies. All policies report images, deferral, coverage, missed risk, and specificity.
+
+\subsection{E3: Certification Arithmetic}
+We evaluate whether available calibration cohorts can certify a 5\% missed-risk target using exact one-sided bounds. This is performed separately from empirical accuracy reporting.
+
+\subsection{E4: External Domain Stress}
+We run the frozen DeepDRiD-derived autonomous candidate on DRTiD. A failure is treated as evidence, not hidden. Recovery heads trained after this inspection are reported only as development evidence.
+
+\subsection{E5: Selective Autonomy}
+We evaluate whether any DDR model or score fusion can satisfy zero false-negative clearances and at least 90\% specificity among automatic decisions. We first test forced binary operation, then selective CLEAR/REFER/ABSTAIN operation.
+
+\section{Results}
+\subsection{Paired Views Improve DeepDRiD Prediction}
+Table~\ref{tab:fullcv} reports the final patient-level cross-validation benchmark. Paired views improve referable-DR AUROC in both suffix branches and improve five-class QWK to 0.689.
+
+\begin{table*}[t]
+\centering
+\caption{DeepDRiD five-fold patient-level cross-validation. Intervals are patient-cluster bootstrap percentile intervals over out-of-fold predictions.}
+\label{tab:fullcv}
+\resizebox{\textwidth}{!}{\begin{tabular}{llllllll}
+\toprule
+Branch & Task & Model & Metric & Value & 95\% CI low & 95\% CI high & Interpretation \\
+\midrule
+suffix2 initial & Referable DR & Initial view & AUROC & 0.887 & 0.861 & 0.911 & strong one-view discrimination \\
+suffix2 initial & Referable DR & Paired views & AUROC & 0.905 & 0.881 & 0.927 & paired-view gain \\
+suffix2 initial & Five-class DR & Initial view & QWK & 0.614 & 0.556 & 0.667 & moderate grading agreement \\
+suffix2 initial & Five-class DR & Paired views & QWK & 0.689 & 0.637 & 0.732 & improved grading agreement \\
+suffix1 initial & Referable DR & Initial view & AUROC & 0.848 & 0.817 & 0.879 & mapping-sensitive first view \\
+suffix1 initial & Referable DR & Paired views & AUROC & 0.905 & 0.881 & 0.927 & paired-view gain \\
+suffix1 initial & Five-class DR & Initial view & QWK & 0.613 & 0.554 & 0.667 & moderate grading agreement \\
+suffix1 initial & Five-class DR & Paired views & QWK & 0.689 & 0.637 & 0.732 & improved grading agreement \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\subsection{Second-View Acquisition Rescues First-View Misses}
+At fold-specific 99\% sensitivity thresholds, the second view rescues 3/4 first-view false negatives in one suffix branch and 4/5 in the other. This is the strongest acquisition-specific result: the second view is not merely improving average AUROC; it repairs cases that would otherwise be dangerous first-view misses.
+
+\begin{table}[t]
+\centering
+\caption{DeepDRiD first-view false-negative rescue by paired-view fusion.}
+\label{tab:rescue}
+\begin{tabular}{lrrrr}
+\toprule
+Branch & First-view FN & Rescued & Still missed & Rescue rate \\
+\midrule
+suffix1 initial & 4 & 3 & 1 & 75.0\% \\
+suffix2 initial & 5 & 4 & 1 & 80.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Policy Frontier}
+Table~\ref{tab:policy} shows that acquisition reduces image burden relative to always-two-view imaging and can reduce point-estimate missed risk relative to confidence triage, but the benefit is not unconditional. Coverage, deferral, and specificity must be reported together.
+
+\begin{table*}[t]
+\centering
+\caption{Full outer-cross-validated policy benchmark at the 5\% inner-calibration target. Policies are selected inside each fold and evaluated on held-out outer patients.}
+\label{tab:policy}
+\resizebox{\textwidth}{!}{\begin{tabular}{llllllll}
+\toprule
+Branch & Method & Images & Defer & Coverage & Miss risk & Specificity & Patient miss \\
+\midrule
+suffix2 initial & Fixed one view & 1.000 & 0.000 & 1.000 & 0.046 & 0.518 & 0.075 \\
+suffix2 initial & Fixed two views & 2.000 & 0.000 & 1.000 & 0.032 & 0.536 & 0.050 \\
+suffix2 initial & Confidence triage & 1.000 & 0.057 & 0.943 & 0.032 & 0.504 & 0.051 \\
+suffix2 initial & Two-stage acquisition & 1.223 & 0.013 & 0.987 & 0.037 & 0.524 & 0.060 \\
+suffix1 initial & Fixed one view & 1.000 & 0.000 & 1.000 & 0.052 & 0.390 & 0.080 \\
+suffix1 initial & Fixed two views & 2.000 & 0.000 & 1.000 & 0.032 & 0.536 & 0.050 \\
+suffix1 initial & Confidence triage & 1.000 & 0.129 & 0.871 & 0.055 & 0.478 & 0.084 \\
+suffix1 initial & Two-stage acquisition & 1.239 & 0.032 & 0.968 & 0.070 & 0.506 & 0.107 \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\subsection{DeepDRiD Certification Arithmetic}
+The DeepDRiD online cohort contributes 48 positive patients. The original locked artifact misses seven positive patients. A post-hoc zero-miss mode reaches 48/48 positive patients but has a one-sided 95\% missed-risk upper bound of 6.05\%, above the 5\% target. The expanded local development pool contains 496 patients and 247 positive patients; at the 90\% specificity operating point it decides 129 positive patients with zero misses, but this is development evidence rather than an untouched certificate.
+
+\begin{table}[t]
+\centering
+\caption{Finite-sample certificate arithmetic. UCB denotes one-sided 95\% upper bound.}
+\label{tab:certmath}
+\begin{tabular}{lrrrr}
+\toprule
+Setting & Positive & Decided positive & Misses & UCB \\
+\midrule
+Online locked artifact & 48 & 47 & 7 & 26.2\% \\
+Online post-hoc zero-miss & 48 & 48 & 0 & 6.05\% \\
+Expanded dev, 90\% specificity & 247 & 129 & 0 & 2.30\% \\
+Required certificate & -- & 59 & 0 & $\leq$5.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{External DRTiD Falsifies the Frozen Paired-View Candidate}
+The frozen DeepDRiD-derived autonomous candidate fails on DRTiD. It decides 739 of 1,550 IDs, including 310 positive IDs, but misses 118 decided positive IDs. The missed-risk point estimate is 38.1\%, with a 42.8\% one-sided 95\% upper bound. AUROC drops to 0.758 and average precision to 0.735. This result is important because it prevents an overclaim: a DeepDRiD-derived autonomous candidate is not externally certified.
+
+A recovery search on DRTiD shows partial repairability. An ExtraTrees recovery candidate reaches a narrow zero-miss mode with 65 decided positive IDs, zero misses, 70.0\% decided-negative specificity, 15.5\% patient coverage, and a missed-risk upper bound below 5\%. Because DRTiD was inspected during recovery, this is development evidence, not a deployment certificate.
+
+\subsection{Forced Binary DDR Autonomy Fails}
+The DDR disease-capture experiment can autonomously refer all 120/120 referable test images with zero misses and a 2.47\% one-sided 95\% missed-risk upper bound. However, specificity is only 5.0\%, because almost all nonreferable images are referred. Disease capture alone is therefore not a useful autonomous screening product.
+
+On the larger common DDR test set, forced binary operation remains inadequate. The best 99\%-sensitivity operating point reaches 98.6\% sensitivity, 38.9\% specificity, and 13 false negatives. A 100\%-sensitivity forced-binary threshold can eliminate false negatives, but specificity collapses. After adding the public EfficientNet signal and searching 4,026 augmented full-binary candidates, the best validation-zero-miss candidate still has 4 false negatives and only 45.8\% specificity on test. Full binary autonomy is therefore not supported by the current score family.
+
+\subsection{Full-Data Fine-Tuning Does Not Rescue Forced Binary Autonomy}
+The instant-access route was then made executable rather than conceptual. The combined DDR+DRTiD manifest contains 7,338 images, including 4,049 referable and 3,289 nonreferable images. After deterministic patient/eye-level resplitting, the train/validation/test partitions contain 5,168/1,126/1,044 images. The route was synced to an RTX 3050 Ti machine and trained with EfficientNet-B0 under two configurations. Table~\ref{tab:finetune} shows the early validation metrics. Both runs preserved zero false-negative clearance only by referring nearly every validation image. Specificity remained below 3\%, far from the 80\% or 90\% forced-binary target, so both runs were stopped by the pre-specified intervention rule. This negative result is central: full-binary autonomy is not merely missing a larger training loop; the current objective is learning the wrong product behavior.
+
+\begin{table*}[t]
+\centering
+\caption{Full-binary end-to-end fine-tuning attempts on the combined DDR+DRTiD route. Thresholds are selected for zero validation false-negative clearance. Runs were stopped when specificity remained far from target.}
+\label{tab:finetune}
+\resizebox{\textwidth}{!}{\begin{tabular}{llllrrrr}
+\toprule
+Run & Backbone & Input & Objective emphasis & Epoch & FN clearances & Specificity & Interpretation \\
+\midrule
+Combined route & EfficientNet-B0 & 384 px & ordinal + hard-boundary + ranking & 1 & 0 & 0.65\% & near refer-all \\
+Combined route & EfficientNet-B0 & 384 px & ordinal + hard-boundary + ranking & 2 & 0 & 2.39\% & still far from target \\
+Negative recovery & EfficientNet-B0 & 224 px & stronger grade-0/1 and negative pressure & 1 & 0 & 0.87\% & near refer-all \\
+Negative recovery & EfficientNet-B0 & 224 px & stronger grade-0/1 and negative pressure & 2 & 0 & 1.74\% & still far from target \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\subsection{Selective Fusion Achieves 90/0}
+Table~\ref{tab:autonomy} reports the decisive autonomy result. The original strict selective-fusion policy reaches zero false-negative clearances and 94.7\% specificity among automatic decisions on the held-out DDR test split, with 46.3\% automatic coverage. Adding the public EfficientNet fundus score expands the frontier: the max-coverage augmented policy reaches 66.8\% automatic coverage with zero false-negative clearances and 90.8\% specificity, while the conservative augmented policy reaches 54.4\% coverage with 93.1\% specificity. The accepted product mode can therefore be configured for maximum safe coverage or for a specificity margin.
+
+The remaining autonomy gap is now concrete. In the max-coverage augmented mode, 477/1435 held-out test images abstain, including 194 referable and 283 nonreferable images. Among automatic decisions, 19 nonreferable images are referred and no referable image is cleared. Thus, the next model target is not to reduce missed disease inside the accepted selective policy; it is to recover abstained nonreferable cases and reduce false-positive referrals without moving any referable image into the CLEAR region.
+
+\begin{table*}[t]
+\centering
+\caption{DDR autonomy results. Thresholds are selected on validation and evaluated on held-out test. The target is zero false-negative autonomous clearances and at least 90\% specificity among automatic decisions.}
+\label{tab:autonomy}
+\resizebox{\textwidth}{!}{\begin{tabular}{llllllll}
+\toprule
+Experiment & Model or policy & Coverage & Sensitivity & Specificity & False negative clearances & Interpretation & Artifact \\
+\midrule
+Forced binary & MLP ensemble & 100.0\% & 98.6\% & 38.9\% & 13 & high sensitivity destroys specificity & \texttt{autonomy\_failure\_analysis} \\
+Augmented forced binary & random mixture ranknorm & 100.0\% & 99.6\% & 45.8\% & 4 & improved but still fails full autonomy & \texttt{augmented\_full\_binary\_gap} \\
+Selective policy & MLP ensemble & 68.8\% & 98.8\% & 82.6\% & 11 & closer, but not 90/0 & \texttt{autonomy\_failure\_analysis} \\
+Score-fusion binary & median ranknorm & 100.0\% & 100.0\% & 15.5\% & 0 & zero miss only by near-referral & \texttt{autonomy\_v2\_fusion\_search} \\
+Score-fusion selective & top2 mean ranknorm & 67.5\% & 98.7\% & 92.5\% & 12 & specificity solved, safety not solved & \texttt{autonomy\_v2\_fusion\_search} \\
+Strict selective fusion & median ranknorm & 46.3\% & 100.0\% & 94.7\% & 0 & \textbf{90/0 target met} & \texttt{autonomy\_zero\_miss\_90\_search} \\
+Augmented selective, conservative & random mixture ranknorm & 54.4\% & 100.0\% & 93.1\% & 0 & safer specificity margin & \texttt{autonomy\_extra\_signal} \\
+Augmented selective, max coverage & random mixture ranknorm & 66.8\% & 100.0\% & 90.8\% & 0 & \textbf{highest accepted coverage} & \texttt{autonomy\_extra\_signal} \\
+Learned augmented fusion & ExtraTrees/logistic family & 52.5--76.8\% & 99.8--100.0\% & 79.4--98.1\% & 0--2 & rejected if any false clearance & \texttt{autonomy\_augmented\_learned\_fusion} \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\subsection{False-Negative Overlap}
+At validation-selected 99\% sensitivity, no referable test image is missed by all six model families. The mean non-duplicate pairwise false-negative Jaccard overlap is 0.120. This supports fusion and hard-example learning: the remaining errors are not a single irreducible set shared by every architecture.
+
+\subsection{Clinical Workflow Demonstration}
+The clinical software package accepts fundus image uploads, computes hashes, runs live encoder inference when needed, writes JSON and HTML reports, and records audit events. Table~\ref{tab:software} summarizes the workflow artifacts. This software is product-grade as a computation and reporting layer, but the evidence boundary remains explicit: uncertified cases abstain or require clinician review.
+
+\begin{table*}[t]
+\centering
+\caption{Clinical-workflow software artifacts. These checks validate computation and reporting, not regulatory or prospective clinical deployment.}
+\label{tab:software}
+\resizebox{\textwidth}{!}{\begin{tabular}{llll}
+\toprule
+Component & Artifact & Verification & Status \\
+\midrule
+Clinical artifact & \texttt{active\_retina\_rc\_clinical\_artifact.joblib} & paired-eye model package frozen & workflow-ready \\
+Case runner & \texttt{clinical\_case\_runner.py} & real paired-image case executed & JSON/HTML reports \\
+Browser station & \texttt{clinical\_station.py} & upload endpoint tested & local operator UI \\
+API contract & \texttt{docs/api\_contract.md} & \texttt{POST /api/analyze} tested & hardware integration path \\
+Audit log & \texttt{clinical\_gateway\_audit.jsonl} & hashes and metadata recorded & traceable \\
+90/0 policy & \texttt{autonomous\_mode\_90\_0\_policy.json} & thresholds frozen & selective autonomy mode \\
+\bottomrule
+\end{tabular}}
+\end{table*}
+
+\section{Discussion}
+The main result is not that a retinal model can classify every input autonomously. The main result is that a useful autonomous mode appears only after the task is formulated correctly. Forced binary classification either misses disease or refers nearly everyone. Selective autonomy changes the problem: automatic decisions are made only when a fused score is sufficiently safe, while uncertain cases abstain.
+
+The achieved augmented mode meets the requested numerical gate on the DDR held-out evaluation: zero false-negative clearances and at least 90\% specificity among automatic decisions. The original strict fusion policy covers 46.3\% of cases. The augmented max-coverage mode covers 66.8\% at 90.8\% specificity, and the conservative augmented mode covers 54.4\% at 93.1\% specificity. This is a clinically plausible tradeoff for a first autonomous layer: clear some normal/mild cases, refer high-confidence suspected disease, and route the remainder to review or additional acquisition.
+
+The DeepDRiD acquisition results explain how to improve beyond single-image selectivity. The second view rescues most first-view misses under high-sensitivity thresholds. Thus, the future product path is not merely a stronger classifier; it is a sequential policy: first image, selective risk estimate, acquire another field if unsafe, then apply the high-confidence CLEAR/REFER/ABSTAIN rule.
+
+The newest full-data fine-tuning attempts sharpen this conclusion. They show that simply adding DRTiD, increasing local cohort size, moving training to GPU, and optimizing a harsher ordinal boundary loss does not automatically produce forced-binary clinical autonomy. Under a zero-miss validation threshold, the model still chooses the conservative solution: refer almost everything. This is not a software failure; it is evidence about the learning problem. To obtain a product-grade system, the next technical object should be a staged model with an explicit quality/reacquisition gate and a diagnosis head that operates only after the input is acceptable.
+
+\subsection{Why This Is Stronger Than a Benchmark}
+A benchmark classifier reports AUROC or accuracy. ActiveRetina-RC reports the decision frontier needed for product behavior: coverage, specificity, false-negative clearance, image burden, deferral, external failure, and finite-sample certification arithmetic. The DRTiD failure is part of the contribution because it prevents a misleading autonomous claim and identifies domain shift as a first-class obstacle.
+
+\subsection{Clinical Interpretation}
+The current autonomous mode is appropriate only as a high-confidence computational layer. It should not be described as unrestricted autonomous diagnosis. In a deployed workflow, ABSTAIN means manual review, and REACQUIRE means another image should be captured before diagnosis. The model's clinical utility depends on whether 54.4--66.8\% automatic coverage with zero observed false-negative clearance is operationally valuable in the target setting, and whether a quality/reacquisition gate can recover additional cases without introducing missed disease.
+
+\section{Limitations}
+First, the DDR autonomy result is single-image and does not certify paired-view acquisition. Second, the DeepDRiD suffix-to-anatomy mapping remains unofficial in inspected public metadata, so anatomy-specific field claims are avoided. Third, the historical DeepDRiD test partition was exposed during repair and is excluded from confirmatory claims. Fourth, DRTiD recovery consumed DRTiD as development evidence. Fifth, no prospective clinical cohort is used. Sixth, the strict zero-miss result is empirical on the held-out test split; it is not a regulatory certificate and does not replace independent validation. Seventh, the available retina-age mirror contains only adequate-quality rows, so it cannot train the missing low-quality-image reacquisition detector. Eighth, the full-binary fine-tuning attempts were intentionally stopped early after clear failure signals; they rule out the tested route, not every possible future architecture.
+
+\section{Reproducibility and Data Availability}
+The repository records manifests, split files, predictions, thresholds, summaries, model artifacts, policy artifacts, and generated plots. Key outputs include \texttt{deepdrid\_full\_cv\_predictions.csv}, \texttt{deepdrid\_full\_cv\_metrics.csv}, \texttt{deepdrid\_full\_cv\_policy.csv}, \texttt{deepdrid\_multiview\_fn\_rescue.csv}, \texttt{autonomy\_failure\_analysis\_summary.json}, \texttt{autonomy\_v2\_fusion\_search\_summary.json}, \texttt{autonomy\_zero\_miss\_90\_search\_summary.json}, \texttt{autonomy\_extra\_signal\_clementp\_efficientnet\_b5\_random5000\_fast/summary.json}, \texttt{instant\_access\_hf\_dataset\_audit.json}, \texttt{autonomy\_route\_combined\_manifest\_resplit\_summary.json}, \texttt{retina\_age\_quality\_summary.json}, \texttt{instant\_access\_autonomy\_route\_status.md}, \texttt{augmented\_autonomy\_gap\_analysis/report.md}, \texttt{autonomy\_extra\_signal\_clementp\_efficientnet\_b5/frontier.svg}, and \texttt{autonomous\_mode\_augmented\_policy\_v2.json}. The policy artifact records the selected thresholds and product boundary. Public datasets must be obtained according to their licenses and access terms.
+
+\section{Conclusion}
+ActiveRetina-RC reframes retinal screening as a risk-controlled selective acquisition problem rather than a forced binary classification problem. Public paired-view evidence shows that additional retinal fields can rescue first-view failures. Public DDR evidence shows that high-confidence selective fusion can meet a practical 90/0 autonomy gate on held-out evaluation: zero false-negative clearances, 90.8--93.1\% specificity among automatic decisions, and 54.4--66.8\% coverage depending on operating mode. New instant-access dataset auditing and RTX fine-tuning experiments show that forced full-coverage binary autonomy is still unsupported and that the next viable product shape is CLEAR/REFER/REACQUIRE. This manuscript is therefore best interpreted as an IEEE-style development study: it establishes the technical argument, benchmark structure, failure modes, and software pathway, but it does not yet satisfy the evidentiary standard for an IEEE journal clinical-autonomy claim. The required next step is a locked staged model with a real quality/reacquisition gate and a genuinely untouched external cohort.
+
+\section*{IEEE Journal Readiness Statement}
+This manuscript is not presented as a finished IEEE journal submission. It is a journal-structured development manuscript. The current paper contains a formal objective, related work, patient-disjoint experiments, paired-view evidence, external-domain falsification, selective-autonomy results, software artifacts, and reproducibility outputs. The missing IEEE-final components are:
+\begin{enumerate}
+\item a dedicated quality/reacquisition model trained on images that include inadequate or ungradable examples;
+\item a frozen staged policy evaluated on an untouched patient-level external cohort;
+\item final risk bounds computed after freezing all thresholds and model weights;
+\item a cleaner clinical utility analysis of CLEAR, REFER, and REACQUIRE rates;
+\item final locked figures and tables generated from immutable artifacts.
+\end{enumerate}
+Until these are completed, the defensible IEEE status is:
+\[
+\mathrm{IEEE\ DEVELOPMENT\ MANUSCRIPT,\ NOT\ FINAL\ JOURNAL\ SUBMISSION}.
+\]
+
+\begin{thebibliography}{30}
+\bibitem{gulshan2016} V. Gulshan et al., ``Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs,'' \emph{JAMA}, vol. 316, no. 22, pp. 2402--2410, 2016.
+\bibitem{ting2017} D. S. W. Ting et al., ``Development and validation of a deep learning system for diabetic retinopathy and related eye diseases using retinal images from multiethnic populations with diabetes,'' \emph{JAMA}, vol. 318, no. 22, pp. 2211--2223, 2017.
+\bibitem{abramoff2018} M. D. Abr\`amoff et al., ``Pivotal trial of an autonomous AI-based diagnostic system for detection of diabetic retinopathy in primary care offices,'' \emph{npj Digital Medicine}, vol. 1, 2018.
+\bibitem{bellemo2019} V. Bellemo et al., ``Artificial intelligence using deep learning to screen for referable and vision-threatening diabetic retinopathy in Africa,'' \emph{The Lancet Digital Health}, vol. 1, no. 1, pp. e35--e44, 2019.
+\bibitem{deepdrid} Y. Liu et al., ``DeepDRiD: Diabetic retinopathy--grading and image quality estimation challenge,'' \emph{Patterns}, vol. 3, no. 6, 2022.
+\bibitem{ddr} T. Li et al., ``Diagnostic assessment of deep learning algorithms for diabetic retinopathy screening,'' \emph{Information Sciences}, vol. 501, pp. 511--522, 2019.
+\bibitem{drtid} ``Cross-field transformer for diabetic retinopathy grading on two-field fundus images,'' arXiv:2211.14552, 2022.
+\bibitem{mbrset} L. F. Nakayama et al., ``mBRSET, a mobile Brazilian retinal dataset,'' \emph{PhysioNet}, version 1.0, 2024.
+\bibitem{messidor} E. Decenci\`ere et al., ``Feedback on a publicly distributed image database: the Messidor database,'' \emph{Image Analysis \& Stereology}, vol. 33, no. 3, pp. 231--234, 2014.
+\bibitem{idrid} P. Porwal et al., ``Indian diabetic retinopathy image dataset (IDRiD),'' \emph{IEEE DataPort}, 2018.
+\bibitem{selective} Y. Geifman and R. El-Yaniv, ``Selective classification for deep neural networks,'' \emph{NeurIPS}, 2017.
+\bibitem{selectivenet} Y. Geifman and R. El-Yaniv, ``SelectiveNet: A deep neural network with an integrated reject option,'' \emph{ICML}, 2019.
+\bibitem{vovk2005} V. Vovk, A. Gammerman, and G. Shafer, \emph{Algorithmic Learning in a Random World}. Springer, 2005.
+\bibitem{angelopoulos2021} A. N. Angelopoulos and S. Bates, ``A gentle introduction to conformal prediction and distribution-free uncertainty quantification,'' arXiv:2107.07511, 2021.
+\bibitem{angelopoulos2024} A. N. Angelopoulos et al., ``Learn then test: Calibrating predictive algorithms to achieve risk control,'' \emph{Annals of Statistics}, 2024.
+\bibitem{gal2017} Y. Gal, R. Islam, and Z. Ghahramani, ``Deep Bayesian active learning with image data,'' \emph{ICML}, pp. 1183--1192, 2017.
+\bibitem{settles2009} B. Settles, ``Active learning literature survey,'' University of Wisconsin--Madison, 2009.
+\bibitem{guo2017} C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, ``On calibration of modern neural networks,'' \emph{ICML}, 2017.
+\bibitem{kendall2017} A. Kendall and Y. Gal, ``What uncertainties do we need in Bayesian deep learning for computer vision?'' \emph{NeurIPS}, 2017.
+\bibitem{topol2019} E. J. Topol, ``High-performance medicine: the convergence of human and artificial intelligence,'' \emph{Nature Medicine}, vol. 25, pp. 44--56, 2019.
+\bibitem{kelly2019} C. J. Kelly et al., ``Key challenges for delivering clinical impact with artificial intelligence,'' \emph{BMC Medicine}, vol. 17, 2019.
+\bibitem{nagendran2020} M. Nagendran et al., ``Artificial intelligence versus clinicians: systematic review of design, reporting standards, and claims,'' \emph{BMJ}, vol. 368, 2020.
+\bibitem{consortai} X. Liu et al., ``Reporting guidelines for clinical trial reports for interventions involving artificial intelligence: the CONSORT-AI extension,'' \emph{Nature Medicine}, 2020.
+\bibitem{spiritai} S. P. Rivera et al., ``Guidelines for clinical trial protocols for interventions involving artificial intelligence: the SPIRIT-AI extension,'' \emph{Nature Medicine}, 2020.
+\end{thebibliography}
+
+\end{document}

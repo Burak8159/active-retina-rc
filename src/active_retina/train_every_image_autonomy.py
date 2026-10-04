@@ -121,8 +121,29 @@ def device_for(name: str) -> torch.device:
     return torch.device(name)
 
 
+def canonical_split(source_split: str) -> str | None:
+    value = source_split.lower()
+    if value in {"train", "training"} or value.endswith("_train") or value.endswith("_training"):
+        return "train"
+    if value in {"valid", "validation", "val"} or value.endswith("_valid") or value.endswith("_validation") or value.endswith("_val"):
+        return "valid"
+    if value in {"test", "testing"} or value.endswith("_test") or value.endswith("_testing"):
+        return "test"
+    return None
+
+
 def split_rows(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
-    return {split: [r for r in rows if r["source_split"] == f"ddr_{split}"] for split in ("train", "valid", "test")}
+    out = {split: [] for split in ("train", "valid", "test")}
+    skipped = 0
+    for row in rows:
+        split = canonical_split(str(row["source_split"]))
+        if split is None:
+            skipped += 1
+            continue
+        out[split].append(row)
+    if skipped:
+        print(json.dumps({"warning": "rows_with_unknown_source_split_skipped", "n_skipped": skipped}), flush=True)
+    return out
 
 
 def set_trainable(model: nn.Module, fragments: list[str]) -> dict[str, Any]:
@@ -143,18 +164,29 @@ def set_trainable(model: nn.Module, fragments: list[str]) -> dict[str, Any]:
     return {"mode": "filtered", "fragments": fragments, "trainable_parameters": trainable, "frozen_parameters": frozen}
 
 
-def class_weights(rows: list[dict[str, Any]], grade2_boost: float, grade1_boost: float) -> torch.Tensor:
+def class_weights(
+    rows: list[dict[str, Any]],
+    grade2_boost: float,
+    grade1_boost: float,
+    grade0_boost: float,
+) -> torch.Tensor:
     counts = np.ones(6, dtype=float)
     for row in rows:
         counts[int(row["grade"])] += 1.0
     weights = counts.sum() / counts
     weights = weights / weights.mean()
+    weights[0] *= grade0_boost
     weights[2] *= grade2_boost
     weights[1] *= grade1_boost
     return torch.tensor(weights, dtype=torch.float32)
 
 
-def sampler_weights(rows: list[dict[str, Any]], grade2_boost: float, grade1_boost: float) -> list[float]:
+def sampler_weights(
+    rows: list[dict[str, Any]],
+    grade2_boost: float,
+    grade1_boost: float,
+    grade0_boost: float,
+) -> list[float]:
     out = []
     for row in rows:
         grade = int(row["grade"])
@@ -162,6 +194,8 @@ def sampler_weights(rows: list[dict[str, Any]], grade2_boost: float, grade1_boos
         weight = 1.0
         if referable:
             weight *= 3.0
+        if grade == 0:
+            weight *= grade0_boost
         if grade == 2:
             weight *= grade2_boost
         if grade == 1:
@@ -187,6 +221,54 @@ def pairwise_boundary_loss(binary_logits: torch.Tensor, referable: torch.Tensor,
     if pos.numel() == 0 or neg.numel() == 0:
         return binary_logits.new_tensor(0.0)
     return torch.relu(margin - (pos[:, None] - neg[None, :])).mean()
+
+
+def hard_boundary_loss(
+    binary_logits: torch.Tensor,
+    grade: torch.Tensor,
+    referable: torch.Tensor,
+    positive_margin: float,
+    negative_margin: float,
+    positive_weight: float,
+    negative_weight: float,
+    grade2_weight: float,
+    grade1_weight: float,
+    top_fraction: float,
+) -> torch.Tensor:
+    """Push referable cases safely above zero and nonreferable cases below zero.
+
+    This is the product-facing loss: false nonreferable clearance is made
+    expensive, while grade-0/1 separation is still trained so specificity can
+    recover instead of collapsing into "refer everything".
+    """
+    pos_mask = referable == 1
+    neg_mask = referable == 0
+    losses = []
+    if pos_mask.any():
+        pos_weights = torch.full_like(binary_logits[pos_mask], positive_weight)
+        pos_grades = grade[pos_mask]
+        pos_weights = torch.where(pos_grades == 2, pos_weights * grade2_weight, pos_weights)
+        pos_loss = pos_weights * torch.nn.functional.softplus(positive_margin - binary_logits[pos_mask])
+        losses.append(top_fraction_mean(pos_loss, top_fraction))
+    if neg_mask.any():
+        neg_weights = torch.full_like(binary_logits[neg_mask], negative_weight)
+        neg_grades = grade[neg_mask]
+        neg_weights = torch.where(neg_grades == 1, neg_weights * grade1_weight, neg_weights)
+        neg_loss = neg_weights * torch.nn.functional.softplus(binary_logits[neg_mask] + negative_margin)
+        losses.append(top_fraction_mean(neg_loss, top_fraction))
+    if not losses:
+        return binary_logits.new_tensor(0.0)
+    return torch.stack(losses).mean()
+
+
+def top_fraction_mean(losses: torch.Tensor, fraction: float) -> torch.Tensor:
+    if losses.numel() == 0:
+        return losses.new_tensor(0.0)
+    fraction = float(max(0.0, min(1.0, fraction)))
+    if fraction <= 0.0 or fraction >= 1.0:
+        return losses.mean()
+    k = max(1, int(np.ceil(losses.numel() * fraction)))
+    return torch.topk(losses.flatten(), k=k, largest=True).values.mean()
 
 
 def predict(model: nn.Module, loader: DataLoader, device: torch.device) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]:
@@ -274,12 +356,21 @@ def main() -> None:
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--lr", type=float, default=2e-5)
     parser.add_argument("--weight-decay", type=float, default=2e-4)
+    parser.add_argument("--grade0-boost", type=float, default=2.0)
     parser.add_argument("--grade2-boost", type=float, default=12.0)
     parser.add_argument("--grade1-boost", type=float, default=4.0)
     parser.add_argument("--boundary-margin-weight", type=float, default=0.5)
     parser.add_argument("--binary-weight", type=float, default=1.0)
     parser.add_argument("--rank-weight", type=float, default=2.0)
     parser.add_argument("--rank-margin", type=float, default=2.0)
+    parser.add_argument("--hard-boundary-weight", type=float, default=0.0)
+    parser.add_argument("--positive-margin", type=float, default=2.0)
+    parser.add_argument("--negative-margin", type=float, default=1.0)
+    parser.add_argument("--hard-positive-weight", type=float, default=10.0)
+    parser.add_argument("--hard-negative-weight", type=float, default=1.0)
+    parser.add_argument("--hard-grade2-weight", type=float, default=2.0)
+    parser.add_argument("--hard-grade1-weight", type=float, default=1.5)
+    parser.add_argument("--hard-top-fraction", type=float, default=1.0)
     parser.add_argument("--trainable-name-fragments", default="")
     parser.add_argument("--target-specificity", type=float, default=0.90)
     parser.add_argument("--seed", type=int, default=20261004)
@@ -309,7 +400,7 @@ def main() -> None:
     valid_dataset = FundusDataset(by_split["valid"], wrapper.eval_transform, root)
     test_dataset = FundusDataset(by_split["test"], wrapper.eval_transform, root)
     sampler = WeightedRandomSampler(
-        sampler_weights(by_split["train"], args.grade2_boost, args.grade1_boost),
+        sampler_weights(by_split["train"], args.grade2_boost, args.grade1_boost, args.grade0_boost),
         num_samples=len(by_split["train"]),
         replacement=True,
     )
@@ -317,7 +408,9 @@ def main() -> None:
     valid_loader = DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
-    ce = nn.CrossEntropyLoss(weight=class_weights(by_split["train"], args.grade2_boost, args.grade1_boost).to(device))
+    ce = nn.CrossEntropyLoss(
+        weight=class_weights(by_split["train"], args.grade2_boost, args.grade1_boost, args.grade0_boost).to(device)
+    )
     bce_logits = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr, weight_decay=args.weight_decay)
     scaler = torch.amp.GradScaler("cuda", enabled=bool(args.use_amp and device.type == "cuda"))
@@ -346,11 +439,24 @@ def main() -> None:
                 binary_boundary = torch.nn.functional.binary_cross_entropy(score.float(), referable.float())
                 binary_loss = bce_logits(binary_logits.float(), referable.float())
                 rank_loss = pairwise_boundary_loss(binary_logits.float(), referable.float(), args.rank_margin)
+                hard_loss = hard_boundary_loss(
+                    binary_logits.float(),
+                    grade,
+                    referable.float(),
+                    args.positive_margin,
+                    args.negative_margin,
+                    args.hard_positive_weight,
+                    args.hard_negative_weight,
+                    args.hard_grade2_weight,
+                    args.hard_grade1_weight,
+                    args.hard_top_fraction,
+                )
             loss = (
                 loss
                 + args.boundary_margin_weight * binary_boundary
                 + args.binary_weight * binary_loss
                 + args.rank_weight * rank_loss
+                + args.hard_boundary_weight * hard_loss
             )
             scaler.scale(loss).backward()
             scaler.step(optimizer)
@@ -405,11 +511,12 @@ def main() -> None:
         },
         args.artifact,
     )
+    target_label = f"{int(round(args.target_specificity * 100))}_0"
     summary = {
         "status": (
-            "GO_EVERY_IMAGE_AUTONOMY_90_0"
+            f"GO_EVERY_IMAGE_AUTONOMY_{target_label}"
             if test_metrics["false_negative_clearance"] == 0 and test_metrics["specificity"] >= args.target_specificity
-            else "NO_GO_EVERY_IMAGE_AUTONOMY_90_0"
+            else f"NO_GO_EVERY_IMAGE_AUTONOMY_{target_label}"
         ),
         "manifest": args.manifest,
         "artifact": args.artifact,

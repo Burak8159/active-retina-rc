@@ -96,6 +96,8 @@ def infer_referable_indices(config: Any, positive_labels: str) -> list[int]:
         return list(range(2, n))
     if n == 2:
         return [1]
+    if n == 1:
+        return [0]
     raise ValueError(f"Could not infer referable label indices from config labels: {id2label}")
 
 
@@ -108,6 +110,7 @@ def predict_split(
     device: torch.device,
     referable_indices: list[int],
     use_fp16: bool,
+    invert_score: bool,
 ) -> list[dict[str, Any]]:
     loader = DataLoader(ImageRows(rows, project_root), batch_size=batch_size, shuffle=False, collate_fn=collate)
     model.eval()
@@ -118,17 +121,22 @@ def predict_split(
             inputs = {k: v.to(device) for k, v in inputs.items()}
             with torch.amp.autocast("cuda", enabled=bool(use_fp16 and device.type == "cuda")):
                 logits = model(**inputs).logits
-                probs = torch.softmax(logits, dim=1)
-                score = probs[:, referable_indices].sum(dim=1)
+                if logits.ndim == 1 or logits.shape[1] == 1:
+                    score = torch.sigmoid(logits.reshape(-1))
+                    probs = score[:, None]
+                else:
+                    probs = torch.softmax(logits, dim=1)
+                    score = probs[:, referable_indices].sum(dim=1)
             scores = score.detach().cpu().float().numpy()
             prob_arr = probs.detach().cpu().float().numpy()
             for image_id, grade, y, s, p in zip(batch["image_id"], batch["grade"], batch["referable_dr"], scores, prob_arr):
+                final_score = 1.0 - float(s) if invert_score else float(s)
                 out.append(
                     {
                         "image_id": image_id,
                         "grade": int(grade),
                         "referable_dr": int(y),
-                        "score": float(s),
+                        "score": final_score,
                         "probs": [float(x) for x in p],
                     }
                 )
@@ -220,6 +228,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--use-fp16", action="store_true")
+    parser.add_argument("--invert-score", action="store_true")
     parser.add_argument("--positive-labels", default="2,3,4,moderate,severe,proliferative,referable")
     parser.add_argument("--min-specificity", type=float, default=0.90)
     parser.add_argument("--min-validation-positive", type=int, default=59)
@@ -239,7 +248,17 @@ def main() -> None:
     model = AutoModelForImageClassification.from_pretrained(args.model_id).to(device)
     referable_indices = infer_referable_indices(model.config, args.positive_labels)
 
-    valid = predict_split(model, processor, by_split["valid"], project_root, args.batch_size, device, referable_indices, args.use_fp16)
+    valid = predict_split(
+        model,
+        processor,
+        by_split["valid"],
+        project_root,
+        args.batch_size,
+        device,
+        referable_indices,
+        args.use_fp16,
+        args.invert_score,
+    )
     selected = select_threshold(
         valid,
         [float(x) for x in args.threshold_safety_factors.split(",") if x.strip()],
@@ -248,7 +267,17 @@ def main() -> None:
     )
     threshold = float(selected["threshold"])
     valid_metrics = eval_threshold(valid, threshold)
-    test = predict_split(model, processor, by_split["test"], project_root, args.batch_size, device, referable_indices, args.use_fp16)
+    test = predict_split(
+        model,
+        processor,
+        by_split["test"],
+        project_root,
+        args.batch_size,
+        device,
+        referable_indices,
+        args.use_fp16,
+        args.invert_score,
+    )
     test_metrics = eval_threshold(test, threshold)
 
     pred_path = out / "predictions.csv"
@@ -265,6 +294,7 @@ def main() -> None:
         "model_id": args.model_id,
         "manifest": args.manifest,
         "referable_indices": referable_indices,
+        "invert_score": args.invert_score,
         "id2label": getattr(model.config, "id2label", None),
         "selected_threshold": selected,
         "valid_metrics": valid_metrics,

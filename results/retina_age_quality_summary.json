@@ -1,0 +1,45 @@
+{
+  "boundary": "Use this dataset for input-quality/reacquisition and external metadata robustness. It is not a five-grade DR certification dataset.",
+  "download_images": false,
+  "dr_binary_counts": {
+    "0": 9159,
+    "1": 698
+  },
+  "limit_per_split": null,
+  "manifest_output": "results/retina_age_quality_manifest.csv",
+  "missing_images_count": 9857,
+  "missing_images_sample": [
+    "external/retina_age_analysis_hf/images/img00005.jpg",
+    "external/retina_age_analysis_hf/images/img00006.jpg",
+    "external/retina_age_analysis_hf/images/img00007.jpg",
+    "external/retina_age_analysis_hf/images/img00008.jpg",
+    "external/retina_age_analysis_hf/images/img00011.jpg",
+    "external/retina_age_analysis_hf/images/img00012.jpg",
+    "external/retina_age_analysis_hf/images/img00013.jpg",
+    "external/retina_age_analysis_hf/images/img00014.jpg",
+    "external/retina_age_analysis_hf/images/img00017.jpg",
+    "external/retina_age_analysis_hf/images/img00018.jpg",
+    "external/retina_age_analysis_hf/images/img00019.jpg",
+    "external/retina_age_analysis_hf/images/img00020.jpg",
+    "external/retina_age_analysis_hf/images/img00021.jpg",
+    "external/retina_age_analysis_hf/images/img00022.jpg",
+    "external/retina_age_analysis_hf/images/img00023.jpg",
+    "external/retina_age_analysis_hf/images/img00024.jpg",
+    "external/retina_age_analysis_hf/images/img00025.jpg",
+    "external/retina_age_analysis_hf/images/img00026.jpg",
+    "external/retina_age_analysis_hf/images/img00027.jpg",
+    "external/retina_age_analysis_hf/images/img00028.jpg"
+  ],
+  "n_patients": 5393,
+  "n_rows": 9857,
+  "quality_counts": {
+    "Adequate": 9857
+  },
+  "repo_id": "ramankamran/retina-age-analysis",
+  "split_counts": {
+    "retina_age_test": 1462,
+    "retina_age_train": 6902,
+    "retina_age_valid": 1493
+  },
+  "status": "RETINA_AGE_QUALITY_MANIFEST_READY"
+}
