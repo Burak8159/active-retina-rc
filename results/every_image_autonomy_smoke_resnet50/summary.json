@@ -1,0 +1,79 @@
+{
+  "artifact": "models/every_image_autonomy_smoke_resnet50.pt",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.277365565299988,
+      "valid": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 16,
+        "n": 32,
+        "negative": 16,
+        "positive": 16,
+        "refer_rate": 1.0,
+        "sensitivity": 1.0,
+        "specificity": 0.0,
+        "threshold": 0.6634851694107056,
+        "true_negative": 0,
+        "true_positive": 16
+      }
+    }
+  ],
+  "image_size": 128,
+  "manifest": "results/ddr_hf_specificity300_manifest.csv",
+  "model_name": "resnet50.a1_in1k",
+  "n_test": 32,
+  "n_train": 32,
+  "n_valid": 32,
+  "predictions": "results/every_image_autonomy_smoke_resnet50/predictions.csv",
+  "pretrained": false,
+  "selected_threshold": {
+    "false_negative_clearance": 0,
+    "false_positive_referral": 16,
+    "n": 32,
+    "negative": 16,
+    "positive": 16,
+    "refer_rate": 1.0,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.6634851694107056,
+    "true_negative": 0,
+    "true_positive": 16
+  },
+  "status": "NO_GO_EVERY_IMAGE_AUTONOMY_90_0",
+  "target_specificity": 0.9,
+  "test_metrics": {
+    "false_negative_clearance": 0,
+    "false_positive_referral": 16,
+    "n": 32,
+    "negative": 16,
+    "positive": 16,
+    "refer_rate": 1.0,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.6634851694107056,
+    "true_negative": 0,
+    "true_positive": 16
+  },
+  "trainable_info": {
+    "fragments": [
+      "fc"
+    ],
+    "frozen_parameters": 23508032,
+    "mode": "filtered",
+    "trainable_parameters": 12294
+  },
+  "valid_metrics": {
+    "false_negative_clearance": 0,
+    "false_positive_referral": 16,
+    "n": 32,
+    "negative": 16,
+    "positive": 16,
+    "refer_rate": 1.0,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "threshold": 0.6634851694107056,
+    "true_negative": 0,
+    "true_positive": 16
+  }
+}

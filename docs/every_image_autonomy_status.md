@@ -76,3 +76,33 @@ train end-to-end hard-case model on GPU
 ```
 
 The local CPU feature-cache route has been exhausted for this target.
+
+## New executable trainer
+
+Added:
+
+```text
+src/active_retina/train_every_image_autonomy.py
+```
+
+This script trains the direct every-image autonomy target:
+
+- 6-class DR-grade head
+- referable score = probability of grade `>= 2`
+- validation-only zero-miss threshold selection
+- frozen threshold applied once to test
+- `GO_EVERY_IMAGE_AUTONOMY_90_0` only if test false-negative clearances are `0` and specificity is at least `90%`
+
+A local offline smoke test passed mechanically using random initialization and a tiny subset:
+
+```text
+results/every_image_autonomy_smoke_resnet50/summary.json
+```
+
+That smoke test is not evidence for the model. It only verifies that the training/evaluation package runs.
+
+RTX instructions:
+
+```text
+docs/rtx_every_image_autonomy_runbook.md
+```
