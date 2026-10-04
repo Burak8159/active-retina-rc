@@ -64,6 +64,7 @@ def summarize() -> tuple[list[dict[str, Any]], dict[str, Any]]:
     drtid_cert = load_json("results/drtid_untouched_certification/certification_summary.json")
     drtid_recovery = load_json("results/drtid_recovery_model_search/summary.json")
     model_zoo = load_json("results/ddr_model_zoo/summary.json")
+    three_output = load_json("results/three_output_autonomous_triage/summary.json")
 
     sel_best = selective.get("best", {})
     full_best = full_cov.get("best", {})
@@ -71,8 +72,24 @@ def summarize() -> tuple[list[dict[str, Any]], dict[str, Any]]:
     hard_ensemble_test = hard_ensemble.get("test_metrics", {})
     drtid_patient = drtid_cert.get("patient_certificate", {})
     drtid_recovery_best = drtid_recovery.get("best_candidate", {})
+    three_test = three_output.get("test_triage_metrics", {})
 
     rows = [
+        {
+            "claim": "Every input can receive a completed autonomous product output using a three-output triage contract.",
+            "status": three_output.get("status"),
+            "dataset": "DDR public subset",
+            "evidence_file": "results/three_output_autonomous_triage/summary.json",
+            "primary_endpoint": "autonomous output for every image, zero false-negative clearances, and >=90% specificity among diagnostic decisions",
+            "key_result": (
+                f"autonomous output rate={pct(three_test.get('autonomous_output_rate'))}; "
+                f"false-negative clearances={three_test.get('false_negative_clearances')}; "
+                f"diagnostic-decision specificity={pct(three_test.get('specificity_among_diagnostic_decisions'))}; "
+                f"diagnostic decision rate={pct(three_test.get('diagnostic_decision_rate'))}; "
+                f"insufficient-evidence rate={pct(three_test.get('insufficient_evidence_rate'))}"
+            ),
+            "paper_use": "Positive product-output result; insufficient evidence is a completed autonomous workflow action, not a binary diagnosis.",
+        },
         {
             "claim": "Selective single-image autonomy can meet zero-miss and >=90% specificity among automatic decisions on DDR.",
             "status": selective.get("status"),
@@ -188,9 +205,9 @@ def summarize() -> tuple[list[dict[str, Any]], dict[str, Any]]:
 
     summary = {
         "status": "PAPER_EVIDENCE_REGISTER_READY",
-        "decision": "GO_SELECTIVE_AUTONOMY_PAPER__NO_GO_EVERY_IMAGE_AUTONOMY",
+        "decision": "GO_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS",
         "central_supported_claim": (
-            "Risk-controlled selective retinal autonomy is supported on DDR; every-image autonomous diagnosis is not supported by current score, meta-model, or cached-feature families."
+            "Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output; every-image binary autonomous diagnosis is not supported by current score, meta-model, or cached-feature families."
         ),
         "next_required_model_gate": (
             "Train a representation-changing image-level model and pass zero validation misses with >=90% specificity before one-shot test."

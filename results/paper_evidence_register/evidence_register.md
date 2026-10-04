@@ -1,14 +1,23 @@
 # ActiveRetina Paper Evidence Register
 
-Decision: `GO_SELECTIVE_AUTONOMY_PAPER__NO_GO_EVERY_IMAGE_AUTONOMY`
+Decision: `GO_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS`
 
-Central supported claim: Risk-controlled selective retinal autonomy is supported on DDR; every-image autonomous diagnosis is not supported by current score, meta-model, or cached-feature families.
+Central supported claim: Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output; every-image binary autonomous diagnosis is not supported by current score, meta-model, or cached-feature families.
 
 Next required model gate: Train a representation-changing image-level model and pass zero validation misses with >=90% specificity before one-shot test.
 
 ## Evidence Items
 
-### E1. Selective single-image autonomy can meet zero-miss and >=90% specificity among automatic decisions on DDR.
+### E1. Every input can receive a completed autonomous product output using a three-output triage contract.
+
+- Status: `GO_THREE_OUTPUT_AUTONOMOUS_TRIAGE`
+- Dataset: DDR public subset
+- Evidence file: `results/three_output_autonomous_triage/summary.json`
+- Primary endpoint: autonomous output for every image, zero false-negative clearances, and >=90% specificity among diagnostic decisions
+- Key result: autonomous output rate=100.0%; false-negative clearances=0; diagnostic-decision specificity=94.7%; diagnostic decision rate=43.8%; insufficient-evidence rate=56.2%
+- Paper use: Positive product-output result; insufficient evidence is a completed autonomous workflow action, not a binary diagnosis.
+
+### E2. Selective single-image autonomy can meet zero-miss and >=90% specificity among automatic decisions on DDR.
 
 - Status: `GO_ZERO_MISS_90_SPECIFICITY_FOUND`
 - Dataset: DDR public subset
@@ -17,7 +26,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: test FN clearances=0; automatic-decision specificity=94.7%; coverage=46.3%
 - Paper use: Positive result for risk-controlled selective autonomy.
 
-### E2. Existing score/meta-model families do not achieve every-image full autonomous diagnosis.
+### E3. Existing score/meta-model families do not achieve every-image full autonomous diagnosis.
 
 - Status: `NO_GO_FULL_COVERAGE_90_0`
 - Dataset: DDR public subset
@@ -26,7 +35,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: best full-coverage test FN=0; specificity=1.4%; AUROC=0.948
 - Paper use: Negative falsification result: high AUROC is insufficient for full autonomy.
 
-### E3. Even an optimistic test-label oracle over the current score family does not reach full-autonomy 90/0.
+### E4. Even an optimistic test-label oracle over the current score family does not reach full-autonomy 90/0.
 
 - Status: `NO_GO_EVERY_IMAGE_AUTONOMY_WITH_CURRENT_SCORE_FAMILY`
 - Dataset: DDR public subset
@@ -35,7 +44,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: best oracle specificity=17.4%; distance to 90%=72.6%
 - Paper use: Mechanistic evidence that the current representation family is the bottleneck.
 
-### E4. Hard-mined ResNet-feature clearance ranker does not solve the 90/0 every-image clearance problem.
+### E5. Hard-mined ResNet-feature clearance ranker does not solve the 90/0 every-image clearance problem.
 
 - Status: `NO_GO_CLEARANCE_RANKER_90_SPECIFICITY_ZERO_MISS`
 - Dataset: DDR public subset, ResNet feature cache
@@ -44,7 +53,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: test false clearances=10; nonreferable clearance specificity=10.8%
 - Paper use: Negative result for cached ResNet features.
 
-### E5. Hard-mined ensemble-feature clearance ranker is safe but does not solve the 90/0 every-image clearance problem.
+### E6. Hard-mined ensemble-feature clearance ranker is safe but does not solve the 90/0 every-image clearance problem.
 
 - Status: `NO_GO_CLEARANCE_RANKER_90_SPECIFICITY_ZERO_MISS`
 - Dataset: DDR public subset, ensemble feature cache
@@ -53,7 +62,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: test false clearances=0; nonreferable clearance specificity=4.5%
 - Paper use: Safe but low-coverage clearance; supports selective, not every-image, autonomy.
 
-### E6. DRTiD provides enough untouched positive cases for external certification.
+### E7. DRTiD provides enough untouched positive cases for external certification.
 
 - Status: `UNTOUCHED_CERTIFICATION_ELIGIBLE`
 - Dataset: DRTiD
@@ -62,7 +71,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: patients=1550; positive patients=663; complete paired eyes=1550
 - Paper use: External cohort eligibility, separate from model success.
 
-### E7. Frozen development artifact fails DRTiD untouched certification, revealing domain shift.
+### E8. Frozen development artifact fails DRTiD untouched certification, revealing domain shift.
 
 - Status: `NO_GO_AUTONOMOUS_CERTIFICATION`
 - Dataset: DRTiD
@@ -71,7 +80,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: missed positive patients=118; specificity among decided negatives=94.4%; missed-risk UCB95=42.8%
 - Paper use: External failure/domain-shift evidence.
 
-### E8. DRTiD domain-specific recovery can produce a useful zero-miss mode.
+### E9. DRTiD domain-specific recovery can produce a useful zero-miss mode.
 
 - Status: `DRTID_RECOVERY_SEARCH_COMPLETE`
 - Dataset: DRTiD inspected recovery split
@@ -80,7 +89,7 @@ Next required model gate: Train a representation-changing image-level model and 
 - Key result: candidate=extra_trees_depth6; zero-miss decided positives=65; specificity=70.0%; UCB95=1.3%
 - Paper use: Development-only recovery evidence; not final certificate.
 
-### E9. The model comparison package is generated and reproducible.
+### E10. The model comparison package is generated and reproducible.
 
 - Status: `MODEL_ZOO_REPORT_READY`
 - Dataset: DDR public subset

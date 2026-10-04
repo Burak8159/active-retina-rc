@@ -1,0 +1,63 @@
+{
+  "purpose": "Candidate stronger retinal/fundus encoders or DR graders for the next representation-changing autonomy experiment.",
+  "boundary": "These are candidate sources to evaluate, not validated ActiveRetina artifacts. Licenses and model cards must be checked before publication or product use.",
+  "recommended_order": [
+    "bitfount/RETFound_DR_IDRID",
+    "seige-ml/FundusDRGrading-vit_base_patch14_dinov2",
+    "ClementP/FundusDRGrading-tf_efficientnet_b5",
+    "dheeren-tejani/DiabeticRetinpathyClassifier",
+    "Kratos7270/ConvNeXt_Tiny_ordinal"
+  ],
+  "candidates": [
+    {
+      "id": "bitfount/RETFound_DR_IDRID",
+      "type": "timm_hf_hub",
+      "why": "RETFound-derived retinal model fine-tuned for DR grading; strongest conceptual fit for retinal representation change.",
+      "known_caveat": "CC-BY-NC-4.0 license and grayscale preprocessing note; publication/product use must respect license.",
+      "evaluation_route": "evaluate_timm_hf_checkpoint_autonomy_or_feature_extraction"
+    },
+    {
+      "id": "seige-ml/FundusDRGrading-vit_base_patch14_dinov2",
+      "type": "transformers_or_timm_like",
+      "why": "DINOv2 ViT fundus DR grading model with reported DDR evaluation; useful for representation comparison.",
+      "known_caveat": "Model loading path must be verified locally.",
+      "evaluation_route": "hf_dr_model_autonomy_or_feature_extraction"
+    },
+    {
+      "id": "ClementP/FundusDRGrading-tf_efficientnet_b5",
+      "type": "transformers_auto_model",
+      "why": "EfficientNet-B5 fundus DR grading candidate trained/evaluated across public DR datasets.",
+      "known_caveat": "May expose embeddings rather than direct classification logits through AutoModel.",
+      "evaluation_route": "feature_extraction_then_two_stage_heads"
+    },
+    {
+      "id": "dheeren-tejani/DiabeticRetinpathyClassifier",
+      "type": "custom_multitask",
+      "why": "Reports 512px input, severity and lesion/region heads; conceptually useful for lesion-aware autonomy.",
+      "known_caveat": "Custom output/API likely needs adapter code before evaluation.",
+      "evaluation_route": "custom_adapter_required"
+    },
+    {
+      "id": "Kratos7270/ConvNeXt_Tiny_ordinal",
+      "type": "ordinal_dr_grader",
+      "why": "Ordinal DR formulation matches the clinical 0-4 severity boundary better than plain binary training.",
+      "known_caveat": "Model loading and preprocessing must be verified.",
+      "evaluation_route": "custom_or_hf_adapter_required"
+    }
+  ],
+  "next_experiment": {
+    "name": "representation_changing_three_output_autonomy",
+    "target": "Improve diagnostic decision rate while preserving zero false-negative clearances and >=90% specificity among diagnostic decisions.",
+    "minimum_acceptance": {
+      "false_negative_clearances": 0,
+      "specificity_among_diagnostic_decisions": 0.9,
+      "diagnostic_decision_rate_improvement_over_current": true
+    },
+    "current_baseline": {
+      "source": "results/three_output_autonomous_triage/summary.json",
+      "diagnostic_decision_rate": 0.43832752613240417,
+      "specificity_among_diagnostic_decisions": 0.9473684210526315,
+      "false_negative_clearances": 0
+    }
+  }
+}

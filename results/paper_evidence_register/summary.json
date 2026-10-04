@@ -1,7 +1,7 @@
 {
-  "central_supported_claim": "Risk-controlled selective retinal autonomy is supported on DDR; every-image autonomous diagnosis is not supported by current score, meta-model, or cached-feature families.",
-  "decision": "GO_SELECTIVE_AUTONOMY_PAPER__NO_GO_EVERY_IMAGE_AUTONOMY",
-  "n_evidence_items": 9,
+  "central_supported_claim": "Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output; every-image binary autonomous diagnosis is not supported by current score, meta-model, or cached-feature families.",
+  "decision": "GO_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS",
+  "n_evidence_items": 10,
   "next_required_model_gate": "Train a representation-changing image-level model and pass zero validation misses with >=90% specificity before one-shot test.",
   "status": "PAPER_EVIDENCE_REGISTER_READY"
 }
