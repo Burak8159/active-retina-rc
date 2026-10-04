@@ -175,6 +175,20 @@ def referable_score(logits: torch.Tensor) -> torch.Tensor:
     return probs[:, 2:].sum(dim=1)
 
 
+def referable_logit(logits: torch.Tensor) -> torch.Tensor:
+    pos = torch.logsumexp(logits[:, 2:], dim=1)
+    neg = torch.logsumexp(logits[:, :2], dim=1)
+    return pos - neg
+
+
+def pairwise_boundary_loss(binary_logits: torch.Tensor, referable: torch.Tensor, margin: float) -> torch.Tensor:
+    pos = binary_logits[referable == 1]
+    neg = binary_logits[referable == 0]
+    if pos.numel() == 0 or neg.numel() == 0:
+        return binary_logits.new_tensor(0.0)
+    return torch.relu(margin - (pos[:, None] - neg[None, :])).mean()
+
+
 def predict(model: nn.Module, loader: DataLoader, device: torch.device) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]:
     model.eval()
     grades: list[int] = []
@@ -263,6 +277,9 @@ def main() -> None:
     parser.add_argument("--grade2-boost", type=float, default=12.0)
     parser.add_argument("--grade1-boost", type=float, default=4.0)
     parser.add_argument("--boundary-margin-weight", type=float, default=0.5)
+    parser.add_argument("--binary-weight", type=float, default=1.0)
+    parser.add_argument("--rank-weight", type=float, default=2.0)
+    parser.add_argument("--rank-margin", type=float, default=2.0)
     parser.add_argument("--trainable-name-fragments", default="")
     parser.add_argument("--target-specificity", type=float, default=0.90)
     parser.add_argument("--seed", type=int, default=20261004)
@@ -301,6 +318,7 @@ def main() -> None:
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
     ce = nn.CrossEntropyLoss(weight=class_weights(by_split["train"], args.grade2_boost, args.grade1_boost).to(device))
+    bce_logits = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr, weight_decay=args.weight_decay)
     scaler = torch.amp.GradScaler("cuda", enabled=bool(args.use_amp and device.type == "cuda"))
 
@@ -320,10 +338,20 @@ def main() -> None:
                 logits = model(images)
                 loss = ce(logits, grade)
                 score = referable_score(logits)
-                # Extra pressure on the binary boundary: grade-2 positives must
-                # outrank grade-1 negatives.
-                binary_boundary = torch.nn.functional.binary_cross_entropy(score, referable)
-                loss = loss + args.boundary_margin_weight * binary_boundary
+                binary_logits = referable_logit(logits)
+            # Extra pressure on the binary boundary. BCE on probabilities is
+            # intentionally kept outside autocast because PyTorch marks it as
+            # unsafe in fp16.
+            with torch.amp.autocast("cuda", enabled=False):
+                binary_boundary = torch.nn.functional.binary_cross_entropy(score.float(), referable.float())
+                binary_loss = bce_logits(binary_logits.float(), referable.float())
+                rank_loss = pairwise_boundary_loss(binary_logits.float(), referable.float(), args.rank_margin)
+            loss = (
+                loss
+                + args.boundary_margin_weight * binary_boundary
+                + args.binary_weight * binary_loss
+                + args.rank_weight * rank_loss
+            )
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
