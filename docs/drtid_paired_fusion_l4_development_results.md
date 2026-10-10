@@ -32,6 +32,12 @@ The earlier combined DDR+DRTiD RTX failure audit also identified a data/target i
 
 Any next experiment must materially change the intervention (for example, full-encoder fine-tuning with discriminative learning rates and a separately trained gradability gate), use only development data for iteration, and reserve a genuinely untouched patient-level cohort for one locked evaluation. No result from the runs recorded here supports forced binary diagnosis for every image.
 
+## Next RTX development candidate (not yet run)
+
+The next candidate is implemented in `src/active_retina/train_drtid_paired_fusion.py` and adds a distinct per-view quality head. DRTiD supplies the paired DR task; DeepDRiD's official training partition supplies image-level `overall quality` labels (`1` means quality is adequate for retinal-disease diagnosis, `0` means it is not). The encoder is fully fine-tuned with a lower learning rate for early layers, a higher rate for layer 4, and the highest rate for task heads. The two datasets are split independently by patient; DeepDRiD official validation and online evaluation partitions are excluded.
+
+This is a development experiment, not a guaranteed route to 80/0/100. DRTiD has no matching quality labels in the current manifest, so DeepDRiD quality performance can be measured on its patient-disjoint quality holdout, but quality-gate transport to DRTiD cannot be confirmed from DR labels alone. A quality failure can be conservatively routed to referral for a forced binary workflow, but that tradeoff must be reported in specificity and evaluated on data with independently labeled image quality.
+
 ## Artifacts
 
 - `results/drtid_paired_fusion_l4_dev/summary.json`

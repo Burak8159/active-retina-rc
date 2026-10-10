@@ -109,6 +109,48 @@ class PairedFundusDataset(Dataset):
         )
 
 
+class DeepDRiDQualityDataset(Dataset):
+    """Paired DeepDRiD images with the dataset's per-view overall-quality labels."""
+
+    def __init__(self, manifest: Path, root: Path, transform: Any, allowed_splits: set[str]) -> None:
+        self.items = []
+        with manifest.open("r", encoding="utf-8") as stream:
+            for line in stream:
+                row = json.loads(line)
+                if row.get("source_split") not in allowed_splits:
+                    continue
+                views = row.get("views", {})
+                if not all(field in views for field in FIELDS):
+                    continue
+                paths = {field: resolve_path(root, views[field]["image_path"]) for field in FIELDS}
+                if not all(path.is_file() for path in paths.values()):
+                    raise FileNotFoundError(f"Missing DeepDRiD quality image for {row.get('eye_id')}")
+                quality_labels = [int(views[field]["quality"]["overall"]) for field in FIELDS]
+                if any(value not in (0, 1) for value in quality_labels):
+                    raise ValueError(f"Unexpected DeepDRiD overall-quality label for {row.get('eye_id')}: {quality_labels}")
+                self.items.append({
+                    "patient_id": str(row["patient_id"]),
+                    "eye_id": str(row["eye_id"]),
+                    "referable_dr": int(row["label"]["referable_dr"]),
+                    "views": {field: str(paths[field]) for field in FIELDS},
+                    "quality": quality_labels,
+                })
+        self.transform = transform
+        if not self.items:
+            raise ValueError(f"No paired DeepDRiD quality labels found for splits {sorted(allowed_splits)}")
+
+    def __len__(self) -> int:
+        return len(self.items)
+
+    def __getitem__(self, index: int):
+        item = self.items[index]
+        tensors = []
+        for field in FIELDS:
+            with Image.open(item["views"][field]) as image:
+                tensors.append(self.transform(image.convert("RGB")))
+        return torch.stack(tensors), torch.tensor(item["quality"], dtype=torch.float32), index
+
+
 class PairedFusionModel(nn.Module):
     def __init__(self, model_name: str, pretrained: bool, unfreeze_layer4: bool) -> None:
         super().__init__()
@@ -120,6 +162,7 @@ class PairedFusionModel(nn.Module):
             for name, parameter in self.encoder.named_parameters():
                 parameter.requires_grad = name.startswith("layer4.")
         self.view_heads = nn.ModuleList(nn.Linear(width, 5) for _ in FIELDS)
+        self.quality_heads = nn.ModuleList(nn.Linear(width, 1) for _ in FIELDS)
         self.fusion = nn.Sequential(
             nn.Linear(width * 4, 1024),
             nn.LayerNorm(1024),
@@ -133,9 +176,12 @@ class PairedFusionModel(nn.Module):
         embeddings = self.encoder(images.reshape(batch * views, channels, height, width))
         embeddings = embeddings.reshape(batch, views, -1)
         view_logits = torch.stack([head(embeddings[:, i]) for i, head in enumerate(self.view_heads)], dim=1)
+        quality_logits = torch.stack(
+            [head(embeddings[:, i]).squeeze(-1) for i, head in enumerate(self.quality_heads)], dim=1
+        )
         first, second = embeddings[:, 0], embeddings[:, 1]
         fused_logits = self.fusion(torch.cat((first, second, torch.abs(first - second), first * second), dim=1))
-        return fused_logits, view_logits
+        return fused_logits, view_logits, quality_logits
 
 
 def referable_score(logits: torch.Tensor) -> torch.Tensor:
@@ -221,7 +267,7 @@ def score_model(model, loader, device, n: int):
     with torch.inference_mode():
         for images, grade, label, indices in loader:
             images = images.to(device)
-            fused, per_view = model(images)
+            fused, per_view, _quality = model(images)
             scores = referable_score(fused).float().cpu().numpy()
             branch_scores = torch.stack([referable_score(per_view[:, i]) for i in range(2)], dim=1).float().cpu().numpy()
             index = indices.numpy()
@@ -230,6 +276,29 @@ def score_model(model, loader, device, n: int):
             labels[index] = label.numpy()
             grades[index] = grade.numpy()
     return fused_scores, per_view_scores, labels, grades
+
+
+def score_quality(model, loader, device):
+    labels, scores = [], []
+    model.eval()
+    with torch.inference_mode():
+        for images, quality, _indices in loader:
+            _fused, _views, logits = model(images.to(device, non_blocking=True))
+            labels.append(quality.numpy().reshape(-1))
+            scores.append(torch.sigmoid(logits.float()).cpu().numpy().reshape(-1))
+    y = np.concatenate(labels).astype(np.int64)
+    p = np.concatenate(scores)
+    predicted = p >= 0.5
+    return {
+        "n": int(len(y)),
+        "adequate": int(y.sum()),
+        "inadequate": int(len(y) - y.sum()),
+        "auroc": safe_metrics(y, p).get("auroc"),
+        "average_precision": safe_metrics(y, p).get("average_precision"),
+        "accuracy_at_0_5": float(np.mean(predicted == y)),
+        "sensitivity_at_0_5": float(np.mean(predicted[y == 1])) if np.any(y == 1) else None,
+        "specificity_at_0_5": float(np.mean(~predicted[y == 0])) if np.any(y == 0) else None,
+    }
 
 
 def write_predictions(path: Path, pairs, fused, branches, grades, labels):
@@ -269,6 +338,9 @@ def main() -> None:
     parser.add_argument("--rank-margin", type=float, default=1.0)
     parser.add_argument("--hard-top-fraction", type=float, default=0.25)
     parser.add_argument("--grade2-rank-weight", type=float, default=2.0)
+    parser.add_argument("--quality-manifest", help="DeepDRiD JSONL manifest with official overall-quality labels.")
+    parser.add_argument("--quality-weight", type=float, default=0.25)
+    parser.add_argument("--encoder-lr", type=float, help="Backbone LR; defaults to one tenth of the head LR when fine-tuning all layers.")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--no-pretrained", action="store_true")
     parser.add_argument("--train-full-encoder", action="store_true")
@@ -294,10 +366,48 @@ def main() -> None:
     valid_ds = PairedFundusDataset(valid_pairs, eval_transform)
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True)
     valid_loader = DataLoader(valid_ds, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=True)
+    quality_train_loader = quality_valid_loader = None
+    quality_train_count = quality_valid_count = 0
+    q_train_ids: set[str] = set()
+    q_valid_ids: set[str] = set()
+    quality_manifest_hash = None
+    if args.quality_manifest:
+        quality_path = Path(args.quality_manifest)
+        quality_manifest_hash = hashlib.sha256(quality_path.read_bytes()).hexdigest()
+        quality_train_data = DeepDRiDQualityDataset(quality_path, root, train_transform, {"official_train"})
+        quality_valid_data = DeepDRiDQualityDataset(quality_path, root, eval_transform, {"official_train"})
+        q_train, q_valid = patient_split(quality_train_data.items, args.validation_fraction, args.seed)
+        q_train_ids = {str(item["patient_id"]) for item in q_train}
+        q_valid_ids = {str(item["patient_id"]) for item in q_valid}
+        if q_train_ids & q_valid_ids:
+            raise RuntimeError("DeepDRiD quality train/validation patient leakage detected")
+        q_train_ds = torch.utils.data.Subset(
+            quality_train_data,
+            [i for i, item in enumerate(quality_train_data.items) if str(item["patient_id"]) in q_train_ids],
+        )
+        q_valid_ds = torch.utils.data.Subset(
+            quality_valid_data,
+            [i for i, item in enumerate(quality_valid_data.items) if str(item["patient_id"]) in q_valid_ids],
+        )
+        quality_train_count, quality_valid_count = len(q_train_ds), len(q_valid_ds)
+        quality_train_loader = DataLoader(q_train_ds, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True)
+        quality_valid_loader = DataLoader(q_valid_ds, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=True)
     device = torch.device(args.device)
     model.to(device)
-    parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
-    optimizer = torch.optim.AdamW(parameters, lr=args.lr, weight_decay=args.weight_decay)
+    named_parameters = list(model.named_parameters())
+    head_parameters = [parameter for name, parameter in named_parameters if parameter.requires_grad and not name.startswith("encoder.")]
+    layer4_parameters = [parameter for name, parameter in named_parameters if parameter.requires_grad and name.startswith("encoder.layer4.")]
+    early_encoder_parameters = [
+        parameter for name, parameter in named_parameters
+        if parameter.requires_grad and name.startswith("encoder.") and not name.startswith("encoder.layer4.")
+    ]
+    layer4_lr = args.encoder_lr or args.lr * 0.1
+    optimizer_groups = [{"params": head_parameters, "lr": args.lr}]
+    if layer4_parameters:
+        optimizer_groups.append({"params": layer4_parameters, "lr": layer4_lr})
+    if early_encoder_parameters:
+        optimizer_groups.append({"params": early_encoder_parameters, "lr": layer4_lr * 0.1})
+    optimizer = torch.optim.AdamW(optimizer_groups, weight_decay=args.weight_decay)
     criterion = nn.CrossEntropyLoss()
     scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda")
     out = Path(args.output_dir)
@@ -311,18 +421,31 @@ def main() -> None:
     for epoch in range(1, args.epochs + 1):
         model.train()
         total, count = 0.0, 0
+        quality_iterator = iter(quality_train_loader) if quality_train_loader is not None else None
         for images, grade, _label, _index in train_loader:
             images = images.to(device, non_blocking=True)
             grade = grade.to(device, non_blocking=True)
             optimizer.zero_grad(set_to_none=True)
             with torch.autocast(device_type=device.type, dtype=torch.float16, enabled=device.type == "cuda"):
-                fused, branches = model(images)
+                fused, branches, _quality_logits = model(images)
                 loss = criterion(fused, grade)
                 loss = loss + args.aux_view_weight * sum(criterion(branches[:, i], grade) for i in range(2))
             loss = loss + args.ordinal_weight * ordinal_loss(fused, grade)
             loss = loss + args.rank_weight * hard_boundary_rank_loss(
                 fused, grade, args.rank_margin, args.hard_top_fraction, args.grade2_rank_weight
             )
+            if quality_iterator is not None:
+                try:
+                    q_images, q_labels, _q_indices = next(quality_iterator)
+                except StopIteration:
+                    quality_iterator = iter(quality_train_loader)
+                    q_images, q_labels, _q_indices = next(quality_iterator)
+                q_images = q_images.to(device, non_blocking=True)
+                q_labels = q_labels.to(device, non_blocking=True)
+                with torch.autocast(device_type=device.type, dtype=torch.float16, enabled=device.type == "cuda"):
+                    _q_fused, _q_views, q_logits = model(q_images)
+                    q_loss = nn.functional.binary_cross_entropy_with_logits(q_logits.float(), q_labels)
+                loss = loss + args.quality_weight * q_loss
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
@@ -335,6 +458,8 @@ def main() -> None:
         metrics["macula_only_zero_miss"] = safe_metrics(labels, branches[:, 0])
         metrics["optic_disc_only_zero_miss"] = safe_metrics(labels, branches[:, 1])
         record = {"epoch": epoch, "train_loss": total / max(1, count), "validation": metrics}
+        if quality_valid_loader is not None:
+            record["quality_validation"] = score_quality(model, quality_valid_loader, device)
         history.append(record)
         print(json.dumps(record, sort_keys=True), flush=True)
 
@@ -352,6 +477,8 @@ def main() -> None:
                 "manifest_sha256": manifest_hash,
                 "train_patient_ids": sorted({str(x["patient_id"]) for x in train_pairs}),
                 "validation_patient_ids": sorted({str(x["patient_id"]) for x in valid_pairs}),
+                "quality_train_patient_ids": sorted(q_train_ids),
+                "quality_validation_patient_ids": sorted(q_valid_ids),
                 "status": "DEVELOPMENT_CHECKPOINT_NOT_CERTIFIED",
             }, best_path)
         (out / "progress.json").write_text(json.dumps({"status": "IN_PROGRESS", "history": history}, indent=2) + "\n", encoding="utf-8")
@@ -373,6 +500,22 @@ def main() -> None:
         "validation_patients": len({str(x["patient_id"]) for x in valid_pairs}),
         "model": args.model_name,
         "encoder_trainable": "layer4 and fusion/view heads" if not args.train_full_encoder else "all encoder layers and heads",
+        "learning_rates": {
+            "task_heads": args.lr,
+            "encoder_layer4": layer4_lr if layer4_parameters else None,
+            "encoder_early_layers": layer4_lr * 0.1 if early_encoder_parameters else None,
+        },
+        "quality_supervision": {
+            "manifest": args.quality_manifest,
+            "manifest_sha256": quality_manifest_hash,
+            "source": "DeepDRiD official_train only; overall quality 1=diagnosable, 0=not diagnosable",
+            "weight": args.quality_weight,
+            "train_pairs": quality_train_count,
+            "validation_pairs": quality_valid_count,
+            "validation_patient_overlap": 0,
+            "train_patients": len(q_train_ids),
+            "validation_patients": len(q_valid_ids),
+        } if args.quality_manifest else None,
         "loss": {
             "fused_cross_entropy": 1.0,
             "per_view_auxiliary_cross_entropy": args.aux_view_weight,
