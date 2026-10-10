@@ -8,9 +8,9 @@ This script targets the hard product requirement directly:
 * GO requires test false clearances = 0 and test specificity >= target.
 
 It differs from the earlier refer/defer and selective-clearance scripts by using
-an ordinal DR-grade head. The referable score is the predicted probability of
-grade >= 2, so the model is trained around the clinical boundary rather than
-only with a binary BCE surrogate.
+an ordinal DR-grade head. The decision score is a stable logit contrasting
+grades >= 2 with grades 0-1; the model also uses binary and pairwise boundary
+losses rather than only a binary BCE surrogate.
 """
 from __future__ import annotations
 
@@ -298,7 +298,9 @@ def predict(model: nn.Module, loader: DataLoader, device: torch.device) -> tuple
     with torch.inference_mode():
         for images, grade, referable, image_ids in loader:
             logits = model(images.to(device))
-            score = referable_score(logits).detach().cpu().float().numpy()
+            # The logit is monotonic with the referable probability but avoids
+            # softmax underflow that can collapse rare hard cases to exact zero.
+            score = referable_logit(logits.float()).detach().cpu().float().numpy()
             scores.extend(float(x) for x in score)
             grades.extend(int(x) for x in grade.numpy())
             labels.extend(int(x) for x in referable.numpy())
@@ -518,6 +520,7 @@ def main() -> None:
                     "pretrained": not args.no_pretrained,
                     "state_dict": best_state,
                     "threshold": float(selected["threshold"]),
+                    "decision_score": "referable_logit",
                     "best_epoch": best_epoch,
                     "args": vars(args),
                     "checkpoint_status": "BEST_VALIDATION_CHECKPOINT; TEST_NOT_YET_EVALUATED",
@@ -578,6 +581,7 @@ def main() -> None:
         "artifact": args.artifact,
         "predictions": str(pred_path),
         "model_name": args.model_name,
+        "decision_score": "referable_logit",
         "pretrained": not args.no_pretrained,
         "image_size": args.image_size,
         "trainable_info": trainable_info,
