@@ -18,6 +18,7 @@ import argparse
 import copy
 import csv
 import json
+import os
 import random
 from pathlib import Path
 from typing import Any
@@ -169,7 +170,10 @@ def class_weights(
     grade2_boost: float,
     grade1_boost: float,
     grade0_boost: float,
+    weighting: str = "inverse",
 ) -> torch.Tensor:
+    if weighting == "uniform":
+        return torch.ones(6, dtype=torch.float32)
     counts = np.ones(6, dtype=float)
     for row in rows:
         counts[int(row["grade"])] += 1.0
@@ -179,6 +183,20 @@ def class_weights(
     weights[2] *= grade2_boost
     weights[1] *= grade1_boost
     return torch.tensor(weights, dtype=torch.float32)
+
+
+def atomic_json(path: Path, value: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def atomic_checkpoint(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    torch.save(payload, temporary)
+    os.replace(temporary, path)
 
 
 def sampler_weights(
@@ -359,6 +377,8 @@ def main() -> None:
     parser.add_argument("--grade0-boost", type=float, default=2.0)
     parser.add_argument("--grade2-boost", type=float, default=12.0)
     parser.add_argument("--grade1-boost", type=float, default=4.0)
+    parser.add_argument("--class-weighting", choices=("inverse", "uniform"), default="inverse")
+    parser.add_argument("--sampling", choices=("weighted", "natural"), default="weighted")
     parser.add_argument("--boundary-margin-weight", type=float, default=0.5)
     parser.add_argument("--binary-weight", type=float, default=1.0)
     parser.add_argument("--rank-weight", type=float, default=2.0)
@@ -399,17 +419,27 @@ def main() -> None:
     train_dataset = FundusDataset(by_split["train"], wrapper.train_transform, root)
     valid_dataset = FundusDataset(by_split["valid"], wrapper.eval_transform, root)
     test_dataset = FundusDataset(by_split["test"], wrapper.eval_transform, root)
-    sampler = WeightedRandomSampler(
-        sampler_weights(by_split["train"], args.grade2_boost, args.grade1_boost, args.grade0_boost),
-        num_samples=len(by_split["train"]),
-        replacement=True,
+    sampler = None
+    if args.sampling == "weighted":
+        sampler = WeightedRandomSampler(
+            sampler_weights(by_split["train"], args.grade2_boost, args.grade1_boost, args.grade0_boost),
+            num_samples=len(by_split["train"]),
+            replacement=True,
+        )
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=args.batch_size,
+        sampler=sampler,
+        shuffle=sampler is None,
+        num_workers=args.num_workers,
     )
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, sampler=sampler, num_workers=args.num_workers)
     valid_loader = DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
     ce = nn.CrossEntropyLoss(
-        weight=class_weights(by_split["train"], args.grade2_boost, args.grade1_boost, args.grade0_boost).to(device)
+        weight=class_weights(
+            by_split["train"], args.grade2_boost, args.grade1_boost, args.grade0_boost, args.class_weighting
+        ).to(device)
     )
     bce_logits = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr, weight_decay=args.weight_decay)
@@ -480,6 +510,32 @@ def main() -> None:
         if key > old_key:
             best_epoch = copy.deepcopy(row)
             best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
+            artifact_path = Path(args.artifact)
+            atomic_checkpoint(
+                artifact_path,
+                {
+                    "model_name": args.model_name,
+                    "pretrained": not args.no_pretrained,
+                    "state_dict": best_state,
+                    "threshold": float(selected["threshold"]),
+                    "best_epoch": best_epoch,
+                    "args": vars(args),
+                    "checkpoint_status": "BEST_VALIDATION_CHECKPOINT; TEST_NOT_YET_EVALUATED",
+                },
+            )
+        atomic_json(
+            out / "progress.json",
+            {
+                "status": "TRAINING_IN_PROGRESS",
+                "epoch": epoch,
+                "epochs_planned": args.epochs,
+                "best_epoch": best_epoch,
+                "best_validation": best_epoch["valid"] if best_epoch else None,
+                "history": history,
+                "args": vars(args),
+                "test_evaluated": False,
+            },
+        )
         print(json.dumps(row, sort_keys=True), flush=True)
 
     if best_state is not None:
@@ -529,12 +585,27 @@ def main() -> None:
         "n_valid": len(by_split["valid"]),
         "n_test": len(by_split["test"]),
         "target_specificity": args.target_specificity,
+        "class_weighting": args.class_weighting,
+        "sampling": args.sampling,
         "selected_threshold": selected,
         "valid_metrics": valid_metrics,
         "test_metrics": test_metrics,
         "history": history,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    atomic_json(
+        out / "progress.json",
+        {
+            "status": "COMPLETE",
+            "epoch": args.epochs,
+            "epochs_planned": args.epochs,
+            "best_epoch": best_epoch,
+            "best_validation": valid_metrics,
+            "test_metrics": test_metrics,
+            "args": vars(args),
+            "test_evaluated": True,
+        },
+    )
     print(json.dumps(summary, indent=2, sort_keys=True), flush=True)
 
 
