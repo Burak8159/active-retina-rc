@@ -86,6 +86,26 @@ def select_policy_fast(valid_y: np.ndarray, valid_s: np.ndarray, min_spec: float
     return best[1] if best else {"status": "NO_VALID_ZERO_MISS_90_POLICY"}
 
 
+def select_best_validated(rows: list[dict[str, Any]], min_spec: float) -> dict[str, Any] | None:
+    feasible = [
+        row for row in rows
+        if "valid_coverage" in row
+        and int(row["valid_false_negative_clearances"]) == 0
+        and float(row["valid_specificity_among_auto_decisions"]) >= min_spec
+        and float(row["valid_negative_clearance_rate"]) > 0
+    ]
+    if not feasible:
+        return None
+    return max(
+        feasible,
+        key=lambda row: (
+            float(row["valid_coverage"]),
+            float(row["valid_negative_clearance_rate"]),
+            float(row["valid_specificity_among_auto_decisions"]),
+        ),
+    )
+
+
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         path.write_text("", encoding="utf-8")
@@ -131,7 +151,7 @@ def main() -> None:
         rng = np.random.default_rng(args.seed)
         for idx in range(args.random_weight_candidates):
             weights = rng.dirichlet(np.ones(len(models)))
-            scores = matrix @ weights
+            scores = np.sum(matrix * weights[None, :], axis=1)
             nonzero = "_".join(f"{m[:4]}{w:.2f}" for m, w in zip(models, weights) if w >= 0.05)
             candidates[f"random_weight_{idx:04d}_{nonzero}"] = scores
     for name, values in list(candidates.items()):
@@ -140,44 +160,32 @@ def main() -> None:
     valid_mask = np.asarray([s == "valid" for s in splits])
     test_mask = np.asarray([s == "test" for s in splits])
     rows: list[dict[str, Any]] = []
-    best: dict[str, Any] | None = None
     for name, scores in candidates.items():
         selected = select_policy_fast(y[valid_mask], scores[valid_mask], min_spec=args.min_specificity)
         if "status" in selected:
             rows.append({"candidate": name, "status": selected["status"]})
             continue
         test = metrics(y[test_mask], scores[test_mask], float(selected["low"]), float(selected["high"]))
-        status = (
-            "GO_ZERO_MISS_90_SPECIFICITY"
+        test_gate = (
+            "DIAGNOSTIC_PASS"
             if test["false_negative_clearances"] == 0
             and test["specificity_among_auto_decisions"] >= args.min_specificity
             and test["negative_clearance_rate"] > 0
-            else "NO_GO_TEST"
+            else "DIAGNOSTIC_FAIL"
         )
         row = {
             "candidate": name,
-            "status": status,
+            "status": "DEVELOPMENT_ONLY",
+            "test_gate_diagnostic": test_gate,
             **{f"valid_{k}": v for k, v in selected.items()},
             **{f"test_{k}": v for k, v in test.items()},
         }
         rows.append(row)
-        if best is None or (
-            int(status == "GO_ZERO_MISS_90_SPECIFICITY"),
-            float(row.get("test_coverage", 0.0)),
-            float(row.get("test_negative_clearance_rate", 0.0)),
-            float(row.get("test_specificity_among_auto_decisions", 0.0)),
-        ) > (
-            int(best.get("status") == "GO_ZERO_MISS_90_SPECIFICITY"),
-            float(best.get("test_coverage", 0.0)),
-            float(best.get("test_negative_clearance_rate", 0.0)),
-            float(best.get("test_specificity_among_auto_decisions", 0.0)),
-        ):
-            best = row
 
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     write_csv(out / "search_table.csv", rows)
-    best = best or {"status": "NO_CANDIDATES"}
+    best = select_best_validated(rows, args.min_specificity) or {"status": "NO_VALIDATION_CANDIDATE"}
     best_name = str(best.get("candidate", ""))
     best_scores = candidates.get(best_name)
     pred_rows: list[dict[str, Any]] = []
@@ -185,7 +193,9 @@ def main() -> None:
         pred_rows = triage_rows(image_ids, splits, y, best_scores, float(best["valid_low"]), float(best["valid_high"]))
         write_csv(out / "best_predictions.csv", pred_rows)
     summary = {
-        "status": "GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY" if best.get("status") == "GO_ZERO_MISS_90_SPECIFICITY" else "NO_GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY",
+        "status": "DEVELOPMENT_ONLY_TEST_EXPOSED",
+        "selection_split": "validation",
+        "test_interpretation": "Diagnostic only; this dataset split has been inspected in prior candidate searches and cannot establish confirmation.",
         "extra_name": args.extra_name,
         "extra_predictions": args.extra_predictions,
         "n_images": len(image_ids),

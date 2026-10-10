@@ -106,6 +106,26 @@ def select_policy(valid_y: np.ndarray, valid_s: np.ndarray, min_spec: float) -> 
     return best[1] if best else {"status": "NO_VALID_ZERO_MISS_90_POLICY"}
 
 
+def select_best_validated(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+    feasible = [
+        row for row in rows
+        if "valid_negative_clearance_rate" in row
+        and int(row["valid_false_negative_clearances"]) == 0
+        and float(row["valid_specificity_among_auto_decisions"]) >= 0.90
+        and float(row["valid_negative_clearance_rate"]) > 0
+    ]
+    if not feasible:
+        return None
+    return max(
+        feasible,
+        key=lambda row: (
+            float(row["valid_negative_clearance_rate"]),
+            float(row["valid_coverage"]),
+            float(row["valid_specificity_among_auto_decisions"]),
+        ),
+    )
+
+
 def main() -> None:
     models, image_ids, model_rows = read_model_rows()
     splits = [model_rows[models[0]][i]["split"] for i in image_ids]
@@ -133,48 +153,43 @@ def main() -> None:
             rows.append({"candidate": name, "min_validation_specificity": min_spec, "status": selected["status"]})
             continue
         test = metrics(y[test_mask], scores[test_mask], selected["low"], selected["high"])
-        status = (
-            "GO_ZERO_MISS_90_SPECIFICITY"
+        test_gate = (
+            "DIAGNOSTIC_PASS"
             if test["false_negative_clearances"] == 0 and test["specificity_among_auto_decisions"] >= 0.90 and test["negative_clearance_rate"] > 0
-            else "NO_GO_TEST"
+            else "DIAGNOSTIC_FAIL"
         )
         rows.append(
             {
                 "candidate": name,
                 "min_validation_specificity": min_spec,
-                "status": status,
+                "status": "DEVELOPMENT_ONLY",
+                "test_gate_diagnostic": test_gate,
                 **{f"valid_{k}": v for k, v in selected.items()},
                 **{f"test_{k}": v for k, v in test.items()},
             }
         )
     write_csv(Path("results/autonomy_zero_miss_90_search.csv"), rows)
-    feasible = [r for r in rows if r.get("status") == "GO_ZERO_MISS_90_SPECIFICITY"]
-    # Product objective: satisfy 90+/0 first, then maximize autonomous coverage.
-    # Negative-clearance and specificity break ties, because clinically useful
-    # autonomy must actually clear normal/mild cases rather than only refer.
-    best = max(
-        rows,
-        key=lambda r: (
-            int(r.get("status") == "GO_ZERO_MISS_90_SPECIFICITY"),
-            float(r.get("test_coverage", 0.0)),
-            float(r.get("test_negative_clearance_rate", 0.0)),
-            float(r.get("test_specificity_among_auto_decisions", 0.0)),
-        ),
-    )
+    best = select_best_validated(rows) or {"status": "NO_VALIDATION_CANDIDATE"}
     summary = {
-        "status": "GO_ZERO_MISS_90_SPECIFICITY_FOUND" if feasible else "NO_GO_ZERO_MISS_90_SPECIFICITY",
+        "status": "DEVELOPMENT_ONLY_TEST_EXPOSED",
         "n_candidates": len(rows),
-        "n_feasible_test_policies": len(feasible),
+        "n_validation_feasible_policies": sum(
+            1 for r in rows if "valid_false_negative_clearances" in r
+            and int(r["valid_false_negative_clearances"]) == 0
+            and float(r["valid_specificity_among_auto_decisions"]) >= 0.90
+            and float(r["valid_negative_clearance_rate"]) > 0
+        ),
         "best": best,
         "table": "results/autonomy_zero_miss_90_search.csv",
-        "selection_rule": "zero false-negative clearance and >=90% specificity on validation; frozen thresholds applied to test",
-        "product_selection_priority": "pass 90+/0 on test, then maximize autonomous coverage; negative clearance and specificity break ties",
+        "selection_split": "validation",
+        "test_interpretation": "Diagnostic only; this dataset split has been inspected in prior candidate searches and cannot establish confirmation.",
+        "selection_rule": "validation-only candidate selection; zero-miss and >=90% validation-specificity policies rank by validation negative-clearance rate, then coverage",
     }
     Path("results/autonomy_zero_miss_90_search_summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     report = [
         "# Zero-Miss / 90% Specificity Search\n\n",
         "This search tightens the gate from 99% sensitivity to exactly zero validation false-negative clearances, then applies the selected policy once to test.\n\n",
-        f"Status: **{summary['status']}**\n\n",
+        "Status: **DEVELOPMENT ONLY; the test split is exposed and this is not a certificate.**\n\n",
         f"Best candidate: `{best.get('candidate')}`\n\n",
         f"Test false-negative clearances: **{best.get('test_false_negative_clearances')}**\n\n",
         f"Test specificity among automatic decisions: **{100 * float(best.get('test_specificity_among_auto_decisions', 0.0)):.1f}%**\n\n",

@@ -2,14 +2,14 @@
 
 This search tightens the gate from 99% sensitivity to exactly zero validation false-negative clearances, then applies the selected policy once to test.
 
-Status: **GO_ZERO_MISS_90_SPECIFICITY_FOUND**
+Status: **DEVELOPMENT ONLY; the test split is exposed and this is not a certificate.**
 
-Best candidate: `median_all_ranknorm`
+Best candidate: `mlp_ensemble`
 
-Test false-negative clearances: **0**
+Test false-negative clearances: **2**
 
-Test specificity among automatic decisions: **94.7%**
+Test specificity among automatic decisions: **83.3%**
 
-Test negative-clearance rate: **14.7%**
+Test negative-clearance rate: **17.4%**
 
-Test coverage: **46.3%**
+Test coverage: **54.6%**

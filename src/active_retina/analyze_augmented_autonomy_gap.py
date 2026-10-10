@@ -98,21 +98,22 @@ def main() -> None:
     lines = [
         "# Augmented Autonomy Gap Analysis",
         "",
-        "Accepted policy: `ActiveRetina-DDR-augmented-selective-fusion-v2`.",
+        "Validation-selected development candidate: `ActiveRetina-DDR-augmented-selective-fusion-v2`.",
+        "The test split has been inspected in prior searches and is diagnostic only, not independent confirmation.",
         "",
         "## Validation Split",
         "",
     ]
     for key, value in valid_summary.items():
         lines.append(f"- {key}: `{value}`")
-    lines += ["", "## Held-Out Test Split", ""]
+    lines += ["", "## Previously Inspected Test Split (Diagnostic Only)", ""]
     for key, value in test_summary.items():
         lines.append(f"- {key}: `{value}`")
     lines += [
         "",
         "## What Still Blocks Every-Image Binary Autonomy",
         "",
-        f"- The accepted policy abstains on `{test_summary['abstentions']}` of `{test_summary['n']}` held-out test images.",
+        f"- The candidate abstains on `{test_summary['abstentions']}` of `{test_summary['n']}` test images.",
         f"- Abstentions include `{test_summary['abstain_positive']}` referable and `{test_summary['abstain_negative']}` nonreferable images.",
         f"- The policy falsely refers `{test_summary['false_positive_referrals']}` nonreferable images among automatic decisions.",
         "- Therefore, the next model improvement target is not lower missed-disease risk inside the accepted selective mode; it is separating abstained/false-positive nonreferable images from hard referable images without introducing any false-negative clearances.",

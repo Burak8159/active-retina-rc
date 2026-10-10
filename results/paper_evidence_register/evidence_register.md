@@ -1,10 +1,10 @@
 # ActiveRetina Paper Evidence Register
 
-Decision: `GO_AUGMENTED_THREE_OUTPUT_AUTONOMOUS_TRIAGE__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS`
+Decision: `DEVELOPMENT_ONLY_THREE_OUTPUT_FRONTIER__NO_GO_EVERY_IMAGE_BINARY_DIAGNOSIS`
 
-Central supported claim: Every-input autonomous triage is supported on DDR when insufficient-evidence/reacquire is an explicit output. Adding a public EfficientNet fundus signal improves the diagnostic coverage frontier from 43.8% to 66.8% while preserving zero false-negative clearances and meeting >=90% diagnostic specificity. Every-image binary autonomous diagnosis remains unsupported by current score, meta-model, or cached-feature families.
+Central supported claim: Existing score signals support only exploratory three-output triage on the inspected DDR cohort. The corrected validation-only score-mixture result is 83.0% specificity among 72.6% diagnostic decisions with zero observed misses on an exposed test split; forcing deferred cases to referral yields 33.9% binary specificity. Every-image binary autonomous diagnosis remains unsupported.
 
-Next required model gate: Train a hard-case model that specifically separates abstained/false-positive nonreferable images from hard referable images, then pass zero validation false-negative clearances with >=90% specificity before one-shot test or external certification.
+Next required model gate: Complete the paired-view residual experiment, selected and thresholded on paired validation data only. Further model work must show a material validation gain without reusing test results for candidate choice.
 
 ## Evidence Items
 
@@ -17,14 +17,14 @@ Next required model gate: Train a hard-case model that specifically separates ab
 - Key result: autonomous output rate=100.0%; false-negative clearances=0; diagnostic-decision specificity=94.7%; diagnostic decision rate=43.8%; insufficient-evidence rate=56.2%
 - Paper use: Positive product-output result; insufficient evidence is a completed autonomous workflow action, not a binary diagnosis.
 
-### E2. Selective single-image autonomy can meet zero-miss and >=90% specificity among automatic decisions on DDR.
+### E2. The earlier selective-search GO was test-selected and is superseded.
 
-- Status: `GO_ZERO_MISS_90_SPECIFICITY_FOUND`
+- Status: `DEVELOPMENT_ONLY_TEST_EXPOSED`
 - Dataset: DDR public subset
 - Evidence file: `results/autonomy_zero_miss_90_search_summary.json`
 - Primary endpoint: zero false-negative clearances and >=90% specificity among automatic decisions
-- Key result: test FN clearances=0; automatic-decision specificity=94.7%; coverage=46.3%
-- Paper use: Positive result for risk-controlled selective autonomy.
+- Key result: corrected validation-only selection chose `mlp_ensemble`; exposed-test diagnostic had 2 false-negative clearances, 83.3% specificity among decisions, and 54.6% diagnostic coverage.
+- Paper use: Development diagnostic only; the historical 94.7% / 46.3% test-selected headline is not confirmatory evidence.
 
 ### E3. Existing score/meta-model families do not achieve every-image full autonomous diagnosis.
 
@@ -98,15 +98,14 @@ Next required model gate: Train a hard-case model that specifically separates ab
 - Key result: n_models=9; metrics=results/ddr_model_zoo/model_zoo_metrics.csv
 - Paper use: Paper-ready model comparison block.
 
-### E11. Public EfficientNet fundus signal improves the autonomous triage frontier when added to the ensemble.
+### E11. Validation-selected augmented scores define a development triage frontier, not a GO.
 
-- Status: `GO_EXTRA_SIGNAL_IMPROVES_AUTONOMY`
+- Status: `DEVELOPMENT_ONLY_TEST_EXPOSED`
 - Dataset: DDR public subset
 - Evidence files: `results/autonomy_extra_signal_clementp_efficientnet_b5_random5000_fast/summary.json`; `results/autonomy_extra_signal_clementp_efficientnet_b5_random600_spec925/summary.json`
 - Primary endpoint: improved diagnostic decision rate while preserving zero false-negative clearances and >=90% specificity among diagnostic decisions
-- Key result: max-coverage mode test FN clearances=0; diagnostic-decision specificity=90.8%; diagnostic decision rate=66.8%; insufficient-evidence rate=33.2%; negative-clearance rate=38.2%
-- Conservative mode: test FN clearances=0; diagnostic-decision specificity=93.1%; diagnostic decision rate=54.4%; insufficient-evidence rate=45.6%; negative-clearance rate=27.6%
-- Paper use: Positive model-improvement result; shows the autonomy frontier can be improved with external retinal pretrained signal diversity.
+- Key result: validation-only selection chose `random_weight_3992`; exposed-test diagnostic: 0 observed misses, 83.0% specificity among 72.6% diagnostic decisions, 27.4% insufficient-evidence rate. If insufficient cases are forced to REFER, binary specificity is 33.9%.
+- Paper use: Exploratory frontier only. The earlier test-selected 90.8% / 66.8% headline is superseded.
 
 ### E12. Learned fusion over augmented signals improves coverage but fails the safety gate.
 
@@ -119,18 +118,18 @@ Next required model gate: Train a hard-case model that specifically separates ab
 
 ### E13. Augmented score family still cannot support every-image binary autonomous diagnosis.
 
-- Status: `NO_GO_FULL_BINARY_90_0`
+- Status: `DEVELOPMENT_ONLY_TEST_EXPOSED`
 - Dataset: DDR public subset
-- Evidence file: `results/augmented_full_binary_gap/summary.json`
-- Primary endpoint: every image receives a binary nonreferable/referable diagnosis with zero false negatives and >=90% specificity
-- Key result: best validation-zero-miss augmented candidate on test has 4 false negatives and 45.8% specificity
+- Evidence file: `results/augmented_full_binary_gap_validation_audit_20261011_clean/summary.json`
+- Primary endpoint: every image receives a binary nonreferable/referable diagnosis with zero false negatives and >=80% specificity
+- Key result: validation-selected candidate reached 44.1% validation specificity at zero misses; previously inspected test diagnostic was 33.1% specificity with 1 false negative.
 - Paper use: Falsification result; the accepted product claim must remain three-output selective autonomy, not unrestricted binary diagnosis.
 
-### E14. Accepted augmented policy exposes the concrete remaining error burden.
+### E14. Validation-selected augmented candidate exposes the remaining uncertain-case burden.
 
-- Status: `GAP_ANALYSIS_READY`
+- Status: `DEVELOPMENT_ONLY_TEST_EXPOSED`
 - Dataset: DDR public subset
-- Evidence files: `results/augmented_autonomy_gap_analysis/report.md`; `results/augmented_autonomy_gap_analysis/test_abstentions.csv`; `results/augmented_autonomy_gap_analysis/test_false_positive_referrals.csv`
+- Evidence files: `results/augmented_autonomy_gap_validation_audit_20261011/report.md`; local case lists are not for GitHub.
 - Primary endpoint: characterize what still blocks every-image binary autonomy after the accepted augmented selective policy
-- Key result: held-out test abstentions=477/1435; abstained positives=194; abstained negatives=283; false-positive nonreferable referrals=19; false-negative clearances=0
-- Paper use: Mechanism/next-target analysis; the next model must recover abstained nonreferable images and reduce false-positive referrals without clearing any referable images.
+- Key result: previously inspected test split abstentions=393/1435; abstained positives=104; abstained negatives=289; false-positive nonreferable referrals=34; false-negative clearances=0. If abstentions are forced to REFER, binary specificity is 166/489=33.9%.
+- Paper use: Development mechanism analysis only; a real separate cohort is still required for confirmation.

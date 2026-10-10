@@ -45,6 +45,16 @@ def select_zero_miss_threshold(y: np.ndarray, scores: np.ndarray) -> dict[str, A
     return confusion(y, scores, threshold)
 
 
+def select_best_validated(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+    feasible = [
+        row for row in rows
+        if "valid_specificity" in row and int(row["valid_fn"]) == 0
+    ]
+    if not feasible:
+        return None
+    return max(feasible, key=lambda row: (float(row["valid_specificity"]), -int(row["valid_fn"])))
+
+
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         path.write_text("", encoding="utf-8")
@@ -84,43 +94,37 @@ def main() -> None:
     rng = np.random.default_rng(args.seed)
     for idx in range(args.random_weight_candidates):
         weights = rng.dirichlet(np.ones(len(models)))
-        candidates[f"random_weight_{idx:04d}"] = matrix @ weights
+        candidates[f"random_weight_{idx:04d}"] = np.sum(matrix * weights[None, :], axis=1)
     for name, values in list(candidates.items()):
         candidates[f"{name}_ranknorm"] = ranknorm(values, splits)
 
     valid_mask = np.asarray([s == "valid" for s in splits])
     test_mask = np.asarray([s == "test" for s in splits])
     rows = []
-    best: dict[str, Any] | None = None
     for name, scores in candidates.items():
         selected = select_zero_miss_threshold(y[valid_mask], scores[valid_mask])
         if "status" in selected:
             rows.append({"candidate": name, **selected})
             continue
         test = confusion(y[test_mask], scores[test_mask], float(selected["threshold"]))
-        status = "GO_FULL_BINARY_90_0" if test["fn"] == 0 and test["specificity"] >= 0.90 else "NO_GO_FULL_BINARY"
+        test_gate = "DIAGNOSTIC_PASS" if test["fn"] == 0 and test["specificity"] >= 0.90 else "DIAGNOSTIC_FAIL"
         row = {
             "candidate": name,
-            "status": status,
+            "status": "DEVELOPMENT_ONLY",
+            "test_gate_diagnostic": test_gate,
             **{f"valid_{k}": v for k, v in selected.items()},
             **{f"test_{k}": v for k, v in test.items()},
         }
         rows.append(row)
-        key = (int(status == "GO_FULL_BINARY_90_0"), float(row["test_specificity"]), -int(row["test_fn"]))
-        best_key = (
-            int(best.get("status") == "GO_FULL_BINARY_90_0") if best else 0,
-            float(best.get("test_specificity", 0.0)) if best else 0.0,
-            -int(best.get("test_fn", 10**9)) if best else -(10**9),
-        )
-        if best is None or key > best_key:
-            best = row
 
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     write_csv(out / "full_binary_gap_table.csv", rows)
-    best = best or {"status": "NO_CANDIDATES"}
+    best = select_best_validated(rows) or {"status": "NO_VALIDATION_CANDIDATE"}
     summary = {
-        "status": "GO_FULL_BINARY_90_0" if best.get("status") == "GO_FULL_BINARY_90_0" else "NO_GO_FULL_BINARY_90_0",
+        "status": "DEVELOPMENT_ONLY_TEST_EXPOSED",
+        "selection_split": "validation",
+        "test_interpretation": "Diagnostic only; this dataset split has been inspected in prior candidate searches and cannot establish confirmation.",
         "best": best,
         "n_candidates": len(rows),
         "table": str(out / "full_binary_gap_table.csv"),

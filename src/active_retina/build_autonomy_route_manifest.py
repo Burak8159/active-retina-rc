@@ -24,6 +24,7 @@ FIELDS = [
     "referable_dr",
     "image_path",
     "source_split",
+    "original_source_split",
     "source_dataset",
 ]
 
@@ -64,10 +65,30 @@ def read_manifest(dataset: str, path: Path) -> list[dict[str, Any]]:
                     "referable_dr": int(row.get("referable_dr", 1 if int(row["grade"]) >= 2 else 0)),
                     "image_path": image_path,
                     "source_split": f"{dataset}_{split}",
+                    "original_source_split": str(row.get("source_split", "")),
                     "source_dataset": dataset,
                 }
             )
     return rows
+
+
+def drop_incomplete_paired_eyes(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for row in rows:
+        if str(row["source_dataset"]).endswith("_paired"):
+            grouped.setdefault((str(row["source_dataset"]), str(row["eye_id"])), []).append(row)
+    incomplete = {
+        key for key, eye_rows in grouped.items()
+        if {str(row["field"]) for row in eye_rows} != {"macula", "optic_disc"}
+    }
+    counts: dict[str, int] = {}
+    for dataset, _eye_id in incomplete:
+        counts[dataset] = counts.get(dataset, 0) + 1
+    return [
+        row for row in rows
+        if not (str(row["source_dataset"]).endswith("_paired")
+                and (str(row["source_dataset"]), str(row["eye_id"])) in incomplete)
+    ], counts
 
 
 def image_exists(root: Path, image_path: str) -> bool:
@@ -132,6 +153,8 @@ def main() -> None:
             continue
         rows.extend(read_manifest(dataset, path))
 
+    rows, incomplete_pairs_dropped = drop_incomplete_paired_eyes(rows)
+
     deduped: list[dict[str, Any]] = []
     seen_paths: set[str] = set()
     missing_images: list[str] = []
@@ -151,6 +174,12 @@ def main() -> None:
 
     write_manifest(Path(args.output), deduped)
     split_counts = Counter(canonical_split(str(row["source_split"])) or "unknown" for row in deduped)
+    patients_by_split: dict[str, set[str]] = {}
+    eyes_by_split: dict[str, set[str]] = {}
+    for row in deduped:
+        split = canonical_split(str(row["source_split"])) or "unknown"
+        patients_by_split.setdefault(split, set()).add(str(row["patient_id"]))
+        eyes_by_split.setdefault(split, set()).add(str(row["eye_id"]))
     dataset_counts = Counter(str(row["source_dataset"]) for row in deduped)
     grade_counts = Counter(int(row["grade"]) for row in deduped)
     referable_counts = Counter(int(row["referable_dr"]) for row in deduped)
@@ -159,6 +188,7 @@ def main() -> None:
         "manifest_output": args.output,
         "inputs": [{"dataset": dataset, "manifest": manifest} for dataset, manifest in inputs],
         "unavailable_inputs": unavailable_inputs,
+        "incomplete_paired_eyes_dropped": incomplete_pairs_dropped,
         "n_rows": len(deduped),
         "n_patients": len({row["patient_id"] for row in deduped}),
         "n_eyes": len({row["eye_id"] for row in deduped}),
@@ -168,6 +198,8 @@ def main() -> None:
         "train_frac": args.train_frac,
         "valid_frac": args.valid_frac,
         "split_counts": dict(sorted(split_counts.items())),
+        "patient_counts_by_split": {key: len(value) for key, value in sorted(patients_by_split.items())},
+        "eye_counts_by_split": {key: len(value) for key, value in sorted(eyes_by_split.items())},
         "dataset_counts": dict(sorted(dataset_counts.items())),
         "grade_counts": dict(sorted(grade_counts.items())),
         "referable_counts": dict(sorted(referable_counts.items())),
