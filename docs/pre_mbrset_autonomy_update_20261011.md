@@ -93,3 +93,10 @@ Do not claim `65/0/100`, `80/0/100`, autonomous clinical diagnosis, or certifica
 - This run does not exceed the 53.25% validation-selected ceiling. It does show that the ordinal anchor was preserved and the residual branch did not improve the already exposed cohort; continuing the same short fine-tuning recipe is not justified without a materially different supervision signal.
 - The result is development-only, not independent confirmation or a formal clinical risk certificate. Reproduction artifacts are `results/rtx_ordinal_attention_residual_20261011/summary.json` and `results/rtx_ordinal_attention_residual_20261011/validation_predictions.csv`.
 - Implementation and focused tests are in `src/active_retina/train_mixed_view_bag_autonomy.py` and `tests/test_quality_gated_autonomy.py`.
+
+### DRTiD photometric normalization audit
+
+- To test whether the remaining DRTiD error was a simple camera/color shift, the frozen DRTiD specialist was evaluated on the same 250 paired validation eyes under four fixed, label-independent image transforms. No model weights were changed; the threshold was recalculated on this already inspected validation cohort, so all results are exploratory.
+- Identity remained the best at 46/127 (**36.22%**) zero-miss specificity. Green-channel triplication reached 15/127 (**11.81%**), gray-world balancing 28/127 (**22.05%**), per-channel percentile normalization 20/127 (**15.75%**), and green-channel autocontrast 7/127 (**5.51%**). All modes had zero observed misses and 100% action output on this cohort.
+- Reject simple photometric normalization as a rescue. Reproduction: `src/active_retina/audit_fundus_photometric_sensitivity.py`; tests: `tests/test_fundus_photometric_sensitivity.py`; results: `results/fundus_photometric_sensitivity_20261011/`.
+- Across this and the ordinal-residual experiment, the current image representation and saved candidate bank have not moved the full-cohort best above the previously measured 53.25% validation-selected ceiling. This leaves new grade-boundary supervision or an independent cohort as the credible next source of signal; no claim of `65/0/100` is supported.
