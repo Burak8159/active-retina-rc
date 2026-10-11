@@ -42,6 +42,16 @@ class TestAppendTrainingOnlyManifest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "grade or referable"):
             combine([row("base", "train", "ddr_hf_specificity300", 0)], [item])
 
+    def test_accepts_an_explicit_non_aptos_training_source(self) -> None:
+        added = [row("idrid-1", "idrid_train", "idrid_train_only", 2)]
+        result = combine([row("base", "train", "ddr_hf_specificity300", 0)], added, "idrid_train_only")
+        self.assertEqual(result[-1]["source_dataset"], "idrid_train_only")
+
+    def test_rejects_unexpected_training_source(self) -> None:
+        added = [row("idrid-1", "idrid_train", "idrid_train_only", 2)]
+        with self.assertRaisesRegex(ValueError, "must be tagged aptos_hf"):
+            combine([row("base", "train", "ddr_hf_specificity300", 0)], added)
+
 
 if __name__ == "__main__":
     unittest.main()

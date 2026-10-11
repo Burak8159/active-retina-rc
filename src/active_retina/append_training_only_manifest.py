@@ -17,7 +17,9 @@ def load(path: Path) -> tuple[list[str], list[dict[str, str]]]:
         return list(reader.fieldnames), list(reader)
 
 
-def combine(base: list[dict[str, str]], added: list[dict[str, str]]) -> list[dict[str, str]]:
+def combine(
+    base: list[dict[str, str]], added: list[dict[str, str]], expected_source: str = "aptos_hf"
+) -> list[dict[str, str]]:
     if not base or not added:
         raise ValueError("Both base and training-only manifests must contain rows")
     required = {"patient_id", "eye_id", "image_id", "field", "grade", "referable_dr", "image_path", "source_split", "source_dataset"}
@@ -27,8 +29,8 @@ def combine(base: list[dict[str, str]], added: list[dict[str, str]]) -> list[dic
             raise ValueError(f"{name} manifest missing fields: {sorted(missing)}")
     if any(str(row["source_split"]).lower().rsplit("_", 1)[-1] != "train" for row in added):
         raise ValueError("Added manifest must contain training rows only")
-    if any(str(row["source_dataset"]) != "aptos_hf" for row in added):
-        raise ValueError("Added rows must be tagged aptos_hf")
+    if any(str(row["source_dataset"]) != expected_source for row in added):
+        raise ValueError(f"Added rows must be tagged {expected_source}")
     existing_ids = {str(row["image_id"]) for row in base}
     added_ids = [str(row["image_id"]) for row in added]
     if existing_ids.intersection(added_ids) or len(set(added_ids)) != len(added_ids):
@@ -44,6 +46,7 @@ def main() -> None:
     parser.add_argument("--training-manifest", required=True)
     parser.add_argument("--output-manifest", required=True)
     parser.add_argument("--summary-output", required=True)
+    parser.add_argument("--expected-source", default="aptos_hf")
     args = parser.parse_args()
     base_path, added_path = Path(args.base_manifest), Path(args.training_manifest)
     output, summary_path = Path(args.output_manifest), Path(args.summary_output)
@@ -51,7 +54,7 @@ def main() -> None:
         raise SystemExit("Refusing to overwrite existing output")
     base_fields, base = load(base_path)
     added_fields, added = load(added_path)
-    rows = combine(base, added)
+    rows = combine(base, added, expected_source=args.expected_source)
     fields = list(base_fields)
     for field in added_fields:
         if field not in fields:
@@ -70,12 +73,12 @@ def main() -> None:
         "base_rows": len(base),
         "added_training_rows": len(added),
         "output_rows": len(rows),
-        "added_source": "aptos_hf",
+        "added_source": args.expected_source,
         "added_split_counts": dict(Counter(row["source_split"] for row in added)),
         "added_grade_counts": dict(sorted(grade_counts.items())),
         "base_split_counts_unchanged": dict(Counter(row["source_split"] for row in base)),
         "validation_and_test_rows_added": 0,
-        "boundary": "APTOS-derived rows are training-only; base validation/test rows remain byte-for-byte field/value unchanged. This does not create independent patient-level evidence.",
+        "boundary": f"{args.expected_source} rows are training-only; base validation/test rows remain byte-for-byte field/value unchanged. Added rows do not create independent patient-level evidence.",
     }
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2, sort_keys=True))
