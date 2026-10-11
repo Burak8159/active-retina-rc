@@ -1,0 +1,103 @@
+{
+  "boundary": "Exact byte-identical files only. Near-duplicates are not detected. Existing model and validation results must be recomputed or filtered against the cleaned manifest; this does not make any prior test partition confirmatory.",
+  "clean_manifest": "results/autonomy_route_three_dataset_manifest_20261011_exactdedup.csv",
+  "duplicate_groups": [
+    {
+      "grade": 0,
+      "kept_image_id": "ddr_hf_specificity300:ddr_test_20170417200522114",
+      "members": [
+        {
+          "eye_id": "ddr_hf_specificity300:ddr_test_20170417200522114",
+          "image_id": "ddr_hf_specificity300:ddr_test_20170417200522114",
+          "patient_id": "ddr_hf_specificity300:ddr_test_20170417200522114",
+          "source_split": "ddr_hf_specificity300_valid"
+        },
+        {
+          "eye_id": "ddr_hf_specificity300:ddr_test_20170417200625313",
+          "image_id": "ddr_hf_specificity300:ddr_test_20170417200625313",
+          "patient_id": "ddr_hf_specificity300:ddr_test_20170417200625313",
+          "source_split": "ddr_hf_specificity300_test"
+        }
+      ],
+      "removed_image_ids": [
+        "ddr_hf_specificity300:ddr_test_20170417200625313"
+      ],
+      "sha256": "2570d7383be8cbbb6c4bb3d660b6cef83a539b3910c769f554197d461a48b391",
+      "source_dataset": "ddr_hf_specificity300"
+    },
+    {
+      "grade": 0,
+      "kept_image_id": "ddr_hf_specificity300:ddr_test_20170417105537560",
+      "members": [
+        {
+          "eye_id": "ddr_hf_specificity300:ddr_test_20170417105537560",
+          "image_id": "ddr_hf_specificity300:ddr_test_20170417105537560",
+          "patient_id": "ddr_hf_specificity300:ddr_test_20170417105537560",
+          "source_split": "ddr_hf_specificity300_valid"
+        },
+        {
+          "eye_id": "ddr_hf_specificity300:ddr_test_20170417105357066",
+          "image_id": "ddr_hf_specificity300:ddr_test_20170417105357066",
+          "patient_id": "ddr_hf_specificity300:ddr_test_20170417105357066",
+          "source_split": "ddr_hf_specificity300_test"
+        }
+      ],
+      "removed_image_ids": [
+        "ddr_hf_specificity300:ddr_test_20170417105357066"
+      ],
+      "sha256": "7b702dfe6ae4485481f96e9522c86768a3e1961cbc1225dd2a3207dd6ce9bf9c",
+      "source_dataset": "ddr_hf_specificity300"
+    },
+    {
+      "grade": 0,
+      "kept_image_id": "ddr_hf_specificity300:ddr_test_20170417105356987",
+      "members": [
+        {
+          "eye_id": "ddr_hf_specificity300:ddr_test_20170417105356987",
+          "image_id": "ddr_hf_specificity300:ddr_test_20170417105356987",
+          "patient_id": "ddr_hf_specificity300:ddr_test_20170417105356987",
+          "source_split": "ddr_hf_specificity300_train"
+        },
+        {
+          "eye_id": "ddr_hf_specificity300:ddr_test_20170417105537128",
+          "image_id": "ddr_hf_specificity300:ddr_test_20170417105537128",
+          "patient_id": "ddr_hf_specificity300:ddr_test_20170417105537128",
+          "source_split": "ddr_hf_specificity300_valid"
+        }
+      ],
+      "removed_image_ids": [
+        "ddr_hf_specificity300:ddr_test_20170417105537128"
+      ],
+      "sha256": "8f8fd88dbebd867333d10b553c41e0c6e002136b2460cbf812353f6db1c2b7c3",
+      "source_dataset": "ddr_hf_specificity300"
+    }
+  ],
+  "input_manifest": "results/autonomy_route_three_dataset_manifest_20261011.csv",
+  "input_rows": 8922,
+  "method": "SHA-256 over original image file bytes",
+  "output_rows": 8919,
+  "removed_duplicate_rows": 3,
+  "split_counts_after": {
+    "ddr_hf_specificity300_test": 608,
+    "ddr_hf_specificity300_train": 3002,
+    "ddr_hf_specificity300_valid": 625,
+    "deepdrid_paired_test": 192,
+    "deepdrid_paired_train": 1180,
+    "deepdrid_paired_valid": 212,
+    "drtid_paired_test": 434,
+    "drtid_paired_train": 2166,
+    "drtid_paired_valid": 500
+  },
+  "split_counts_before": {
+    "ddr_hf_specificity300_test": 610,
+    "ddr_hf_specificity300_train": 3002,
+    "ddr_hf_specificity300_valid": 626,
+    "deepdrid_paired_test": 192,
+    "deepdrid_paired_train": 1180,
+    "deepdrid_paired_valid": 212,
+    "drtid_paired_test": 434,
+    "drtid_paired_train": 2166,
+    "drtid_paired_valid": 500
+  },
+  "status": "EXACT_DUPLICATES_COLLAPSED"
+}
