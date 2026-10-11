@@ -1,0 +1,33 @@
+{
+  "added_grade_counts": {
+    "0": 134,
+    "1": 18,
+    "2": 133,
+    "3": 73,
+    "4": 48
+  },
+  "added_source": "idrid_train_only",
+  "added_split_counts": {
+    "idrid_train": 406
+  },
+  "added_training_rows": 406,
+  "base_manifest": "results/autonomy_route_three_dataset_manifest_20261011_exactdedup.csv",
+  "base_rows": 8919,
+  "base_split_counts_unchanged": {
+    "ddr_hf_specificity300_test": 608,
+    "ddr_hf_specificity300_train": 3002,
+    "ddr_hf_specificity300_valid": 625,
+    "deepdrid_paired_test": 192,
+    "deepdrid_paired_train": 1180,
+    "deepdrid_paired_valid": 212,
+    "drtid_paired_test": 434,
+    "drtid_paired_train": 2166,
+    "drtid_paired_valid": 500
+  },
+  "boundary": "APTOS-derived rows are training-only; base validation/test rows remain byte-for-byte field/value unchanged. This does not create independent patient-level evidence.",
+  "output_manifest": "results/autonomy_route_idrid_extended_manifest_20261011.csv",
+  "output_rows": 9325,
+  "status": "TRAIN_ONLY_SOURCE_APPENDED_FROZEN_BASE_UNCHANGED",
+  "training_manifest": "results/idrid_training_manifest_20261011_v2.csv",
+  "validation_and_test_rows_added": 0
+}
