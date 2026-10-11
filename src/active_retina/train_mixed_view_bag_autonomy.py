@@ -487,7 +487,7 @@ def predictions(model: nn.Module, loader: DataLoader, device: torch.device) -> d
     model.eval()
     columns: dict[str, list[Any]] = {
         key: []
-        for key in ("grade", "referable", "quality_known", "ungradable", "risk", "ordinal_risk", "quality", "eye_id", "patient_id", "source_dataset", "image_ids")
+        for key in ("grade", "referable", "quality_known", "ungradable", "risk", "ordinal_risk", "max_grade_margin", "grade_boundary_margin", "quality", "eye_id", "patient_id", "source_dataset", "image_ids")
     }
     with torch.inference_mode():
         for images, mask, grade, referable, quality_known, ungradable, eye_id, patient_id, source, image_ids, _, _ in loader:
@@ -499,6 +499,8 @@ def predictions(model: nn.Module, loader: DataLoader, device: torch.device) -> d
                 "ungradable": ungradable.numpy(),
                 "risk": torch.sigmoid(risk.float()).cpu().numpy(),
                 "ordinal_risk": ordinal_referable_score(grade_logits).cpu().numpy(),
+                "max_grade_margin": max_grade_margin(grade_logits).cpu().numpy(),
+                "grade_boundary_margin": grade_boundary_margin(grade_logits).cpu().numpy(),
                 "quality": torch.sigmoid(quality.float()).cpu().numpy(),
                 "eye_id": eye_id,
                 "patient_id": patient_id,
@@ -539,6 +541,21 @@ def select_filtered_policy(
 
 def ordinal_referable_score(grade_logits: torch.Tensor) -> torch.Tensor:
     return torch.softmax(grade_logits.float(), dim=1)[:, 2:5].sum(dim=1)
+
+
+def max_grade_margin(grade_logits: torch.Tensor) -> torch.Tensor:
+    """Max referable-grade logit minus max nonreferable-grade logit."""
+    if grade_logits.ndim != 2 or grade_logits.shape[1] != 5:
+        raise ValueError("Expected five grade logits for grades 0-4")
+    logits = grade_logits.float()
+    return logits[:, 2:5].max(dim=1).values - logits[:, :2].max(dim=1).values
+
+
+def grade_boundary_margin(grade_logits: torch.Tensor) -> torch.Tensor:
+    """Grade-2 logit minus grade-1 logit, targeting the referable boundary."""
+    if grade_logits.ndim != 2 or grade_logits.shape[1] != 5:
+        raise ValueError("Expected five grade logits for grades 0-4")
+    return grade_logits.float()[:, 2] - grade_logits.float()[:, 1]
 
 
 def ordinal_referable_logit(grade_logits: torch.Tensor) -> torch.Tensor:
@@ -623,7 +640,7 @@ def write_predictions(
     referred = (scores[score_key].astype(float) >= float(policy["risk_threshold"])) | (
         scores["quality"].astype(float) >= float(policy["quality_threshold"])
     )
-    keys = ["eye_id", "patient_id", "source_dataset", "grade", "referable", "quality_known", "ungradable", "risk", "ordinal_risk", "quality"]
+    keys = ["eye_id", "patient_id", "source_dataset", "grade", "referable", "quality_known", "ungradable", "risk", "ordinal_risk", "max_grade_margin", "grade_boundary_margin", "quality"]
     with path.open("w", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=["split", *keys, "image_ids", "refer_action"])
         writer.writeheader()
@@ -652,7 +669,7 @@ def main() -> None:
     parser.add_argument("--risk-pooling", choices=("fused", "mean", "max", "logmeanexp"), default="fused",
                         help="Use an eye-level multiple-instance disease head over view embeddings; view labels are never fabricated.")
     parser.add_argument("--risk-pool-temperature", type=float, default=0.25)
-    parser.add_argument("--selection-score", choices=("risk", "ordinal_risk"), default="risk",
+    parser.add_argument("--selection-score", choices=("risk", "ordinal_risk", "max_grade_margin", "grade_boundary_margin"), default="risk",
                         help="Validation score used to select the checkpoint and zero-miss policy.")
     parser.add_argument("--lesion-presence-csv",
                         help="Optional DDR train-only mask-derived EX/HE/MA/SE labels keyed by image_basename.")

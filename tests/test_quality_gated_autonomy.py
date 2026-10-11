@@ -20,6 +20,8 @@ from active_retina.train_mixed_view_bag_autonomy import (
     aggregate_pretrained_view_risk,
     filter_prediction_sources,
     manifest_view_counts,
+    grade_boundary_margin,
+    max_grade_margin,
     ordinal_referable_score,
     pool_view_risk,
     select_manifest_sources,
@@ -277,6 +279,8 @@ def test_ordinal_policy_score_is_used_for_diagnostics_and_saved_actions(tmp_path
         "grade": np.array([0, 2]),
         "risk": np.array([0.8, 0.1]),
         "ordinal_risk": np.array([0.1, 0.9]),
+        "max_grade_margin": np.array([-1.0, 1.0]),
+        "grade_boundary_margin": np.array([-1.0, 1.0]),
         "quality": np.zeros(2),
         "quality_known": np.zeros(2, dtype=int),
         "ungradable": np.zeros(2, dtype=int),
@@ -349,6 +353,14 @@ def test_ordinal_rank_logit_matches_deployed_referable_probability():
     rank_logit = ordinal_referable_logit(logits)
 
     assert torch.allclose(torch.sigmoid(rank_logit), probability, atol=1e-6)
+
+
+def test_max_grade_margin_uses_five_grade_head_and_matches_declared_margin():
+    logits = torch.tensor([[2.0, 1.0, 0.2, -0.3, -1.0]])
+    score = max_grade_margin(logits)
+
+    assert torch.allclose(score, torch.tensor([-1.8]))
+    assert torch.allclose(grade_boundary_margin(logits), torch.tensor([-0.8]))
 
 
 def test_cumulative_ordinal_loss_trains_ordered_boundaries_and_masks_ungradable():
