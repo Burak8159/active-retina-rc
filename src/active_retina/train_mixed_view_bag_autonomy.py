@@ -108,18 +108,37 @@ class EyeBags(Dataset):
 
 class MixedViewModel(nn.Module):
     def __init__(
-        self, model_name: str, pretrained: bool, image_size: int, preserve_pretrained_risk: bool = False
+        self,
+        model_name: str,
+        pretrained: bool,
+        image_size: int,
+        preserve_pretrained_risk: bool = False,
+        risk_pooling: str = "fused",
+        risk_pool_temperature: float = 0.25,
     ) -> None:
         super().__init__()
         import timm
 
+        if risk_pooling not in {"fused", "mean", "max", "logmeanexp"}:
+            raise ValueError(f"Unsupported risk pooling: {risk_pooling}")
+        if risk_pool_temperature <= 0:
+            raise ValueError("risk_pool_temperature must be positive")
         self.preserve_pretrained_risk = preserve_pretrained_risk
+        self.risk_pooling = risk_pooling
+        self.risk_pool_temperature = float(risk_pool_temperature)
         self.encoder = timm.create_model(
             model_name, pretrained=pretrained, num_classes=1 if preserve_pretrained_risk else 0, global_pool="avg"
         )
         width = int(self.encoder.num_features)
         self.grade_head = nn.Sequential(nn.Linear(width * 3, width), nn.GELU(), nn.Dropout(0.2), nn.Linear(width, 5))
         self.risk_head = nn.Sequential(nn.Linear(width * 3, width), nn.GELU(), nn.Dropout(0.2), nn.Linear(width, 1))
+        self.view_risk_head = (
+            nn.Sequential(nn.Linear(width, width // 2), nn.GELU(), nn.Dropout(0.2), nn.Linear(width // 2, 1))
+            if risk_pooling != "fused"
+            else None
+        )
+        if self.view_risk_head is not None:
+            self.risk_head.requires_grad_(False)
         self.quality_head = nn.Sequential(nn.Linear(width * 3, width // 2), nn.GELU(), nn.Dropout(0.2), nn.Linear(width // 2, 1))
         if preserve_pretrained_risk:
             nn.init.zeros_(self.risk_head[-1].weight)
@@ -145,11 +164,36 @@ class MixedViewModel(nn.Module):
         maximum = features.masked_fill(~view_mask.unsqueeze(-1), torch.finfo(features.dtype).min).max(dim=1).values
         difference = torch.abs(features[:, 0] - features[:, 1]) * (view_mask[:, 1] & view_mask[:, 0]).unsqueeze(-1)
         fused = torch.cat((mean, maximum, difference), dim=1)
-        risk = self.risk_head(fused).squeeze(1)
+        if self.view_risk_head is None:
+            risk = self.risk_head(fused).squeeze(1)
+        else:
+            per_view_risk = self.view_risk_head(features).squeeze(-1)
+            risk = pool_view_risk(per_view_risk, view_mask, self.risk_pooling, self.risk_pool_temperature)
         if pretrained_logits is not None:
             prior_risk = aggregate_pretrained_view_risk(pretrained_logits, view_mask)
             risk = prior_risk + risk
         return self.grade_head(fused), risk, self.quality_head(fused).squeeze(1)
+
+
+def pool_view_risk(
+    logits: torch.Tensor, view_mask: torch.Tensor, mode: str, temperature: float = 0.25
+) -> torch.Tensor:
+    """Pool view logits to an eye score without assigning labels to individual views."""
+    if logits.ndim != 2 or view_mask.shape != logits.shape:
+        raise ValueError("logits and view_mask must have matching [batch, views] shapes")
+    if not bool(view_mask.any(dim=1).all()):
+        raise ValueError("Every eye must have at least one valid view")
+    masked = logits.float().masked_fill(~view_mask, torch.finfo(torch.float32).min)
+    if mode == "max":
+        return masked.max(dim=1).values
+    if mode == "mean":
+        return (masked.masked_fill(~view_mask, 0.0).sum(dim=1) / view_mask.sum(dim=1).clamp_min(1))
+    if mode == "logmeanexp":
+        if temperature <= 0:
+            raise ValueError("temperature must be positive")
+        pooled = torch.logsumexp(masked / temperature, dim=1) * temperature
+        return pooled - temperature * view_mask.sum(dim=1).float().log()
+    raise ValueError(f"Unsupported view pooling mode: {mode}")
 
 
 class BoundaryPairBatchSampler(Sampler[list[int]]):
@@ -346,6 +390,38 @@ def select_manifest_sources(
     return selected
 
 
+def manifest_view_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    per_eye: dict[str, int] = {}
+    for row in rows:
+        eye_id = str(row["eye_id"])
+        per_eye[eye_id] = per_eye.get(eye_id, 0) + 1
+    return {
+        "eyes": len(per_eye),
+        "one_view": sum(count == 1 for count in per_eye.values()),
+        "two_view": sum(count == 2 for count in per_eye.values()),
+    }
+
+
+def stratified_policy_metrics(scores: dict[str, np.ndarray], policy: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Report the same validation-selected policy by source and reference grade."""
+    output: dict[str, dict[str, Any]] = {}
+    base = {key: scores[key] for key in ("grade", "risk", "quality", "quality_known", "ungradable")}
+    sources = scores.get("source_dataset")
+    if sources is not None:
+        for source in sorted(set(sources.tolist())):
+            mask = sources == source
+            output[f"source:{source}"] = evaluate_policy(
+                {key: value[mask] for key, value in base.items()}, policy
+            )
+    grades = scores["grade"].astype(int)
+    for grade in sorted(set(grades.tolist())):
+        mask = grades == grade
+        output[f"grade:{grade}"] = evaluate_policy(
+            {key: value[mask] for key, value in base.items()}, policy
+        )
+    return output
+
+
 def write_predictions(path: Path, split: str, scores: dict[str, np.ndarray], policy: dict[str, Any]) -> None:
     referred = (scores["risk"].astype(float) >= float(policy["risk_threshold"])) | (
         scores["quality"].astype(float) >= float(policy["quality_threshold"])
@@ -376,6 +452,9 @@ def main() -> None:
     parser.add_argument("--model-name", default="convnext_tiny.fb_in22k_ft_in1k")
     parser.add_argument("--preserve-pretrained-risk", action="store_true",
                         help="Use the pretrained scalar disease head as a risk prior and learn a zero-initialized residual.")
+    parser.add_argument("--risk-pooling", choices=("fused", "mean", "max", "logmeanexp"), default="fused",
+                        help="Use an eye-level multiple-instance disease head over view embeddings; view labels are never fabricated.")
+    parser.add_argument("--risk-pool-temperature", type=float, default=0.25)
     parser.add_argument("--image-size", type=int, default=224)
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=2)
@@ -394,6 +473,8 @@ def main() -> None:
                         help="Restrict policy selection and aggregate metrics to these source_dataset values.")
     parser.add_argument("--training-sources", nargs="+", default=None,
                         help="Restrict training to these source_dataset values; held-out splits remain patient-disjoint.")
+    parser.add_argument("--skip-test-evaluation", action="store_true",
+                        help="Do not load or score development-test images; select this candidate using validation only.")
     parser.add_argument("--rank-weight", type=float, default=0.25)
     parser.add_argument("--rank-margin", type=float, default=0.5)
     parser.add_argument("--rank-top-fraction", type=float, default=0.25)
@@ -412,18 +493,25 @@ def main() -> None:
     model = MixedViewModel(
         args.model_name, pretrained=not bool(args.init_checkpoint), image_size=args.image_size,
         preserve_pretrained_risk=args.preserve_pretrained_risk,
+        risk_pooling=args.risk_pooling, risk_pool_temperature=args.risk_pool_temperature,
     ).to(device)
     if args.init_checkpoint:
         initial = torch.load(args.init_checkpoint, map_location="cpu", weights_only=False)
         if initial.get("model_name") != args.model_name:
             raise ValueError("Warm-start checkpoint backbone does not match --model-name")
-        model.load_state_dict(initial["state_dict"])
+        incompatible = model.load_state_dict(initial["state_dict"], strict=args.risk_pooling == "fused")
+        if args.risk_pooling != "fused":
+            if incompatible.unexpected_keys or any(not key.startswith("view_risk_head.") for key in incompatible.missing_keys):
+                raise ValueError(
+                    "Warm-start checkpoint is structurally incompatible; only the new view_risk_head may be missing. "
+                    f"missing={incompatible.missing_keys}, unexpected={incompatible.unexpected_keys}"
+                )
     train_rows = select_manifest_sources(splits["train"], args.training_sources, "train")
     valid_rows = select_manifest_sources(splits["valid"], args.evaluation_sources, "validation")
     test_rows = select_manifest_sources(splits["test"], args.evaluation_sources, "test")
     train_data = EyeBags(train_rows, model.train_transform, root)
     valid_data = EyeBags(valid_rows, model.eval_transform, root)
-    test_data = EyeBags(test_rows, model.eval_transform, root)
+    test_data = None if args.skip_test_evaluation else EyeBags(test_rows, model.eval_transform, root)
     pin = device.type == "cuda"
     sampler_modes = sum(bool(value) for value in (
         args.boundary_pair_batches, args.boundary_focused_samples, args.source_balanced_batches
@@ -448,11 +536,16 @@ def main() -> None:
     else:
         train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=pin)
     valid_loader = DataLoader(valid_data, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=pin)
-    test_loader = DataLoader(test_data, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=pin)
+    test_loader = None if test_data is None else DataLoader(
+        test_data, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=pin
+    )
     optimizer = torch.optim.AdamW(
         [
             {"params": model.encoder.parameters(), "lr": args.backbone_lr},
-            {"params": list(model.grade_head.parameters()) + list(model.risk_head.parameters()) + list(model.quality_head.parameters()), "lr": args.head_lr},
+            {"params": list(model.grade_head.parameters()) +
+             [parameter for parameter in model.risk_head.parameters() if parameter.requires_grad] +
+             ([] if model.view_risk_head is None else list(model.view_risk_head.parameters())) +
+             list(model.quality_head.parameters()), "lr": args.head_lr},
         ],
         weight_decay=args.weight_decay,
     )
@@ -502,12 +595,14 @@ def main() -> None:
         _, ordinal_policy = select_filtered_policy(valid_pred, args.evaluation_sources, "ordinal_risk")
         record = {
             "epoch": epoch,
+            "risk_pooling": args.risk_pooling,
             "train_loss": total_loss / max(1, n_examples),
             "validation_policy": policy,
             "validation_metrics": evaluate_policy(
                 {"grade": policy_valid_pred["grade"], "risk": policy_valid_pred["risk"], "quality": policy_valid_pred["quality"],
                  "quality_known": policy_valid_pred["quality_known"], "ungradable": policy_valid_pred["ungradable"]}, policy
             ),
+            "validation_metrics_by_source_and_grade": stratified_policy_metrics(policy_valid_pred, policy),
             "ordinal_validation_policy": ordinal_policy,
             "ordinal_validation_metrics": evaluate_policy(
                 {"grade": policy_valid_pred["grade"], "risk": policy_valid_pred["ordinal_risk"], "quality": policy_valid_pred["quality"],
@@ -541,37 +636,47 @@ def main() -> None:
     valid_pred = predictions(model, valid_loader, device)
     policy_valid_pred, policy = select_filtered_policy(valid_pred, args.evaluation_sources)
     _, ordinal_policy = select_filtered_policy(valid_pred, args.evaluation_sources, "ordinal_risk")
-    test_pred = predictions(model, test_loader, device)
-    policy_test_pred = filter_prediction_sources(test_pred, args.evaluation_sources)
     valid_input = {key: policy_valid_pred[key] for key in ("grade", "risk", "quality", "quality_known", "ungradable")}
-    test_input = {key: policy_test_pred[key] for key in ("grade", "risk", "quality", "quality_known", "ungradable")}
     ordinal_valid_input = {key: policy_valid_pred[key] for key in ("grade", "quality", "quality_known", "ungradable")}
     ordinal_valid_input["risk"] = policy_valid_pred["ordinal_risk"]
-    ordinal_test_input = {key: policy_test_pred[key] for key in ("grade", "quality", "quality_known", "ungradable")}
-    ordinal_test_input["risk"] = policy_test_pred["ordinal_risk"]
     write_predictions(out / "validation_predictions.csv", "valid", valid_pred, policy)
-    write_predictions(out / "test_predictions_development_only.csv", "test", test_pred, policy)
+    if test_loader is None:
+        test_metrics = None
+        ordinal_test_metrics = None
+    else:
+        test_pred = predictions(model, test_loader, device)
+        policy_test_pred = filter_prediction_sources(test_pred, args.evaluation_sources)
+        test_input = {key: policy_test_pred[key] for key in ("grade", "risk", "quality", "quality_known", "ungradable")}
+        ordinal_test_input = {key: policy_test_pred[key] for key in ("grade", "quality", "quality_known", "ungradable")}
+        ordinal_test_input["risk"] = policy_test_pred["ordinal_risk"]
+        test_metrics = evaluate_policy(test_input, policy)
+        ordinal_test_metrics = evaluate_policy(ordinal_test_input, ordinal_policy)
+        write_predictions(out / "test_predictions_development_only.csv", "test", test_pred, policy)
     summary = {
         "status": "DEVELOPMENT_CANDIDATE_NOT_CERTIFIED",
         "claim_boundary": "The mixed manifest has been used for prior development and is not an untouched certification cohort.",
         "unit_of_analysis": "eye-level bag; one DDR image or paired DRTiD/DeepDRiD macula+optic-disc images",
         "manifest": args.manifest,
         "model_name": args.model_name,
+        "risk_pooling": args.risk_pooling,
+        "risk_pool_temperature": args.risk_pool_temperature,
         "training_sources": args.training_sources,
         "evaluation_sources": args.evaluation_sources,
         "best_epoch": best_record,
         "selected_validation_policy": policy,
         "validation_metrics": evaluate_policy(valid_input, policy),
-        "test_metrics_development_only": evaluate_policy(test_input, policy),
+        "validation_metrics_by_source_and_grade": stratified_policy_metrics(policy_valid_pred, policy),
+        "test_metrics_development_only": test_metrics,
         "selected_ordinal_validation_policy": ordinal_policy,
         "ordinal_validation_metrics": evaluate_policy(ordinal_valid_input, ordinal_policy),
-        "ordinal_test_metrics_development_only": evaluate_policy(ordinal_test_input, ordinal_policy),
-        "train_eyes": len(train_data), "validation_eyes": len(valid_data), "test_eyes": len(test_data),
+        "ordinal_test_metrics_development_only": ordinal_test_metrics,
+        "train_eyes": len(train_data), "validation_eyes": len(valid_data), "test_eyes": len(test_rows),
+        "test_evaluation_skipped": args.skip_test_evaluation,
         "view_counts": {
             split: {"eyes": len(dataset), "one_view": sum(len(x["views"]) == 1 for x in dataset.items),
                    "two_view": sum(len(x["views"]) == 2 for x in dataset.items)}
-            for split, dataset in (("train", train_data), ("valid", valid_data), ("test", test_data))
-        },
+            for split, dataset in (("train", train_data), ("valid", valid_data))
+        } | {"test": manifest_view_counts(test_rows)},
         "quality_label_boundary": "DDR grade 5 is ungradable; DRTiD quality labels are unknown and excluded from quality loss.",
         "history": history,
         "artifact": args.artifact,

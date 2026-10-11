@@ -16,9 +16,12 @@ from active_retina.train_mixed_view_bag_autonomy import (
     SourceBalancedEyeBatchSampler,
     aggregate_pretrained_view_risk,
     filter_prediction_sources,
+    manifest_view_counts,
     ordinal_referable_score,
+    pool_view_risk,
     select_manifest_sources,
     select_filtered_policy,
+    stratified_policy_metrics,
 )
 from active_retina.autonomy_extra_signal_search import select_best_validated
 from active_retina.autonomy_zero_miss_90_search import select_best_validated as select_zero_miss_search_candidate
@@ -172,6 +175,59 @@ def test_max_view_fusion_preserves_any_view_risk_signal():
     pred = make_policy_input(scores, "max_any_view")
 
     assert np.allclose(pred["risk"], [0.7, 0.8])
+
+
+def test_view_level_mil_pooling_is_masked_and_differentiable():
+    logits = torch.tensor([[0.1, 1.2], [-0.4, 9.0]], requires_grad=True)
+    mask = torch.tensor([[True, True], [True, False]])
+
+    pooled = pool_view_risk(logits, mask, "logmeanexp", temperature=0.25)
+    pooled.sum().backward()
+
+    assert pooled.shape == (2,)
+    assert torch.isfinite(pooled).all()
+    assert torch.allclose(pooled[1], logits.detach()[1, 0])
+    assert logits.grad[0, 0] > 0
+    assert logits.grad[0, 1] > 0
+    assert logits.grad[1, 1] == 0
+
+
+def test_view_level_mil_rejects_eyes_without_any_valid_view():
+    try:
+        pool_view_risk(torch.zeros(1, 2), torch.zeros(1, 2, dtype=torch.bool), "max")
+    except ValueError as error:
+        assert "at least one valid view" in str(error)
+    else:
+        raise AssertionError("An empty eye bag must fail closed")
+
+
+def test_manifest_view_counts_do_not_load_test_images():
+    rows = [
+        {"eye_id": "single", "image_path": "not-opened.jpg"},
+        {"eye_id": "pair", "image_path": "also-not-opened-a.jpg"},
+        {"eye_id": "pair", "image_path": "also-not-opened-b.jpg"},
+    ]
+
+    assert manifest_view_counts(rows) == {"eyes": 2, "one_view": 1, "two_view": 1}
+
+
+def test_stratified_policy_diagnostics_reuse_one_locked_policy():
+    scores = {
+        "grade": np.array([0, 1, 2, 3]),
+        "risk": np.array([0.1, 0.3, 0.4, 0.8]),
+        "quality": np.zeros(4),
+        "quality_known": np.zeros(4, dtype=int),
+        "ungradable": np.zeros(4, dtype=int),
+        "source_dataset": np.array(["a", "a", "b", "b"]),
+    }
+    policy = {"risk_threshold": 0.4, "quality_threshold": 2.0}
+
+    metrics = stratified_policy_metrics(scores, policy)
+
+    assert metrics["source:a"]["specificity_gradable_nonreferable"] == 1.0
+    assert metrics["grade:0"]["false_referrals_on_gradable_nonreferable"] == 0
+    assert metrics["grade:1"]["false_referrals_on_gradable_nonreferable"] == 0
+    assert metrics["grade:2"]["missed_referable_dr"] == 0
 
 
 def test_boundary_focused_sampler_emits_one_eye_and_periodic_quality_controls():
