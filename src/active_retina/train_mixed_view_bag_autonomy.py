@@ -550,6 +550,23 @@ def ordinal_referable_logit(grade_logits: torch.Tensor) -> torch.Tensor:
     return positive - nonreferable_or_ungradable
 
 
+def cumulative_ordinal_loss(
+    grade_logits: torch.Tensor, grade: torch.Tensor, gradable: torch.Tensor
+) -> torch.Tensor:
+    logits = grade_logits.float()[gradable]
+    targets = grade[gradable]
+    if not len(targets):
+        return grade_logits.sum() * 0.0
+    boundaries = torch.arange(1, grade_logits.shape[1], device=targets.device)
+    cumulative_logits = torch.stack([
+        torch.logsumexp(logits[:, boundary:], dim=1)
+        - torch.logsumexp(logits[:, :boundary], dim=1)
+        for boundary in range(1, grade_logits.shape[1])
+    ], dim=1)
+    cumulative_targets = (targets[:, None] >= boundaries[None, :]).float()
+    return nn.functional.binary_cross_entropy_with_logits(cumulative_logits, cumulative_targets)
+
+
 def aggregate_pretrained_view_risk(logits: torch.Tensor, view_mask: torch.Tensor) -> torch.Tensor:
     return logits.masked_fill(~view_mask, torch.finfo(logits.dtype).min).max(dim=1).values
 
@@ -676,6 +693,8 @@ def main() -> None:
     parser.add_argument("--skip-test-evaluation", action="store_true",
                         help="Do not load or score development-test images; select this candidate using validation only.")
     parser.add_argument("--rank-weight", type=float, default=0.25)
+    parser.add_argument("--cumulative-ordinal-weight", type=float, default=0.0,
+                        help="Add a cumulative ordinal loss over every grade boundary, including grade 1 vs 2.")
     parser.add_argument("--rank-margin", type=float, default=0.5)
     parser.add_argument("--rank-top-fraction", type=float, default=0.25)
     parser.add_argument("--grade2-rank-weight", type=float, default=1.5)
@@ -685,6 +704,8 @@ def main() -> None:
 
     if args.lesion_loss_weight < 0:
         raise ValueError("--lesion-loss-weight must be nonnegative")
+    if args.cumulative_ordinal_weight < 0:
+        raise ValueError("--cumulative-ordinal-weight must be nonnegative")
     if args.max_train_batches < 0:
         raise ValueError("--max-train-batches must be nonnegative")
     if args.amp_init_scale <= 0:
@@ -916,6 +937,7 @@ def main() -> None:
                     )
                 gradable = grade < 5
                 grade_loss = masked_cross_entropy(grade_logits, grade, gradable)
+                cumulative_loss = cumulative_ordinal_loss(grade_logits, grade, gradable)
                 risk_loss = masked_bce_with_logits(risk_logits, referable, gradable)
                 quality_loss = masked_bce_with_logits(quality_logits, ungradable, quality_known)
                 rank_scores = ordinal_referable_logit(grade_logits) if args.rank_score == "ordinal" else risk_logits
@@ -927,11 +949,14 @@ def main() -> None:
                     masked_bce_with_logits(outputs[3], lesion_targets, lesion_known)
                     if args.lesion_presence_csv else risk_logits.sum() * 0.0
                 )
-                loss = grade_loss + risk_loss + quality_loss + args.rank_weight * rank_loss
+                loss = (grade_loss + risk_loss + quality_loss
+                        + args.cumulative_ordinal_weight * cumulative_loss
+                        + args.rank_weight * rank_loss)
                 loss = loss + args.lesion_loss_weight * lesion_loss
             if not torch.isfinite(loss):
                 components = {
                     "grade": float(grade_loss.detach().float().cpu()),
+                    "cumulative_ordinal": float(cumulative_loss.detach().float().cpu()),
                     "risk": float(risk_loss.detach().float().cpu()),
                     "quality": float(quality_loss.detach().float().cpu()),
                     "rank": float(rank_loss.detach().float().cpu()),
@@ -958,6 +983,7 @@ def main() -> None:
                         "loss": float(loss.detach().float().cpu()),
                         "components": {
                             "grade": float(grade_loss.detach().float().cpu()),
+                            "cumulative_ordinal": float(cumulative_loss.detach().float().cpu()),
                             "risk": float(risk_loss.detach().float().cpu()),
                             "quality": float(quality_loss.detach().float().cpu()),
                             "rank": float(rank_loss.detach().float().cpu()),
@@ -999,6 +1025,7 @@ def main() -> None:
             "epoch": epoch,
             "selection_score": args.selection_score,
             "rank_score": args.rank_score,
+            "cumulative_ordinal_loss_weight": args.cumulative_ordinal_weight,
             "risk_pooling": args.risk_pooling,
             "trainable_components": args.trainable_components,
             "train_loss": total_loss / max(1, n_examples),
@@ -1091,6 +1118,7 @@ def main() -> None:
         "risk_pool_temperature": args.risk_pool_temperature,
         "selection_score": args.selection_score,
         "rank_score": args.rank_score,
+        "cumulative_ordinal_loss_weight": args.cumulative_ordinal_weight,
         "trainable_components": trainable_info,
         "training_sources": args.training_sources,
         "evaluation_sources": args.evaluation_sources,

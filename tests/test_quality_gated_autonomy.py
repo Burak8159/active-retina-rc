@@ -27,8 +27,8 @@ from active_retina.train_mixed_view_bag_autonomy import (
     stratified_policy_metrics,
     HardBoundaryPairBatchSampler,
     LesionBalancedBatchSampler,
+    cumulative_ordinal_loss,
     ordinal_referable_logit,
-    ordinal_referable_score,
     write_predictions,
 )
 from active_retina.autonomy_extra_signal_search import select_best_validated
@@ -349,6 +349,23 @@ def test_ordinal_rank_logit_matches_deployed_referable_probability():
     rank_logit = ordinal_referable_logit(logits)
 
     assert torch.allclose(torch.sigmoid(rank_logit), probability, atol=1e-6)
+
+
+def test_cumulative_ordinal_loss_trains_ordered_boundaries_and_masks_ungradable():
+    logits = torch.tensor(
+        [[2.0, 1.0, 0.2, -0.3, -1.0], [0.0, 0.5, 1.0, -0.5, -1.0],
+         [1.0, 0.0, -0.5, -1.0, -2.0]],
+        requires_grad=True,
+    )
+    grade = torch.tensor([1, 3, 5])
+    loss = cumulative_ordinal_loss(logits, grade, grade < 5)
+    loss.backward()
+
+    assert torch.isfinite(loss)
+    assert torch.isfinite(logits.grad).all()
+    assert torch.equal(logits.grad[2], torch.zeros_like(logits.grad[2]))
+    assert logits.grad[0].abs().sum() > 0
+    assert logits.grad[1].abs().sum() > 0
 
 
 def test_hard_boundary_sampler_uses_only_train_scores_for_same_source_pairs():
