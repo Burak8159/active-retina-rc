@@ -1,0 +1,92 @@
+{
+  "archive": "/private/tmp/IDRiD_B_Disease_Grading.zip",
+  "archive_sha256": "8a9f4752b35d74cc35ff48b21ad44f295a6f800110ec218fc2d1c264803e4d8c",
+  "exact_duplicate_groups": [
+    {
+      "disposition": "excluded_all_conflicting_labels",
+      "images_and_grades": [
+        {
+          "grade": 1,
+          "image": "IDRiD_021"
+        },
+        {
+          "grade": 2,
+          "image": "IDRiD_391"
+        }
+      ]
+    },
+    {
+      "disposition": "excluded_all_conflicting_labels",
+      "images_and_grades": [
+        {
+          "grade": 4,
+          "image": "IDRiD_028"
+        },
+        {
+          "grade": 3,
+          "image": "IDRiD_327"
+        }
+      ]
+    },
+    {
+      "disposition": "kept_first_same_grade_copy",
+      "images_and_grades": [
+        {
+          "grade": 2,
+          "image": "IDRiD_045"
+        },
+        {
+          "grade": 2,
+          "image": "IDRiD_333"
+        }
+      ]
+    },
+    {
+      "disposition": "kept_first_same_grade_copy",
+      "images_and_grades": [
+        {
+          "grade": 2,
+          "image": "IDRiD_073"
+        },
+        {
+          "grade": 2,
+          "image": "IDRiD_375"
+        }
+      ]
+    },
+    {
+      "disposition": "kept_first_same_grade_copy",
+      "images_and_grades": [
+        {
+          "grade": 1,
+          "image": "IDRiD_079"
+        },
+        {
+          "grade": 1,
+          "image": "IDRiD_279"
+        }
+      ]
+    }
+  ],
+  "grade_counts": {
+    "0": 134,
+    "1": 18,
+    "2": 133,
+    "3": 73,
+    "4": 48
+  },
+  "heldout_manifest": "results/autonomy_route_three_dataset_manifest_20261011_exactdedup.csv",
+  "images": "external/IDRiD_train_only_final",
+  "label_member": "B. Disease Grading/2. Groundtruths/a. IDRiD_Disease Grading_Training Labels.csv",
+  "manifest": "results/idrid_training_manifest_20261011_final.csv",
+  "n_conflicting_duplicate_rows_excluded": 4,
+  "n_exact_duplicate_rows_excluded": 3,
+  "n_exact_heldout_overlaps_excluded": 0,
+  "n_training_images": 406,
+  "patient_identity_boundary": "IDRiD grading data provides image-level labels but no patient/eye IDs; it is appended to training only and provides no patient-level validation or certification evidence.",
+  "referable_grade_definition": "ICDR grade >= 2",
+  "source_license_boundary": "Official IDRiD page links to IEEE DataPort; Zenodo mirror declares CC BY 4.0 while retaining the original license. Preserve attribution and verify original terms before redistribution.",
+  "status": "IDRID_TRAIN_ONLY_EXTRACTED",
+  "test_partition_used": false,
+  "used_partition": "explicit training-label CSV and training image directory only"
+}
