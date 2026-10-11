@@ -77,3 +77,18 @@ Do not claim `65/0/100`, `80/0/100`, autonomous clinical diagnosis, or certifica
 ### Decision
 
 `NO_GO_65_0_100_PRE_MBRSET`. Do not deploy the permissive consensus or select its threshold on the same validation cohort. The meaningful next intervention is new grade-boundary supervision and a new independent cohort, not additional search over the current checkpoint library. The RTX is idle after the interrupted replay; its saved artifact retained the prior best checkpoint.
+
+### Nested out-of-fold score-stack audit
+
+- A regularized logistic stack over 22 saved score/quality features was evaluated with nested patient-grouped folds. Feature count and regularization were selected inside each outer training fold; the outer-fold patients were not used to fit the stack or its threshold.
+- The out-of-fold operating policy cleared 208/385 gradable nonreferable eyes (**54.03% specificity**) but missed 5/463 referable eyes (**98.92% sensitivity**), with 100% case-action coverage. This fails the required zero-observed-miss condition and is not promoted as a zero-miss result.
+- An intentionally invalid hindsight diagnostic selected each outer fold's threshold using that fold's positive labels. It reached 233/385 (**60.52%**) with zero misses, demonstrating that score separation exists for some cases but not that a usable threshold generalizes. It must not be reported as a policy result.
+- Source-level OOF results were DDR 120/206 specificity with 1/286 positive misses, DeepDRiD 43/52 with 1/54 misses, and DRTiD 45/127 with 3/123 misses. DRTiD remains the weakest source and contributes most of the misses.
+- Reproduction: `src/active_retina/audit_oof_risk_stack.py`; tests: `tests/test_audit_oof_risk_stack.py`; outputs: `results/oof_risk_stack_nested_20261011_caseaudit.json` and `results/oof_risk_stack_nested_20261011.json`.
+
+### Ordinal-anchored paired-view residual experiment (RTX, in progress)
+
+- The next distinct intervention freezes the encoder and existing grade head, uses the ordinal grade-derived referable-risk score as the baseline, and trains only a zero-initialized view-attention/residual head. At initialization it exactly preserves the ordinal baseline, so a candidate can be compared without silently replacing it with the weaker binary head.
+- On the shared 981-eye development cohort, the epoch-0 baseline is 185/385 (**48.05%**) specificity, 0/463 observed referable misses, 0/133 known-ungradable misses, and 100% case-action coverage. It does not exceed the 53.25% validation-selected ceiling above.
+- The 3-epoch RTX run is active; no trained-epoch result has yet been verified. Do not interpret the epoch-0 threshold fit as independent confirmation, and do not promote an epoch unless it improves specificity while retaining zero observed misses on this development cohort. These checks are still not a formal clinical risk certificate.
+- Implementation and focused tests are in `src/active_retina/train_mixed_view_bag_autonomy.py` and `tests/test_quality_gated_autonomy.py`.

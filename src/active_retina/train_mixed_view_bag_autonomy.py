@@ -139,7 +139,7 @@ class MixedViewModel(nn.Module):
         super().__init__()
         import timm
 
-        if risk_pooling not in {"fused", "mean", "max", "logmeanexp"}:
+        if risk_pooling not in {"fused", "mean", "max", "logmeanexp", "attention", "attention_residual", "ordinal_attention_residual"}:
             raise ValueError(f"Unsupported risk pooling: {risk_pooling}")
         if risk_pool_temperature <= 0:
             raise ValueError("risk_pool_temperature must be positive")
@@ -154,9 +154,25 @@ class MixedViewModel(nn.Module):
         self.risk_head = nn.Sequential(nn.Linear(width * 3, width), nn.GELU(), nn.Dropout(0.2), nn.Linear(width, 1))
         self.view_risk_head = (
             nn.Sequential(nn.Linear(width, width // 2), nn.GELU(), nn.Dropout(0.2), nn.Linear(width // 2, 1))
-            if risk_pooling != "fused"
+            if risk_pooling not in {"fused", "ordinal_attention_residual"}
             else None
         )
+        self.view_attention_head = (
+            nn.Sequential(nn.Linear(width, width // 4), nn.Tanh(), nn.Linear(width // 4, 1))
+            if risk_pooling in {"attention", "attention_residual", "ordinal_attention_residual"}
+            else None
+        )
+        self.view_residual_head = (
+            nn.Sequential(nn.Linear(width, width // 2), nn.GELU(), nn.Dropout(0.2), nn.Linear(width // 2, 1))
+            if risk_pooling in {"attention_residual", "ordinal_attention_residual"}
+            else None
+        )
+        if self.view_attention_head is not None:
+            nn.init.zeros_(self.view_attention_head[-1].weight)
+            nn.init.zeros_(self.view_attention_head[-1].bias)
+        if self.view_residual_head is not None:
+            nn.init.zeros_(self.view_residual_head[-1].weight)
+            nn.init.zeros_(self.view_residual_head[-1].bias)
         self.encoder_frozen = False
         if self.view_risk_head is not None:
             self.risk_head.requires_grad_(False)
@@ -175,10 +191,14 @@ class MixedViewModel(nn.Module):
         self.eval_transform = timm.data.create_transform(**cfg, is_training=False)
 
     def configure_trainable_components(self, mode: str) -> dict[str, int | str]:
-        if mode not in {"all", "view-risk-only", "last-stage", "last-stage-lesion-aux"}:
+        if mode not in {"all", "view-risk-only", "attention-residual-only", "last-stage", "last-stage-lesion-aux"}:
             raise ValueError(f"Unsupported trainable component mode: {mode}")
         if mode == "view-risk-only" and self.view_risk_head is None:
             raise ValueError("view-risk-only training requires a non-fused risk head")
+        if mode == "attention-residual-only" and (
+            self.view_attention_head is None or self.view_residual_head is None
+        ):
+            raise ValueError("attention-residual-only training requires residual attention pooling")
         if mode == "last-stage-lesion-aux" and self.lesion_head is None:
             raise ValueError("last-stage-lesion-aux requires --lesion-presence-csv")
         for parameter in self.parameters():
@@ -188,6 +208,13 @@ class MixedViewModel(nn.Module):
         if mode == "view-risk-only":
             for parameter in self.view_risk_head.parameters():
                 parameter.requires_grad_(True)
+            if self.view_attention_head is not None:
+                for parameter in self.view_attention_head.parameters():
+                    parameter.requires_grad_(True)
+        elif mode == "attention-residual-only":
+            for module in (self.view_attention_head, self.view_residual_head):
+                for parameter in module.parameters():
+                    parameter.requires_grad_(True)
         elif mode in {"last-stage", "last-stage-lesion-aux"}:
             if mode == "last-stage-lesion-aux" and self.lesion_head is None:
                 raise ValueError("last-stage-lesion-aux requires --lesion-presence-csv")
@@ -200,13 +227,13 @@ class MixedViewModel(nn.Module):
             if final_norm is not None:
                 for parameter in final_norm.parameters():
                     parameter.requires_grad_(True)
-            for module in (self.grade_head, self.quality_head, self.lesion_head, self.view_risk_head):
+            for module in (self.grade_head, self.quality_head, self.lesion_head, self.view_risk_head, self.view_attention_head, self.view_residual_head):
                 if module is not None:
                     for parameter in module.parameters():
                         parameter.requires_grad_(True)
             if self.view_risk_head is None:
                 self.risk_head.requires_grad_(True)
-        self.encoder_frozen = mode in {"view-risk-only", "last-stage", "last-stage-lesion-aux"}
+        self.encoder_frozen = mode in {"view-risk-only", "attention-residual-only", "last-stage", "last-stage-lesion-aux"}
         return {
             "mode": mode,
             "trainable_parameters": sum(p.numel() for p in self.parameters() if p.requires_grad),
@@ -235,15 +262,30 @@ class MixedViewModel(nn.Module):
         maximum = features.masked_fill(~view_mask.unsqueeze(-1), torch.finfo(features.dtype).min).max(dim=1).values
         difference = torch.abs(features[:, 0] - features[:, 1]) * (view_mask[:, 1] & view_mask[:, 0]).unsqueeze(-1)
         fused = torch.cat((mean, maximum, difference), dim=1)
-        if self.view_risk_head is None:
+        grade_logits = self.grade_head(fused)
+        if self.risk_pooling == "ordinal_attention_residual":
+            attention_logits = self.view_attention_head(features).squeeze(-1)
+            residual = self.view_residual_head(features).squeeze(-1)
+            risk = ordinal_attention_residual_score(grade_logits, residual, attention_logits, view_mask)
+        elif self.view_risk_head is None:
             risk = self.risk_head(fused).squeeze(1)
         else:
             per_view_risk = self.view_risk_head(features).squeeze(-1)
-            risk = pool_view_risk(per_view_risk, view_mask, self.risk_pooling, self.risk_pool_temperature)
+            if self.risk_pooling == "attention":
+                attention_logits = self.view_attention_head(features).squeeze(-1)
+                risk = attention_pool_view_risk(per_view_risk, attention_logits, view_mask)
+            elif self.risk_pooling == "attention_residual":
+                attention_logits = self.view_attention_head(features).squeeze(-1)
+                residual = self.view_residual_head(features).squeeze(-1)
+                risk = attention_residual_pool(
+                    per_view_risk, residual, attention_logits, view_mask, self.risk_pool_temperature
+                )
+            else:
+                risk = pool_view_risk(per_view_risk, view_mask, self.risk_pooling, self.risk_pool_temperature)
         if pretrained_logits is not None:
             prior_risk = aggregate_pretrained_view_risk(pretrained_logits, view_mask)
             risk = prior_risk + risk
-        result = (self.grade_head(fused), risk, self.quality_head(fused).squeeze(1))
+        result = (grade_logits, risk, self.quality_head(fused).squeeze(1))
         if return_auxiliary:
             if self.lesion_head is None:
                 raise ValueError("Auxiliary outputs requested without lesion-presence supervision")
@@ -270,6 +312,47 @@ def pool_view_risk(
         pooled = torch.logsumexp(masked / temperature, dim=1) * temperature
         return pooled - temperature * view_mask.sum(dim=1).float().log()
     raise ValueError(f"Unsupported view pooling mode: {mode}")
+
+
+def attention_pool_view_risk(
+    logits: torch.Tensor, attention_logits: torch.Tensor, view_mask: torch.Tensor
+) -> torch.Tensor:
+    """Learn a masked eye-level weighting over view-specific risk logits."""
+    if logits.ndim != 2 or attention_logits.shape != logits.shape or view_mask.shape != logits.shape:
+        raise ValueError("risk, attention, and view mask tensors must have matching [batch, views] shapes")
+    if not bool(view_mask.any(dim=1).all()):
+        raise ValueError("Every eye must have at least one valid view")
+    weights = torch.softmax(
+        attention_logits.float().masked_fill(~view_mask, torch.finfo(torch.float32).min), dim=1
+    )
+    return (weights * logits.float()).sum(dim=1)
+
+
+def attention_residual_pool(
+    logits: torch.Tensor,
+    residual: torch.Tensor,
+    attention_logits: torch.Tensor,
+    view_mask: torch.Tensor,
+    temperature: float,
+) -> torch.Tensor:
+    """Preserve the baseline MIL score and add a learned, view-aware residual."""
+    if logits.shape != residual.shape or logits.shape != attention_logits.shape or logits.shape != view_mask.shape:
+        raise ValueError("risk, residual, attention, and view mask tensors must have matching [batch, views] shapes")
+    baseline = pool_view_risk(logits, view_mask, "logmeanexp", temperature)
+    correction = attention_pool_view_risk(residual, attention_logits, view_mask)
+    return baseline + correction
+
+
+def ordinal_attention_residual_score(
+    grade_logits: torch.Tensor,
+    residual: torch.Tensor,
+    attention_logits: torch.Tensor,
+    view_mask: torch.Tensor,
+) -> torch.Tensor:
+    """Anchor view corrections to the existing eye-level ordinal DR score."""
+    baseline = ordinal_referable_logit(grade_logits)
+    correction = attention_pool_view_risk(residual, attention_logits, view_mask)
+    return baseline + correction
 
 
 class BoundaryPairBatchSampler(Sampler[list[int]]):
@@ -680,8 +763,8 @@ def main() -> None:
     parser.add_argument("--model-name", default="convnext_tiny.fb_in22k_ft_in1k")
     parser.add_argument("--preserve-pretrained-risk", action="store_true",
                         help="Use the pretrained scalar disease head as a risk prior and learn a zero-initialized residual.")
-    parser.add_argument("--risk-pooling", choices=("fused", "mean", "max", "logmeanexp"), default="fused",
-                        help="Use an eye-level multiple-instance disease head over view embeddings; view labels are never fabricated.")
+    parser.add_argument("--risk-pooling", choices=("fused", "mean", "max", "logmeanexp", "attention", "attention_residual", "ordinal_attention_residual"), default="fused",
+                        help="Pool view-level disease evidence at eye level; view labels are never fabricated.")
     parser.add_argument("--risk-pool-temperature", type=float, default=0.25)
     parser.add_argument("--selection-score", choices=("risk", "ordinal_risk", "max_grade_margin", "grade_boundary_margin"), default="risk",
                         help="Validation score used to select the checkpoint and zero-miss policy.")
@@ -696,8 +779,8 @@ def main() -> None:
                         help="Initial CUDA AMP loss scale; reduce for diagnosing repeated overflow skips.")
     parser.add_argument("--lesion-aux-batches", type=int, default=0,
                         help="Use this many two-eye batches per epoch, each containing one mask-labeled DDR eye.")
-    parser.add_argument("--trainable-components", choices=("all", "view-risk-only", "last-stage", "last-stage-lesion-aux"), default="all",
-                        help="Choose full, risk-head-only, last-stage, or last-stage plus lesion-auxiliary fine-tuning.")
+    parser.add_argument("--trainable-components", choices=("all", "view-risk-only", "attention-residual-only", "last-stage", "last-stage-lesion-aux"), default="all",
+                        help="Choose full, view-risk, ordinal-anchored attention-residual, last-stage, or lesion-auxiliary fine-tuning.")
     parser.add_argument("--rank-score", choices=("binary", "ordinal"), default="binary",
                         help="Train the pairwise boundary objective on the binary-risk head or the deployed ordinal risk score.")
     parser.add_argument("--image-size", type=int, default=224)
@@ -794,8 +877,9 @@ def main() -> None:
             initial["state_dict"], strict=args.risk_pooling == "fused" and not args.lesion_presence_csv
         )
         if args.risk_pooling != "fused":
-            allowed_missing = ("view_risk_head.", "lesion_head.") if args.lesion_presence_csv else ("view_risk_head.",)
-            if incompatible.unexpected_keys or any(not key.startswith(allowed_missing) for key in incompatible.missing_keys):
+            allowed_missing = ("view_risk_head.", "view_attention_head.", "view_residual_head.", "lesion_head.") if args.lesion_presence_csv else ("view_risk_head.", "view_attention_head.", "view_residual_head.")
+            allowed_unexpected = ("view_risk_head.",) if args.risk_pooling == "ordinal_attention_residual" else ()
+            if any(not key.startswith(allowed_unexpected) for key in incompatible.unexpected_keys) or any(not key.startswith(allowed_missing) for key in incompatible.missing_keys):
                 raise ValueError(
                     "Warm-start checkpoint is structurally incompatible; only declared new heads may be missing. "
                     f"missing={incompatible.missing_keys}, unexpected={incompatible.unexpected_keys}"
@@ -895,7 +979,7 @@ def main() -> None:
     encoder_params = [p for p in model.encoder.parameters() if p.requires_grad]
     if encoder_params:
         optimizer_groups.append({"params": encoder_params, "lr": args.backbone_lr})
-    head_params = [p for module in (model.grade_head, model.risk_head, model.view_risk_head, model.quality_head, model.lesion_head)
+    head_params = [p for module in (model.grade_head, model.risk_head, model.view_risk_head, model.view_attention_head, model.view_residual_head, model.quality_head, model.lesion_head)
                    if module is not None for p in module.parameters() if p.requires_grad]
     if head_params:
         optimizer_groups.append({"params": head_params, "lr": args.head_lr})

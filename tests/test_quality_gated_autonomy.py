@@ -18,11 +18,14 @@ from active_retina.train_mixed_view_bag_autonomy import (
     MixedViewModel,
     SourceBalancedEyeBatchSampler,
     aggregate_pretrained_view_risk,
+    attention_pool_view_risk,
+    attention_residual_pool,
     filter_prediction_sources,
     manifest_view_counts,
     grade_boundary_margin,
     max_grade_margin,
     ordinal_referable_score,
+    ordinal_attention_residual_score,
     pool_view_risk,
     select_manifest_sources,
     select_filtered_policy,
@@ -278,6 +281,72 @@ def test_view_level_mil_rejects_eyes_without_any_valid_view():
         raise AssertionError("An empty eye bag must fail closed")
 
 
+def test_attention_pooling_masks_missing_view_and_propagates_gradients():
+    logits = torch.tensor([[0.0, 2.0], [-1.0, 5.0]], requires_grad=True)
+    attention = torch.tensor([[0.0, 2.0], [0.0, 20.0]], requires_grad=True)
+    mask = torch.tensor([[True, True], [True, False]])
+    pooled = attention_pool_view_risk(logits, attention, mask)
+    pooled.sum().backward()
+
+    assert torch.allclose(pooled[1], logits.detach()[1, 0])
+    assert torch.isfinite(pooled).all()
+    assert logits.grad[0, 1] > logits.grad[0, 0]
+    assert logits.grad[1, 1] == 0
+
+
+def test_attention_pooling_rejects_empty_eye_bag():
+    try:
+        attention_pool_view_risk(torch.zeros(1, 2), torch.zeros(1, 2), torch.zeros(1, 2, dtype=torch.bool))
+    except ValueError as error:
+        assert "at least one valid view" in str(error)
+    else:
+        raise AssertionError("An empty eye bag must fail closed")
+
+
+def test_attention_residual_exactly_preserves_logmeanexp_at_initialization():
+    logits = torch.tensor([[0.2, 1.1], [-0.3, 9.0]])
+    residual = torch.zeros_like(logits, requires_grad=True)
+    attention = torch.tensor([[1.5, -0.5], [7.0, -9.0]])
+    mask = torch.tensor([[True, True], [True, False]])
+    pooled = attention_residual_pool(logits, residual, attention, mask, temperature=0.25)
+    baseline = pool_view_risk(logits, mask, "logmeanexp", temperature=0.25)
+    assert torch.allclose(pooled, baseline)
+
+
+def test_attention_residual_only_mode_freezes_baseline_and_encoder():
+    model = object.__new__(MixedViewModel)
+    torch.nn.Module.__init__(model)
+    model.encoder = torch.nn.Sequential(torch.nn.Linear(2, 2), torch.nn.BatchNorm1d(2))
+    model.grade_head = torch.nn.Linear(2, 2)
+    model.risk_head = torch.nn.Linear(2, 1)
+    model.view_risk_head = torch.nn.Linear(2, 1)
+    model.view_attention_head = torch.nn.Linear(2, 1)
+    model.view_residual_head = torch.nn.Linear(2, 1)
+    model.quality_head = torch.nn.Linear(2, 1)
+    model.lesion_head = None
+    model.encoder_frozen = False
+
+    info = model.configure_trainable_components("attention-residual-only")
+    model.train()
+    selected = {"view_attention_head.", "view_residual_head."}
+    assert info["trainable_parameters"] == sum(
+        p.numel() for module in (model.view_attention_head, model.view_residual_head) for p in module.parameters()
+    )
+    assert all(p.requires_grad for name, p in model.named_parameters() if any(name.startswith(prefix) for prefix in selected))
+    assert all(not p.requires_grad for name, p in model.named_parameters() if not any(name.startswith(prefix) for prefix in selected))
+    assert not model.encoder.training
+
+
+def test_ordinal_attention_residual_preserves_ordinal_base_at_initialization():
+    grade_logits = torch.tensor([[0.1, 0.4, 0.8, -0.1, -0.3], [0.5, 0.2, -0.3, -0.5, -0.8]])
+    residual = torch.zeros(2, 2)
+    attention = torch.tensor([[4.0, -2.0], [100.0, -100.0]])
+    mask = torch.tensor([[True, True], [True, False]])
+    score = ordinal_attention_residual_score(grade_logits, residual, attention, mask)
+    baseline = ordinal_referable_logit(grade_logits)
+    assert torch.allclose(score, baseline)
+
+
 def test_view_risk_only_mode_freezes_encoder_and_auxiliary_heads():
     model = object.__new__(MixedViewModel)
     torch.nn.Module.__init__(model)
@@ -285,6 +354,7 @@ def test_view_risk_only_mode_freezes_encoder_and_auxiliary_heads():
     model.grade_head = torch.nn.Linear(2, 2)
     model.risk_head = torch.nn.Linear(2, 1)
     model.view_risk_head = torch.nn.Linear(2, 1)
+    model.view_attention_head = None
     model.quality_head = torch.nn.Linear(2, 1)
     model.encoder_frozen = False
 
