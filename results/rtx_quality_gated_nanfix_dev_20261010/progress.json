@@ -1,0 +1,72 @@
+{
+  "args": {
+    "artifact": "models\\active_retina_quality_gated_convnext_tiny_80_dev_20261010.pt",
+    "backbone_lr": 5e-06,
+    "batch_size": 4,
+    "device": "cuda",
+    "epochs": 18,
+    "head_lr": 0.0003,
+    "image_size": 224,
+    "manifest": "results\\autonomy_route_combined_manifest_resplit.csv",
+    "model_name": "convnext_tiny.fb_in22k_ft_in1k",
+    "num_workers": 2,
+    "output_dir": "results\\quality_gated_convnext_tiny_80_dev_20261010",
+    "seed": 20261010,
+    "use_amp": true,
+    "weight_decay": 0.0002
+  },
+  "best_epoch": {
+    "epoch": 2,
+    "train_loss": NaN,
+    "validation_policy": {
+      "missed_referable_dr": 0,
+      "missed_ungradable": 0,
+      "n": 1126,
+      "n_gradable_nonreferable": 461,
+      "n_referable_dr": 532,
+      "n_ungradable": 133,
+      "quality_threshold": 0.008407918736338615,
+      "referral_rate": 0.9458259325044405,
+      "risk_threshold": 0.03573504462838173,
+      "specificity_gradable_nonreferable": 0.13232104121475055
+    }
+  },
+  "epoch": 2,
+  "epochs_planned": 18,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": NaN,
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 1126,
+        "n_gradable_nonreferable": 461,
+        "n_referable_dr": 532,
+        "n_ungradable": 133,
+        "quality_threshold": 0.0013507104013115168,
+        "referral_rate": 0.9591474245115453,
+        "risk_threshold": 0.03502776473760605,
+        "specificity_gradable_nonreferable": 0.09978308026030369
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": NaN,
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 1126,
+        "n_gradable_nonreferable": 461,
+        "n_referable_dr": 532,
+        "n_ungradable": 133,
+        "quality_threshold": 0.008407918736338615,
+        "referral_rate": 0.9458259325044405,
+        "risk_threshold": 0.03573504462838173,
+        "specificity_gradable_nonreferable": 0.13232104121475055
+      }
+    }
+  ],
+  "status": "TRAINING_IN_PROGRESS",
+  "test_evaluated": false
+}

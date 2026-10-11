@@ -1,0 +1,29 @@
+{
+  "annotated_grade_counts": {
+    "0": 0,
+    "1": 24,
+    "2": 193,
+    "3": 6,
+    "4": 23,
+    "5": 0
+  },
+  "annotation_split": "train only; validation and test annotations excluded",
+  "dimension_mismatch_count": 0,
+  "grade_mismatch_count": 0,
+  "heldout_annotation_overlap_excluded": 42,
+  "lesion_presence_counts": {
+    "EX": 173,
+    "HE": 195,
+    "MA": 187,
+    "SE": 28
+  },
+  "manifest_train_ddr_rows_before_expansion": 3002,
+  "matched_annotated_images": 246,
+  "missing_mask_files": [],
+  "new_train_images_added_from_official_split": 184,
+  "official_train_segmentation_images": 383,
+  "patient_id_note": "Newly appended image IDs are image-level surrogates because DDR patient identifiers are not supplied here.",
+  "segmentation_images_without_official_train_grade_excluded": 108,
+  "status": "AUDIT_COMPLETE_TRAIN_SPLIT_ONLY",
+  "unannotated_rows_not_labeled_absent": true
+}

@@ -1,6 +1,5 @@
 {
   "backbone": "RETFound ViT-L/16 (EyePACS-pretrained checkpoint), strict-loaded into timm vit_large_patch16_224 at 256px with average pooling",
-  "checkpoint_sha256": "9b7d5a3395d6b7839278327afce723f388398b7a0c5d24f864ecaa6f39683bd0",
   "best_candidate": "ordinal_grade_logistic_c01_balanced",
   "candidate_results": {
     "linear_svc_c001": {

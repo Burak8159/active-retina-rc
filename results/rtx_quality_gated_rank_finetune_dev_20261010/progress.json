@@ -1,0 +1,21 @@
+{
+  "status": "COMPLETE",
+  "epoch": 5,
+  "test_evaluated": true,
+  "best_epoch": {
+    "epoch": 2,
+    "train_loss": 1.5134213843776472,
+    "validation_policy": {
+      "risk_threshold": 0.007052783854305744,
+      "quality_threshold": 0.0056582181714475155,
+      "specificity_gradable_nonreferable": 0.1843817787418655,
+      "missed_referable_dr": 0,
+      "missed_ungradable": 0,
+      "n_referable_dr": 532,
+      "n_ungradable": 133,
+      "n_gradable_nonreferable": 461,
+      "referral_rate": 0.9245115452930728,
+      "n": 1126
+    }
+  }
+}

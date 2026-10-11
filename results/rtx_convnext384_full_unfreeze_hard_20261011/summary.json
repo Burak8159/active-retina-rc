@@ -1,0 +1,1535 @@
+{
+  "artifact": "models\\active_retina_convnext384_full_unfreeze_hard_20261011.pt",
+  "best_epoch": {
+    "epoch": 1,
+    "gradient_skip_details": [
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.weight",
+          "encoder.stem.0.bias",
+          "encoder.stem.1.weight",
+          "encoder.stem.1.bias",
+          "encoder.stages.0.blocks.0.gamma",
+          "encoder.stages.0.blocks.0.conv_dw.weight",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.0.norm.weight",
+          "encoder.stages.0.blocks.0.norm.bias",
+          "encoder.stages.0.blocks.0.mlp.fc1.weight",
+          "encoder.stages.0.blocks.0.mlp.fc1.bias",
+          "encoder.stages.0.blocks.0.mlp.fc2.weight"
+        ],
+        "components": {
+          "grade": 1.6806640625,
+          "lesion": -0.0,
+          "quality": 0.0,
+          "rank": 4.806740760803223,
+          "risk": 2.8666563034057617
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "ddr_hf_specificity300:ddr_train_007-2456-100|ddr_hf_specificity300:ddr_train_007-2456-100",
+          "ddr_hf_specificity300:ddr_valid_007-5118-300|ddr_hf_specificity300:ddr_valid_007-5118-300"
+        ],
+        "loss": 14.160801887512207,
+        "scale_before_update": 65536.0,
+        "source_dataset": [
+          "ddr_hf_specificity300",
+          "ddr_hf_specificity300"
+        ],
+        "step": 1
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.weight",
+          "encoder.stem.0.bias",
+          "encoder.stem.1.weight",
+          "encoder.stem.1.bias",
+          "encoder.stages.0.blocks.0.gamma",
+          "encoder.stages.0.blocks.0.conv_dw.weight",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.0.norm.weight",
+          "encoder.stages.0.blocks.0.norm.bias",
+          "encoder.stages.0.blocks.0.mlp.fc1.weight",
+          "encoder.stages.0.blocks.0.mlp.fc1.bias",
+          "encoder.stages.0.blocks.0.mlp.fc2.weight"
+        ],
+        "components": {
+          "grade": 5.923828125,
+          "lesion": -0.0,
+          "quality": 0.0,
+          "rank": 20.176708221435547,
+          "risk": 5.667689800262451
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "ddr_hf_specificity300:ddr_test_007-3179-100|ddr_hf_specificity300:ddr_test_007-3179-100",
+          "ddr_hf_specificity300:ddr_train_007-1979-100|ddr_hf_specificity300:ddr_train_007-1979-100"
+        ],
+        "loss": 51.9449348449707,
+        "scale_before_update": 32768.0,
+        "source_dataset": [
+          "ddr_hf_specificity300",
+          "ddr_hf_specificity300"
+        ],
+        "step": 2
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.weight",
+          "encoder.stem.0.bias",
+          "encoder.stem.1.weight",
+          "encoder.stem.1.bias",
+          "encoder.stages.0.blocks.0.gamma",
+          "encoder.stages.0.blocks.0.conv_dw.weight",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.0.norm.weight",
+          "encoder.stages.0.blocks.0.norm.bias",
+          "encoder.stages.0.blocks.0.mlp.fc1.weight",
+          "encoder.stages.0.blocks.0.mlp.fc1.bias",
+          "encoder.stages.0.blocks.0.mlp.fc2.weight"
+        ],
+        "components": {
+          "grade": 4.2197265625,
+          "lesion": 0.0,
+          "quality": -0.0,
+          "rank": 15.036498069763184,
+          "risk": 5.854485511779785
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "drtid_paired:drtid_0384_1|drtid_paired:drtid_0384_2",
+          "drtid_paired:drtid_1765_1|drtid_paired:drtid_1765_2"
+        ],
+        "loss": 40.14720916748047,
+        "scale_before_update": 16384.0,
+        "source_dataset": [
+          "drtid_paired",
+          "drtid_paired"
+        ],
+        "step": 3
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.weight",
+          "encoder.stem.0.bias",
+          "encoder.stem.1.weight",
+          "encoder.stem.1.bias",
+          "encoder.stages.0.blocks.0.gamma",
+          "encoder.stages.0.blocks.0.conv_dw.weight",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.0.norm.weight",
+          "encoder.stages.0.blocks.0.norm.bias",
+          "encoder.stages.0.blocks.0.mlp.fc1.weight",
+          "encoder.stages.0.blocks.0.mlp.fc1.bias",
+          "encoder.stages.0.blocks.0.mlp.fc2.weight"
+        ],
+        "components": {
+          "grade": 4.021484375,
+          "lesion": 0.0,
+          "quality": -0.0,
+          "rank": 14.22760009765625,
+          "risk": 3.6741154193878174
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "drtid_paired:drtid_1572_1|drtid_paired:drtid_1572_2",
+          "drtid_paired:drtid_1876_1|drtid_paired:drtid_1876_2"
+        ],
+        "loss": 36.15079879760742,
+        "scale_before_update": 8192.0,
+        "source_dataset": [
+          "drtid_paired",
+          "drtid_paired"
+        ],
+        "step": 4
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.weight",
+          "encoder.stem.0.bias",
+          "encoder.stem.1.weight",
+          "encoder.stem.1.bias",
+          "encoder.stages.0.blocks.0.gamma",
+          "encoder.stages.0.blocks.0.conv_dw.weight",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.0.norm.weight",
+          "encoder.stages.0.blocks.0.norm.bias",
+          "encoder.stages.0.blocks.0.mlp.fc1.weight",
+          "encoder.stages.0.blocks.0.mlp.fc1.bias",
+          "encoder.stages.0.blocks.0.mlp.fc2.weight"
+        ],
+        "components": {
+          "grade": 0.85693359375,
+          "lesion": 0.0,
+          "quality": 0.00035500526428222656,
+          "rank": 3.619187593460083,
+          "risk": 0.7455793023109436
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "ddr_hf_specificity300:ddr_test_007-2976-100|ddr_hf_specificity300:ddr_test_007-2976-100",
+          "ddr_hf_specificity300:ddr_valid_007-5136-300|ddr_hf_specificity300:ddr_valid_007-5136-300"
+        ],
+        "loss": 8.841242790222168,
+        "scale_before_update": 4096.0,
+        "source_dataset": [
+          "ddr_hf_specificity300",
+          "ddr_hf_specificity300"
+        ],
+        "step": 5
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.weight",
+          "encoder.stem.0.bias",
+          "encoder.stem.1.weight",
+          "encoder.stem.1.bias",
+          "encoder.stages.0.blocks.0.gamma",
+          "encoder.stages.0.blocks.0.conv_dw.weight",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.0.norm.weight",
+          "encoder.stages.0.blocks.0.norm.bias",
+          "encoder.stages.0.blocks.0.mlp.fc1.weight",
+          "encoder.stages.0.blocks.0.mlp.fc1.bias",
+          "encoder.stages.0.blocks.0.mlp.fc2.weight"
+        ],
+        "components": {
+          "grade": 2.23681640625,
+          "lesion": -0.0,
+          "quality": 0.0,
+          "rank": 8.663330078125,
+          "risk": 2.7344298362731934
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "ddr_hf_specificity300:ddr_test_007-2878-100|ddr_hf_specificity300:ddr_test_007-2878-100",
+          "ddr_hf_specificity300:ddr_train_007-2222-100|ddr_hf_specificity300:ddr_train_007-2222-100"
+        ],
+        "loss": 22.29790687561035,
+        "scale_before_update": 2048.0,
+        "source_dataset": [
+          "ddr_hf_specificity300",
+          "ddr_hf_specificity300"
+        ],
+        "step": 6
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.weight",
+          "encoder.stem.0.bias",
+          "encoder.stem.1.weight",
+          "encoder.stem.1.bias",
+          "encoder.stages.0.blocks.0.gamma",
+          "encoder.stages.0.blocks.0.conv_dw.weight",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.0.norm.weight",
+          "encoder.stages.0.blocks.0.norm.bias",
+          "encoder.stages.0.blocks.0.mlp.fc1.weight",
+          "encoder.stages.0.blocks.0.mlp.fc1.bias",
+          "encoder.stages.0.blocks.0.mlp.fc2.weight"
+        ],
+        "components": {
+          "grade": 11.71484375,
+          "lesion": 0.0,
+          "quality": -0.0,
+          "rank": 37.99329376220703,
+          "risk": 9.203235626220703
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "drtid_paired:drtid_0729_1|drtid_paired:drtid_0729_2",
+          "drtid_paired:drtid_1052_1|drtid_paired:drtid_1052_2"
+        ],
+        "loss": 96.9046630859375,
+        "scale_before_update": 1024.0,
+        "source_dataset": [
+          "drtid_paired",
+          "drtid_paired"
+        ],
+        "step": 7
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stem.0.bias",
+          "encoder.stages.0.blocks.0.conv_dw.bias",
+          "encoder.stages.0.blocks.1.conv_dw.weight",
+          "encoder.stages.0.blocks.1.conv_dw.bias"
+        ],
+        "components": {
+          "grade": 4.10693359375,
+          "lesion": -0.0,
+          "quality": -0.0,
+          "rank": 11.870795249938965,
+          "risk": 2.185666561126709
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "drtid_paired:drtid_1552_1|drtid_paired:drtid_1552_2",
+          "drtid_paired:drtid_1412_1|drtid_paired:drtid_1412_2"
+        ],
+        "loss": 30.034191131591797,
+        "scale_before_update": 512.0,
+        "source_dataset": [
+          "drtid_paired",
+          "drtid_paired"
+        ],
+        "step": 8
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stages.0.blocks.0.mlp.fc2.weight",
+          "encoder.stages.0.blocks.1.conv_dw.weight",
+          "encoder.stages.0.blocks.1.conv_dw.bias"
+        ],
+        "components": {
+          "grade": 3.6201171875,
+          "lesion": -0.0,
+          "quality": -0.0,
+          "rank": 11.65770435333252,
+          "risk": 4.562472343444824
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "drtid_paired:drtid_1582_1|drtid_paired:drtid_1582_2",
+          "drtid_paired:drtid_0840_1|drtid_paired:drtid_0840_2"
+        ],
+        "loss": 31.497997283935547,
+        "scale_before_update": 256.0,
+        "source_dataset": [
+          "drtid_paired",
+          "drtid_paired"
+        ],
+        "step": 11
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stages.0.blocks.1.conv_dw.bias"
+        ],
+        "components": {
+          "grade": 3.6143798828125,
+          "lesion": 0.0,
+          "quality": -0.0,
+          "rank": 11.362363815307617,
+          "risk": 4.1780686378479
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "drtid_paired:drtid_1560_1|drtid_paired:drtid_1560_2",
+          "drtid_paired:drtid_1885_1|drtid_paired:drtid_1885_2"
+        ],
+        "loss": 30.517175674438477,
+        "scale_before_update": 128.0,
+        "source_dataset": [
+          "drtid_paired",
+          "drtid_paired"
+        ],
+        "step": 12
+      },
+      {
+        "bad_gradient_parameters": [
+          "encoder.stages.0.blocks.1.conv_dw.bias"
+        ],
+        "components": {
+          "grade": 5.5091552734375,
+          "lesion": 0.0,
+          "quality": 0.0,
+          "rank": 17.700695037841797,
+          "risk": 1.2043745517730713
+        },
+        "grade": [
+          1,
+          2
+        ],
+        "image_ids": [
+          "ddr_hf_specificity300:ddr_train_007-2087-100|ddr_hf_specificity300:ddr_train_007-2087-100",
+          "ddr_hf_specificity300:ddr_train_007-2046-100|ddr_hf_specificity300:ddr_train_007-2046-100"
+        ],
+        "loss": 42.11492156982422,
+        "scale_before_update": 64.0,
+        "source_dataset": [
+          "ddr_hf_specificity300",
+          "ddr_hf_specificity300"
+        ],
+        "step": 25
+      }
+    ],
+    "hard_boundary_batches": 64,
+    "hard_boundary_fraction": 0.25,
+    "mined_training_eyes_by_source": {
+      "ddr_hf_specificity300": {
+        "grade1": 111,
+        "grade2": 160
+      },
+      "drtid_paired": {
+        "grade1": 24,
+        "grade2": 70
+      }
+    },
+    "ordinal_validation_metrics": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 175,
+      "gradable_nonreferable": 334,
+      "gradable_referable_dr": 409,
+      "known_ungradable": 133,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 876,
+      "referral_rate": 0.8184931506849316,
+      "sensitivity_referable_dr": 1.0,
+      "specificity_gradable_nonreferable": 0.47604790419161674,
+      "ungradable_routed_to_refer": 1.0
+    },
+    "ordinal_validation_policy": {
+      "missed_referable_dr": 0,
+      "missed_ungradable": 0,
+      "n": 876,
+      "n_gradable_nonreferable": 334,
+      "n_referable_dr": 409,
+      "n_ungradable": 133,
+      "quality_threshold": 4.208195605315268e-06,
+      "referral_rate": 0.8184931506849316,
+      "risk_threshold": 0.004006341099739075,
+      "specificity_gradable_nonreferable": 0.47604790419161674
+    },
+    "partial_epoch_diagnostic": false,
+    "rank_score": "ordinal",
+    "risk_pooling": "logmeanexp",
+    "selection_score": "ordinal_risk",
+    "skipped_nonfinite_gradient_batches": 11,
+    "train_batch_count": 64,
+    "train_loss": 27.194659197209337,
+    "trainable_components": "all",
+    "training_sampler": "train_only_hard_grade1_grade2_pairs",
+    "validation_metrics": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 175,
+      "gradable_nonreferable": 334,
+      "gradable_referable_dr": 409,
+      "known_ungradable": 133,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 876,
+      "referral_rate": 0.8184931506849316,
+      "sensitivity_referable_dr": 1.0,
+      "specificity_gradable_nonreferable": 0.47604790419161674,
+      "ungradable_routed_to_refer": 1.0
+    },
+    "validation_metrics_by_source_and_grade": {
+      "grade:0": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 88,
+        "gradable_nonreferable": 233,
+        "gradable_referable_dr": 0,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 233,
+        "referral_rate": 0.3776824034334764,
+        "sensitivity_referable_dr": null,
+        "specificity_gradable_nonreferable": 0.6223175965665236,
+        "ungradable_routed_to_refer": null
+      },
+      "grade:1": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 87,
+        "gradable_nonreferable": 101,
+        "gradable_referable_dr": 0,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 101,
+        "referral_rate": 0.8613861386138614,
+        "sensitivity_referable_dr": null,
+        "specificity_gradable_nonreferable": 0.13861386138613863,
+        "ungradable_routed_to_refer": null
+      },
+      "grade:2": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 0,
+        "gradable_nonreferable": 0,
+        "gradable_referable_dr": 203,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 203,
+        "referral_rate": 1.0,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": null,
+        "ungradable_routed_to_refer": null
+      },
+      "grade:3": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 0,
+        "gradable_nonreferable": 0,
+        "gradable_referable_dr": 76,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 76,
+        "referral_rate": 1.0,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": null,
+        "ungradable_routed_to_refer": null
+      },
+      "grade:4": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 0,
+        "gradable_nonreferable": 0,
+        "gradable_referable_dr": 130,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 130,
+        "referral_rate": 1.0,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": null,
+        "ungradable_routed_to_refer": null
+      },
+      "grade:5": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 0,
+        "gradable_nonreferable": 0,
+        "gradable_referable_dr": 0,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 133,
+        "referral_rate": 1.0,
+        "sensitivity_referable_dr": null,
+        "specificity_gradable_nonreferable": null,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "source:ddr_hf_specificity300": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 90,
+        "gradable_nonreferable": 207,
+        "gradable_referable_dr": 286,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 626,
+        "referral_rate": 0.8130990415335463,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.5652173913043478,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "source:drtid_paired": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 85,
+        "gradable_nonreferable": 127,
+        "gradable_referable_dr": 123,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 250,
+        "referral_rate": 0.832,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.33070866141732286,
+        "ungradable_routed_to_refer": null
+      }
+    },
+    "validation_policy": {
+      "missed_referable_dr": 0,
+      "missed_ungradable": 0,
+      "n": 876,
+      "n_gradable_nonreferable": 334,
+      "n_referable_dr": 409,
+      "n_ungradable": 133,
+      "quality_threshold": 4.208195605315268e-06,
+      "referral_rate": 0.8184931506849316,
+      "risk_threshold": 0.004006341099739075,
+      "specificity_gradable_nonreferable": 0.47604790419161674
+    }
+  },
+  "claim_boundary": "The mixed manifest has been used for prior development and is not an untouched certification cohort.",
+  "evaluation_sources": null,
+  "history": [
+    {
+      "epoch": 0,
+      "ordinal_validation_metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 194,
+        "gradable_nonreferable": 334,
+        "gradable_referable_dr": 409,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 876,
+        "referral_rate": 0.8401826484018264,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.41916167664670656,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "ordinal_validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 876,
+        "n_gradable_nonreferable": 334,
+        "n_referable_dr": 409,
+        "n_ungradable": 133,
+        "quality_threshold": 8.176109986379743e-06,
+        "referral_rate": 0.8401826484018264,
+        "risk_threshold": 0.0012807386228814721,
+        "specificity_gradable_nonreferable": 0.41916167664670656
+      },
+      "risk_pooling": "logmeanexp",
+      "selection_score": "ordinal_risk",
+      "train_loss": null,
+      "trainable_components": "all",
+      "validation_metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 194,
+        "gradable_nonreferable": 334,
+        "gradable_referable_dr": 409,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 876,
+        "referral_rate": 0.8401826484018264,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.41916167664670656,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "validation_metrics_by_source_and_grade": {
+        "grade:0": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 100,
+          "gradable_nonreferable": 233,
+          "gradable_referable_dr": 0,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 233,
+          "referral_rate": 0.4291845493562232,
+          "sensitivity_referable_dr": null,
+          "specificity_gradable_nonreferable": 0.5708154506437768,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:1": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 94,
+          "gradable_nonreferable": 101,
+          "gradable_referable_dr": 0,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 101,
+          "referral_rate": 0.9306930693069307,
+          "sensitivity_referable_dr": null,
+          "specificity_gradable_nonreferable": 0.06930693069306931,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:2": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 203,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 203,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:3": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 76,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 76,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:4": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 130,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 130,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:5": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 0,
+          "known_ungradable": 133,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 133,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": null,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": 1.0
+        },
+        "source:ddr_hf_specificity300": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 108,
+          "gradable_nonreferable": 207,
+          "gradable_referable_dr": 286,
+          "known_ungradable": 133,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 626,
+          "referral_rate": 0.84185303514377,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": 0.4782608695652174,
+          "ungradable_routed_to_refer": 1.0
+        },
+        "source:drtid_paired": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 86,
+          "gradable_nonreferable": 127,
+          "gradable_referable_dr": 123,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 250,
+          "referral_rate": 0.836,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": 0.3228346456692913,
+          "ungradable_routed_to_refer": null
+        }
+      },
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 876,
+        "n_gradable_nonreferable": 334,
+        "n_referable_dr": 409,
+        "n_ungradable": 133,
+        "quality_threshold": 8.176109986379743e-06,
+        "referral_rate": 0.8401826484018264,
+        "risk_threshold": 0.0012807386228814721,
+        "specificity_gradable_nonreferable": 0.41916167664670656
+      }
+    },
+    {
+      "epoch": 1,
+      "gradient_skip_details": [
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.weight",
+            "encoder.stem.0.bias",
+            "encoder.stem.1.weight",
+            "encoder.stem.1.bias",
+            "encoder.stages.0.blocks.0.gamma",
+            "encoder.stages.0.blocks.0.conv_dw.weight",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.0.norm.weight",
+            "encoder.stages.0.blocks.0.norm.bias",
+            "encoder.stages.0.blocks.0.mlp.fc1.weight",
+            "encoder.stages.0.blocks.0.mlp.fc1.bias",
+            "encoder.stages.0.blocks.0.mlp.fc2.weight"
+          ],
+          "components": {
+            "grade": 1.6806640625,
+            "lesion": -0.0,
+            "quality": 0.0,
+            "rank": 4.806740760803223,
+            "risk": 2.8666563034057617
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "ddr_hf_specificity300:ddr_train_007-2456-100|ddr_hf_specificity300:ddr_train_007-2456-100",
+            "ddr_hf_specificity300:ddr_valid_007-5118-300|ddr_hf_specificity300:ddr_valid_007-5118-300"
+          ],
+          "loss": 14.160801887512207,
+          "scale_before_update": 65536.0,
+          "source_dataset": [
+            "ddr_hf_specificity300",
+            "ddr_hf_specificity300"
+          ],
+          "step": 1
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.weight",
+            "encoder.stem.0.bias",
+            "encoder.stem.1.weight",
+            "encoder.stem.1.bias",
+            "encoder.stages.0.blocks.0.gamma",
+            "encoder.stages.0.blocks.0.conv_dw.weight",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.0.norm.weight",
+            "encoder.stages.0.blocks.0.norm.bias",
+            "encoder.stages.0.blocks.0.mlp.fc1.weight",
+            "encoder.stages.0.blocks.0.mlp.fc1.bias",
+            "encoder.stages.0.blocks.0.mlp.fc2.weight"
+          ],
+          "components": {
+            "grade": 5.923828125,
+            "lesion": -0.0,
+            "quality": 0.0,
+            "rank": 20.176708221435547,
+            "risk": 5.667689800262451
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "ddr_hf_specificity300:ddr_test_007-3179-100|ddr_hf_specificity300:ddr_test_007-3179-100",
+            "ddr_hf_specificity300:ddr_train_007-1979-100|ddr_hf_specificity300:ddr_train_007-1979-100"
+          ],
+          "loss": 51.9449348449707,
+          "scale_before_update": 32768.0,
+          "source_dataset": [
+            "ddr_hf_specificity300",
+            "ddr_hf_specificity300"
+          ],
+          "step": 2
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.weight",
+            "encoder.stem.0.bias",
+            "encoder.stem.1.weight",
+            "encoder.stem.1.bias",
+            "encoder.stages.0.blocks.0.gamma",
+            "encoder.stages.0.blocks.0.conv_dw.weight",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.0.norm.weight",
+            "encoder.stages.0.blocks.0.norm.bias",
+            "encoder.stages.0.blocks.0.mlp.fc1.weight",
+            "encoder.stages.0.blocks.0.mlp.fc1.bias",
+            "encoder.stages.0.blocks.0.mlp.fc2.weight"
+          ],
+          "components": {
+            "grade": 4.2197265625,
+            "lesion": 0.0,
+            "quality": -0.0,
+            "rank": 15.036498069763184,
+            "risk": 5.854485511779785
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "drtid_paired:drtid_0384_1|drtid_paired:drtid_0384_2",
+            "drtid_paired:drtid_1765_1|drtid_paired:drtid_1765_2"
+          ],
+          "loss": 40.14720916748047,
+          "scale_before_update": 16384.0,
+          "source_dataset": [
+            "drtid_paired",
+            "drtid_paired"
+          ],
+          "step": 3
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.weight",
+            "encoder.stem.0.bias",
+            "encoder.stem.1.weight",
+            "encoder.stem.1.bias",
+            "encoder.stages.0.blocks.0.gamma",
+            "encoder.stages.0.blocks.0.conv_dw.weight",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.0.norm.weight",
+            "encoder.stages.0.blocks.0.norm.bias",
+            "encoder.stages.0.blocks.0.mlp.fc1.weight",
+            "encoder.stages.0.blocks.0.mlp.fc1.bias",
+            "encoder.stages.0.blocks.0.mlp.fc2.weight"
+          ],
+          "components": {
+            "grade": 4.021484375,
+            "lesion": 0.0,
+            "quality": -0.0,
+            "rank": 14.22760009765625,
+            "risk": 3.6741154193878174
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "drtid_paired:drtid_1572_1|drtid_paired:drtid_1572_2",
+            "drtid_paired:drtid_1876_1|drtid_paired:drtid_1876_2"
+          ],
+          "loss": 36.15079879760742,
+          "scale_before_update": 8192.0,
+          "source_dataset": [
+            "drtid_paired",
+            "drtid_paired"
+          ],
+          "step": 4
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.weight",
+            "encoder.stem.0.bias",
+            "encoder.stem.1.weight",
+            "encoder.stem.1.bias",
+            "encoder.stages.0.blocks.0.gamma",
+            "encoder.stages.0.blocks.0.conv_dw.weight",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.0.norm.weight",
+            "encoder.stages.0.blocks.0.norm.bias",
+            "encoder.stages.0.blocks.0.mlp.fc1.weight",
+            "encoder.stages.0.blocks.0.mlp.fc1.bias",
+            "encoder.stages.0.blocks.0.mlp.fc2.weight"
+          ],
+          "components": {
+            "grade": 0.85693359375,
+            "lesion": 0.0,
+            "quality": 0.00035500526428222656,
+            "rank": 3.619187593460083,
+            "risk": 0.7455793023109436
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "ddr_hf_specificity300:ddr_test_007-2976-100|ddr_hf_specificity300:ddr_test_007-2976-100",
+            "ddr_hf_specificity300:ddr_valid_007-5136-300|ddr_hf_specificity300:ddr_valid_007-5136-300"
+          ],
+          "loss": 8.841242790222168,
+          "scale_before_update": 4096.0,
+          "source_dataset": [
+            "ddr_hf_specificity300",
+            "ddr_hf_specificity300"
+          ],
+          "step": 5
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.weight",
+            "encoder.stem.0.bias",
+            "encoder.stem.1.weight",
+            "encoder.stem.1.bias",
+            "encoder.stages.0.blocks.0.gamma",
+            "encoder.stages.0.blocks.0.conv_dw.weight",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.0.norm.weight",
+            "encoder.stages.0.blocks.0.norm.bias",
+            "encoder.stages.0.blocks.0.mlp.fc1.weight",
+            "encoder.stages.0.blocks.0.mlp.fc1.bias",
+            "encoder.stages.0.blocks.0.mlp.fc2.weight"
+          ],
+          "components": {
+            "grade": 2.23681640625,
+            "lesion": -0.0,
+            "quality": 0.0,
+            "rank": 8.663330078125,
+            "risk": 2.7344298362731934
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "ddr_hf_specificity300:ddr_test_007-2878-100|ddr_hf_specificity300:ddr_test_007-2878-100",
+            "ddr_hf_specificity300:ddr_train_007-2222-100|ddr_hf_specificity300:ddr_train_007-2222-100"
+          ],
+          "loss": 22.29790687561035,
+          "scale_before_update": 2048.0,
+          "source_dataset": [
+            "ddr_hf_specificity300",
+            "ddr_hf_specificity300"
+          ],
+          "step": 6
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.weight",
+            "encoder.stem.0.bias",
+            "encoder.stem.1.weight",
+            "encoder.stem.1.bias",
+            "encoder.stages.0.blocks.0.gamma",
+            "encoder.stages.0.blocks.0.conv_dw.weight",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.0.norm.weight",
+            "encoder.stages.0.blocks.0.norm.bias",
+            "encoder.stages.0.blocks.0.mlp.fc1.weight",
+            "encoder.stages.0.blocks.0.mlp.fc1.bias",
+            "encoder.stages.0.blocks.0.mlp.fc2.weight"
+          ],
+          "components": {
+            "grade": 11.71484375,
+            "lesion": 0.0,
+            "quality": -0.0,
+            "rank": 37.99329376220703,
+            "risk": 9.203235626220703
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "drtid_paired:drtid_0729_1|drtid_paired:drtid_0729_2",
+            "drtid_paired:drtid_1052_1|drtid_paired:drtid_1052_2"
+          ],
+          "loss": 96.9046630859375,
+          "scale_before_update": 1024.0,
+          "source_dataset": [
+            "drtid_paired",
+            "drtid_paired"
+          ],
+          "step": 7
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stem.0.bias",
+            "encoder.stages.0.blocks.0.conv_dw.bias",
+            "encoder.stages.0.blocks.1.conv_dw.weight",
+            "encoder.stages.0.blocks.1.conv_dw.bias"
+          ],
+          "components": {
+            "grade": 4.10693359375,
+            "lesion": -0.0,
+            "quality": -0.0,
+            "rank": 11.870795249938965,
+            "risk": 2.185666561126709
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "drtid_paired:drtid_1552_1|drtid_paired:drtid_1552_2",
+            "drtid_paired:drtid_1412_1|drtid_paired:drtid_1412_2"
+          ],
+          "loss": 30.034191131591797,
+          "scale_before_update": 512.0,
+          "source_dataset": [
+            "drtid_paired",
+            "drtid_paired"
+          ],
+          "step": 8
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stages.0.blocks.0.mlp.fc2.weight",
+            "encoder.stages.0.blocks.1.conv_dw.weight",
+            "encoder.stages.0.blocks.1.conv_dw.bias"
+          ],
+          "components": {
+            "grade": 3.6201171875,
+            "lesion": -0.0,
+            "quality": -0.0,
+            "rank": 11.65770435333252,
+            "risk": 4.562472343444824
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "drtid_paired:drtid_1582_1|drtid_paired:drtid_1582_2",
+            "drtid_paired:drtid_0840_1|drtid_paired:drtid_0840_2"
+          ],
+          "loss": 31.497997283935547,
+          "scale_before_update": 256.0,
+          "source_dataset": [
+            "drtid_paired",
+            "drtid_paired"
+          ],
+          "step": 11
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stages.0.blocks.1.conv_dw.bias"
+          ],
+          "components": {
+            "grade": 3.6143798828125,
+            "lesion": 0.0,
+            "quality": -0.0,
+            "rank": 11.362363815307617,
+            "risk": 4.1780686378479
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "drtid_paired:drtid_1560_1|drtid_paired:drtid_1560_2",
+            "drtid_paired:drtid_1885_1|drtid_paired:drtid_1885_2"
+          ],
+          "loss": 30.517175674438477,
+          "scale_before_update": 128.0,
+          "source_dataset": [
+            "drtid_paired",
+            "drtid_paired"
+          ],
+          "step": 12
+        },
+        {
+          "bad_gradient_parameters": [
+            "encoder.stages.0.blocks.1.conv_dw.bias"
+          ],
+          "components": {
+            "grade": 5.5091552734375,
+            "lesion": 0.0,
+            "quality": 0.0,
+            "rank": 17.700695037841797,
+            "risk": 1.2043745517730713
+          },
+          "grade": [
+            1,
+            2
+          ],
+          "image_ids": [
+            "ddr_hf_specificity300:ddr_train_007-2087-100|ddr_hf_specificity300:ddr_train_007-2087-100",
+            "ddr_hf_specificity300:ddr_train_007-2046-100|ddr_hf_specificity300:ddr_train_007-2046-100"
+          ],
+          "loss": 42.11492156982422,
+          "scale_before_update": 64.0,
+          "source_dataset": [
+            "ddr_hf_specificity300",
+            "ddr_hf_specificity300"
+          ],
+          "step": 25
+        }
+      ],
+      "hard_boundary_batches": 64,
+      "hard_boundary_fraction": 0.25,
+      "mined_training_eyes_by_source": {
+        "ddr_hf_specificity300": {
+          "grade1": 111,
+          "grade2": 160
+        },
+        "drtid_paired": {
+          "grade1": 24,
+          "grade2": 70
+        }
+      },
+      "ordinal_validation_metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 175,
+        "gradable_nonreferable": 334,
+        "gradable_referable_dr": 409,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 876,
+        "referral_rate": 0.8184931506849316,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.47604790419161674,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "ordinal_validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 876,
+        "n_gradable_nonreferable": 334,
+        "n_referable_dr": 409,
+        "n_ungradable": 133,
+        "quality_threshold": 4.208195605315268e-06,
+        "referral_rate": 0.8184931506849316,
+        "risk_threshold": 0.004006341099739075,
+        "specificity_gradable_nonreferable": 0.47604790419161674
+      },
+      "partial_epoch_diagnostic": false,
+      "rank_score": "ordinal",
+      "risk_pooling": "logmeanexp",
+      "selection_score": "ordinal_risk",
+      "skipped_nonfinite_gradient_batches": 11,
+      "train_batch_count": 64,
+      "train_loss": 27.194659197209337,
+      "trainable_components": "all",
+      "training_sampler": "train_only_hard_grade1_grade2_pairs",
+      "validation_metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 175,
+        "gradable_nonreferable": 334,
+        "gradable_referable_dr": 409,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 876,
+        "referral_rate": 0.8184931506849316,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.47604790419161674,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "validation_metrics_by_source_and_grade": {
+        "grade:0": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 88,
+          "gradable_nonreferable": 233,
+          "gradable_referable_dr": 0,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 233,
+          "referral_rate": 0.3776824034334764,
+          "sensitivity_referable_dr": null,
+          "specificity_gradable_nonreferable": 0.6223175965665236,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:1": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 87,
+          "gradable_nonreferable": 101,
+          "gradable_referable_dr": 0,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 101,
+          "referral_rate": 0.8613861386138614,
+          "sensitivity_referable_dr": null,
+          "specificity_gradable_nonreferable": 0.13861386138613863,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:2": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 203,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 203,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:3": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 76,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 76,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:4": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 130,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 130,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": null
+        },
+        "grade:5": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 0,
+          "gradable_nonreferable": 0,
+          "gradable_referable_dr": 0,
+          "known_ungradable": 133,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 133,
+          "referral_rate": 1.0,
+          "sensitivity_referable_dr": null,
+          "specificity_gradable_nonreferable": null,
+          "ungradable_routed_to_refer": 1.0
+        },
+        "source:ddr_hf_specificity300": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 90,
+          "gradable_nonreferable": 207,
+          "gradable_referable_dr": 286,
+          "known_ungradable": 133,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 626,
+          "referral_rate": 0.8130990415335463,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": 0.5652173913043478,
+          "ungradable_routed_to_refer": 1.0
+        },
+        "source:drtid_paired": {
+          "case_action_coverage": 1.0,
+          "false_referrals_on_gradable_nonreferable": 85,
+          "gradable_nonreferable": 127,
+          "gradable_referable_dr": 123,
+          "known_ungradable": 0,
+          "missed_known_ungradable": 0,
+          "missed_referable_dr": 0,
+          "n": 250,
+          "referral_rate": 0.832,
+          "sensitivity_referable_dr": 1.0,
+          "specificity_gradable_nonreferable": 0.33070866141732286,
+          "ungradable_routed_to_refer": null
+        }
+      },
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 876,
+        "n_gradable_nonreferable": 334,
+        "n_referable_dr": 409,
+        "n_ungradable": 133,
+        "quality_threshold": 4.208195605315268e-06,
+        "referral_rate": 0.8184931506849316,
+        "risk_threshold": 0.004006341099739075,
+        "specificity_gradable_nonreferable": 0.47604790419161674
+      }
+    }
+  ],
+  "lesion_presence_supervision": {
+    "auxiliary_head_exported": false,
+    "enabled": false,
+    "label_csv": null,
+    "lesions": [],
+    "loss_weight": 0.0,
+    "supervised_training_eyes": 0
+  },
+  "manifest": "results\\autonomy_route_combined_manifest_resplit.csv",
+  "model_name": "convnext_tiny.fb_in22k_ft_in1k",
+  "ordinal_test_metrics_development_only": null,
+  "ordinal_validation_metrics": {
+    "case_action_coverage": 1.0,
+    "false_referrals_on_gradable_nonreferable": 175,
+    "gradable_nonreferable": 334,
+    "gradable_referable_dr": 409,
+    "known_ungradable": 133,
+    "missed_known_ungradable": 0,
+    "missed_referable_dr": 0,
+    "n": 876,
+    "referral_rate": 0.8184931506849316,
+    "sensitivity_referable_dr": 1.0,
+    "specificity_gradable_nonreferable": 0.47604790419161674,
+    "ungradable_routed_to_refer": 1.0
+  },
+  "partial_training_diagnostic": false,
+  "quality_label_boundary": "DDR grade 5 is ungradable; DRTiD quality labels are unknown and excluded from quality loss.",
+  "rank_score": "ordinal",
+  "risk_pool_temperature": 0.25,
+  "risk_pooling": "logmeanexp",
+  "selected_ordinal_validation_policy": {
+    "missed_referable_dr": 0,
+    "missed_ungradable": 0,
+    "n": 876,
+    "n_gradable_nonreferable": 334,
+    "n_referable_dr": 409,
+    "n_ungradable": 133,
+    "quality_threshold": 4.208195605315268e-06,
+    "referral_rate": 0.8184931506849316,
+    "risk_threshold": 0.004006341099739075,
+    "specificity_gradable_nonreferable": 0.47604790419161674
+  },
+  "selected_validation_policy": {
+    "missed_referable_dr": 0,
+    "missed_ungradable": 0,
+    "n": 876,
+    "n_gradable_nonreferable": 334,
+    "n_referable_dr": 409,
+    "n_ungradable": 133,
+    "quality_threshold": 4.208195605315268e-06,
+    "referral_rate": 0.8184931506849316,
+    "risk_threshold": 0.004006341099739075,
+    "specificity_gradable_nonreferable": 0.47604790419161674
+  },
+  "selection_score": "ordinal_risk",
+  "status": "DEVELOPMENT_CANDIDATE_NOT_CERTIFIED",
+  "test_evaluation_skipped": true,
+  "test_eyes": 1044,
+  "test_metrics_development_only": null,
+  "train_eyes": 4085,
+  "trainable_components": {
+    "frozen_parameters": 1771009,
+    "mode": "all",
+    "trainable_parameters": 30775399
+  },
+  "training_sources": null,
+  "unit_of_analysis": "eye-level bag; one DDR image or paired DRTiD/DeepDRiD macula+optic-disc images",
+  "validation_eyes": 876,
+  "validation_metrics": {
+    "case_action_coverage": 1.0,
+    "false_referrals_on_gradable_nonreferable": 175,
+    "gradable_nonreferable": 334,
+    "gradable_referable_dr": 409,
+    "known_ungradable": 133,
+    "missed_known_ungradable": 0,
+    "missed_referable_dr": 0,
+    "n": 876,
+    "referral_rate": 0.8184931506849316,
+    "sensitivity_referable_dr": 1.0,
+    "specificity_gradable_nonreferable": 0.47604790419161674,
+    "ungradable_routed_to_refer": 1.0
+  },
+  "validation_metrics_by_source_and_grade": {
+    "grade:0": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 88,
+      "gradable_nonreferable": 233,
+      "gradable_referable_dr": 0,
+      "known_ungradable": 0,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 233,
+      "referral_rate": 0.3776824034334764,
+      "sensitivity_referable_dr": null,
+      "specificity_gradable_nonreferable": 0.6223175965665236,
+      "ungradable_routed_to_refer": null
+    },
+    "grade:1": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 87,
+      "gradable_nonreferable": 101,
+      "gradable_referable_dr": 0,
+      "known_ungradable": 0,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 101,
+      "referral_rate": 0.8613861386138614,
+      "sensitivity_referable_dr": null,
+      "specificity_gradable_nonreferable": 0.13861386138613863,
+      "ungradable_routed_to_refer": null
+    },
+    "grade:2": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 0,
+      "gradable_nonreferable": 0,
+      "gradable_referable_dr": 203,
+      "known_ungradable": 0,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 203,
+      "referral_rate": 1.0,
+      "sensitivity_referable_dr": 1.0,
+      "specificity_gradable_nonreferable": null,
+      "ungradable_routed_to_refer": null
+    },
+    "grade:3": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 0,
+      "gradable_nonreferable": 0,
+      "gradable_referable_dr": 76,
+      "known_ungradable": 0,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 76,
+      "referral_rate": 1.0,
+      "sensitivity_referable_dr": 1.0,
+      "specificity_gradable_nonreferable": null,
+      "ungradable_routed_to_refer": null
+    },
+    "grade:4": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 0,
+      "gradable_nonreferable": 0,
+      "gradable_referable_dr": 130,
+      "known_ungradable": 0,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 130,
+      "referral_rate": 1.0,
+      "sensitivity_referable_dr": 1.0,
+      "specificity_gradable_nonreferable": null,
+      "ungradable_routed_to_refer": null
+    },
+    "grade:5": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 0,
+      "gradable_nonreferable": 0,
+      "gradable_referable_dr": 0,
+      "known_ungradable": 133,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 133,
+      "referral_rate": 1.0,
+      "sensitivity_referable_dr": null,
+      "specificity_gradable_nonreferable": null,
+      "ungradable_routed_to_refer": 1.0
+    },
+    "source:ddr_hf_specificity300": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 90,
+      "gradable_nonreferable": 207,
+      "gradable_referable_dr": 286,
+      "known_ungradable": 133,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 626,
+      "referral_rate": 0.8130990415335463,
+      "sensitivity_referable_dr": 1.0,
+      "specificity_gradable_nonreferable": 0.5652173913043478,
+      "ungradable_routed_to_refer": 1.0
+    },
+    "source:drtid_paired": {
+      "case_action_coverage": 1.0,
+      "false_referrals_on_gradable_nonreferable": 85,
+      "gradable_nonreferable": 127,
+      "gradable_referable_dr": 123,
+      "known_ungradable": 0,
+      "missed_known_ungradable": 0,
+      "missed_referable_dr": 0,
+      "n": 250,
+      "referral_rate": 0.832,
+      "sensitivity_referable_dr": 1.0,
+      "specificity_gradable_nonreferable": 0.33070866141732286,
+      "ungradable_routed_to_refer": null
+    }
+  },
+  "view_counts": {
+    "test": {
+      "eyes": 827,
+      "one_view": 610,
+      "two_view": 217
+    },
+    "train": {
+      "eyes": 4085,
+      "one_view": 3002,
+      "two_view": 1083
+    },
+    "valid": {
+      "eyes": 876,
+      "one_view": 626,
+      "two_view": 250
+    }
+  }
+}

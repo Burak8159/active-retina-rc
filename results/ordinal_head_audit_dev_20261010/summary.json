@@ -1,0 +1,48 @@
+{
+  "backbone": "convnext_tiny.fb_in22k_ft_in1k",
+  "checkpoint": "models\\active_retina_mixed_view_bag_refine_dev_20261010.pt",
+  "claim_boundary": "Splits were used during prior development; test metrics are not untouched certification evidence.",
+  "manifest": "results\\autonomy_route_combined_manifest_resplit.csv",
+  "score": "ordinal softmax probability mass for grades 2-4",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_CERTIFIED",
+  "test_metrics_development_only": {
+    "case_action_coverage": 1.0,
+    "false_referrals_on_gradable_nonreferable": 263,
+    "gradable_nonreferable": 357,
+    "gradable_referable_dr": 341,
+    "known_ungradable": 129,
+    "missed_known_ungradable": 0,
+    "missed_referable_dr": 3,
+    "n": 827,
+    "referral_rate": 0.8827085852478839,
+    "sensitivity_referable_dr": 0.9912023460410557,
+    "specificity_gradable_nonreferable": 0.26330532212885155,
+    "ungradable_routed_to_refer": 1.0
+  },
+  "validation_metrics": {
+    "case_action_coverage": 1.0,
+    "false_referrals_on_gradable_nonreferable": 247,
+    "gradable_nonreferable": 334,
+    "gradable_referable_dr": 409,
+    "known_ungradable": 133,
+    "missed_known_ungradable": 0,
+    "missed_referable_dr": 0,
+    "n": 876,
+    "referral_rate": 0.9006849315068494,
+    "sensitivity_referable_dr": 1.0,
+    "specificity_gradable_nonreferable": 0.26047904191616766,
+    "ungradable_routed_to_refer": 1.0
+  },
+  "validation_policy": {
+    "missed_referable_dr": 0,
+    "missed_ungradable": 0,
+    "n": 876,
+    "n_gradable_nonreferable": 334,
+    "n_referable_dr": 409,
+    "n_ungradable": 133,
+    "quality_threshold": 0.0001335192791884765,
+    "referral_rate": 0.9006849315068494,
+    "risk_threshold": 0.00018052116502076387,
+    "specificity_gradable_nonreferable": 0.26047904191616766
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "artifact": "models\\active_retina_quality_gated_rank_dev_20261010.pt",
+  "best_epoch": {
+    "epoch": 2,
+    "train_loss": 1.5134213843776472,
+    "validation_policy": {
+      "missed_referable_dr": 0,
+      "missed_ungradable": 0,
+      "n": 1126,
+      "n_gradable_nonreferable": 461,
+      "n_referable_dr": 532,
+      "n_ungradable": 133,
+      "quality_threshold": 0.0056582181714475155,
+      "referral_rate": 0.9245115452930728,
+      "risk_threshold": 0.007052783854305744,
+      "specificity_gradable_nonreferable": 0.1843817787418655
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.5564259059551306,
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 1126,
+        "n_gradable_nonreferable": 461,
+        "n_referable_dr": 532,
+        "n_ungradable": 133,
+        "quality_threshold": 0.002205324824899435,
+        "referral_rate": 0.9626998223801065,
+        "risk_threshold": 0.004252120852470398,
+        "specificity_gradable_nonreferable": 0.0911062906724512
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.5134213843776472,
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 1126,
+        "n_gradable_nonreferable": 461,
+        "n_referable_dr": 532,
+        "n_ungradable": 133,
+        "quality_threshold": 0.0056582181714475155,
+        "referral_rate": 0.9245115452930728,
+        "risk_threshold": 0.007052783854305744,
+        "specificity_gradable_nonreferable": 0.1843817787418655
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.390289073940453,
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 1126,
+        "n_gradable_nonreferable": 461,
+        "n_referable_dr": 532,
+        "n_ungradable": 133,
+        "quality_threshold": 0.07335997372865677,
+        "referral_rate": 0.955595026642984,
+        "risk_threshold": 0.0008987114415504038,
+        "specificity_gradable_nonreferable": 0.10845986984815618
+      }
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.5085890955830876,
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 1126,
+        "n_gradable_nonreferable": 461,
+        "n_referable_dr": 532,
+        "n_ungradable": 133,
+        "quality_threshold": 0.07312652468681335,
+        "referral_rate": 0.9662522202486679,
+        "risk_threshold": 0.00048214077833108604,
+        "specificity_gradable_nonreferable": 0.0824295010845987
+      }
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.499713816929424,
+      "validation_policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 1126,
+        "n_gradable_nonreferable": 461,
+        "n_referable_dr": 532,
+        "n_ungradable": 133,
+        "quality_threshold": 0.024019425734877586,
+        "referral_rate": 0.9422735346358793,
+        "risk_threshold": 0.0027284431271255016,
+        "specificity_gradable_nonreferable": 0.14099783080260303
+      }
+    }
+  ],
+  "manifest": "results\\autonomy_route_combined_manifest_resplit.csv",
+  "model_name": "convnext_tiny.fb_in22k_ft_in1k",
+  "n_test": 1044,
+  "n_train": 5168,
+  "n_valid": 1126,
+  "quality_supervision": "DDR grade 5 is treated as ungradable; DRTiD quality labels are unknown and do not train the quality head.",
+  "reason": "Current public development partitions have been inspected during prior model work; no independent certification claim is made.",
+  "selected_validation_policy": {
+    "missed_referable_dr": 0,
+    "missed_ungradable": 0,
+    "n": 1126,
+    "n_gradable_nonreferable": 461,
+    "n_referable_dr": 532,
+    "n_ungradable": 133,
+    "quality_threshold": 0.0056582181714475155,
+    "referral_rate": 0.9245115452930728,
+    "risk_threshold": 0.007052783854305744,
+    "specificity_gradable_nonreferable": 0.1843817787418655
+  },
+  "status": "DEVELOPMENT_CANDIDATE_NOT_CERTIFIED",
+  "task": "binary referral action: REFER for referable DR or predicted ungradable; otherwise CLEAR",
+  "test_metrics_development_only": {
+    "case_action_coverage": 1.0,
+    "false_referrals_on_gradable_nonreferable": 392,
+    "gradable_nonreferable": 492,
+    "gradable_referable_dr": 423,
+    "known_ungradable": 129,
+    "missed_known_ungradable": 0,
+    "missed_referable_dr": 4,
+    "n": 1044,
+    "referral_rate": 0.9003831417624522,
+    "sensitivity_referable_dr": 0.9905437352245863,
+    "specificity_gradable_nonreferable": 0.2032520325203252,
+    "ungradable_routed_to_refer": 1.0
+  },
+  "validation_metrics": {
+    "case_action_coverage": 1.0,
+    "false_referrals_on_gradable_nonreferable": 376,
+    "gradable_nonreferable": 461,
+    "gradable_referable_dr": 532,
+    "known_ungradable": 133,
+    "missed_known_ungradable": 0,
+    "missed_referable_dr": 0,
+    "n": 1126,
+    "referral_rate": 0.9245115452930728,
+    "sensitivity_referable_dr": 1.0,
+    "specificity_gradable_nonreferable": 0.1843817787418655,
+    "ungradable_routed_to_refer": 1.0
+  }
+}

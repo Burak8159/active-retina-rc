@@ -1,0 +1,37 @@
+{
+  "status": "TRAINING_IN_PROGRESS",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.708649290656974,
+      "validation_policy": {
+        "risk_threshold": 0.0004696844844147563,
+        "quality_threshold": 0.00158329913392663,
+        "specificity_gradable_nonreferable": 0.24611398963730569,
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n_referable_dr": 463,
+        "n_ungradable": 133,
+        "n_gradable_nonreferable": 386,
+        "referral_rate": 0.9032586558044806,
+        "n": 982
+      },
+      "validation_metrics": {
+        "n": 982,
+        "gradable_nonreferable": 386,
+        "gradable_referable_dr": 463,
+        "known_ungradable": 133,
+        "false_referrals_on_gradable_nonreferable": 291,
+        "missed_referable_dr": 0,
+        "missed_known_ungradable": 0,
+        "specificity_gradable_nonreferable": 0.24611398963730569,
+        "sensitivity_referable_dr": 1.0,
+        "ungradable_routed_to_refer": 1.0,
+        "case_action_coverage": 1.0,
+        "referral_rate": 0.9032586558044806
+      },
+      "training_sampler": "equal_source_exposure_natural_within_source_grades_with_quality_controls",
+      "source_balanced_batches": 1200
+    }
+  ]
+}

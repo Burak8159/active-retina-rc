@@ -1,0 +1,37 @@
+{
+  "status": "TRAINING_IN_PROGRESS",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.2778562241150757,
+      "validation_policy": {
+        "risk_threshold": 0.0021904243621975183,
+        "quality_threshold": 5.8489645198278595e-06,
+        "specificity_gradable_nonreferable": 0.23652694610778444,
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n_referable_dr": 409,
+        "n_ungradable": 133,
+        "n_gradable_nonreferable": 334,
+        "referral_rate": 0.9098173515981736,
+        "n": 876
+      },
+      "validation_metrics": {
+        "n": 876,
+        "gradable_nonreferable": 334,
+        "gradable_referable_dr": 409,
+        "known_ungradable": 133,
+        "false_referrals_on_gradable_nonreferable": 255,
+        "missed_referable_dr": 0,
+        "missed_known_ungradable": 0,
+        "specificity_gradable_nonreferable": 0.23652694610778444,
+        "sensitivity_referable_dr": 1.0,
+        "ungradable_routed_to_refer": 1.0,
+        "case_action_coverage": 1.0,
+        "referral_rate": 0.9098173515981736
+      },
+      "training_sampler": "source_matched_grade1_grade2_with_quality_and_extreme_grade_batches",
+      "boundary_pair_batches": 200
+    }
+  ]
+}

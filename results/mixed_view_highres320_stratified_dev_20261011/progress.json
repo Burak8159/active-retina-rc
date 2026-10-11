@@ -1,0 +1,37 @@
+{
+  "status": "TRAINING_IN_PROGRESS",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.6985378576288712,
+      "validation_policy": {
+        "risk_threshold": 0.0035407012328505516,
+        "quality_threshold": 0.0021419310942292213,
+        "specificity_gradable_nonreferable": 0.23053892215568864,
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n_referable_dr": 409,
+        "n_ungradable": 133,
+        "n_gradable_nonreferable": 334,
+        "referral_rate": 0.9121004566210046,
+        "n": 876
+      },
+      "validation_metrics": {
+        "n": 876,
+        "gradable_nonreferable": 334,
+        "gradable_referable_dr": 409,
+        "known_ungradable": 133,
+        "false_referrals_on_gradable_nonreferable": 257,
+        "missed_referable_dr": 0,
+        "missed_known_ungradable": 0,
+        "specificity_gradable_nonreferable": 0.23053892215568864,
+        "sensitivity_referable_dr": 1.0,
+        "ungradable_routed_to_refer": 1.0,
+        "case_action_coverage": 1.0,
+        "referral_rate": 0.9121004566210046
+      },
+      "training_sampler": "stratified_grade1_grade2_single_eye_updates_with_quality_and_extreme_grade_controls",
+      "boundary_focused_samples": 300
+    }
+  ]
+}

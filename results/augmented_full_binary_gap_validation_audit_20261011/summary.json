@@ -1,0 +1,26 @@
+{
+  "best": {
+    "candidate": "random_weight_1903",
+    "status": "DEVELOPMENT_ONLY",
+    "test_fn": 1,
+    "test_fp": 327,
+    "test_gate_diagnostic": "DIAGNOSTIC_FAIL",
+    "test_sensitivity": 0.9989429175475687,
+    "test_specificity": 0.3312883435582822,
+    "test_threshold": 0.37924911839187414,
+    "test_tn": 162,
+    "test_tp": 945,
+    "valid_fn": 0,
+    "valid_fp": 238,
+    "valid_sensitivity": 1.0,
+    "valid_specificity": 0.4413145539906103,
+    "valid_threshold": 0.37924911839187414,
+    "valid_tn": 188,
+    "valid_tp": 759
+  },
+  "n_candidates": 4026,
+  "selection_split": "validation",
+  "status": "DEVELOPMENT_ONLY_TEST_EXPOSED",
+  "table": "results/augmented_full_binary_gap_validation_audit_20261011/full_binary_gap_table.csv",
+  "test_interpretation": "Diagnostic only; this dataset split has been inspected in prior candidate searches and cannot establish confirmation."
+}

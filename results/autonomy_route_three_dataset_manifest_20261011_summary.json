@@ -1,0 +1,53 @@
+{
+  "boundary": "This is a development/training manifest. Certification still requires a sealed patient-level cohort not used for model selection.",
+  "dataset_counts": {
+    "ddr_hf_specificity300": 4238,
+    "deepdrid_paired": 1584,
+    "drtid_paired": 3100
+  },
+  "force_patient_resplit": true,
+  "grade_counts": {
+    "0": 3098,
+    "1": 1079,
+    "2": 2034,
+    "3": 916,
+    "4": 965,
+    "5": 830
+  },
+  "incomplete_paired_eyes_dropped": {
+    "deepdrid_paired": 5
+  },
+  "inputs": [
+    {
+      "dataset": "ddr_hf_specificity300",
+      "manifest": "results/ddr_hf_specificity300_manifest.csv"
+    },
+    {
+      "dataset": "drtid_paired",
+      "manifest": "results/drtid_untouched_certification/certification_manifest.csv"
+    },
+    {
+      "dataset": "deepdrid_paired",
+      "manifest": "results/deepdrid_manifest.csv"
+    }
+  ],
+  "manifest_output": "results/autonomy_route_three_dataset_manifest_20261011.csv",
+  "missing_images_sample": [],
+  "n_eyes": 6580,
+  "n_missing_images_dropped": 0,
+  "n_patients": 6184,
+  "n_rows": 8922,
+  "referable_counts": {
+    "0": 4177,
+    "1": 4745
+  },
+  "split_counts": {
+    "test": 1236,
+    "train": 6348,
+    "valid": 1338
+  },
+  "status": "AUTONOMY_ROUTE_MANIFEST_READY",
+  "train_frac": 0.7,
+  "unavailable_inputs": [],
+  "valid_frac": 0.15
+}

@@ -1,0 +1,56 @@
+{
+  "boundary": "Development/training manifest only. All sources have prior project exposure or lack verified patient identifiers; this is not patient-disjoint certification evidence.",
+  "dataset_counts": {
+    "ddr_hf_specificity300": 4238,
+    "deepdrid": 1589,
+    "drtid_paired": 3100
+  },
+  "force_patient_resplit": true,
+  "known_limitations": [
+    "DDR source export has no verified patient identifier; image_id is used as a pseudo-patient key, so DDR grouping is image-level and cannot establish patient-disjoint evaluation.",
+    "DDR grade 5 denotes ungradable images; the current trainer's grade>=2 referable score routes them to REFER and must not treat them as disease-positive ground truth.",
+    "DRTiD and DeepDRiD have been inspected in prior development; the combined manifest is not a sealed external certification cohort.",
+    "DeepDRiD suffix-to-anatomy mapping remains inferred rather than officially verified."
+  ],
+  "grade_counts": {
+    "0": 3100,
+    "1": 1080,
+    "2": 2036,
+    "3": 916,
+    "4": 965,
+    "5": 830
+  },
+  "inputs": [
+    {
+      "dataset": "ddr_hf_specificity300",
+      "manifest": "results/ddr_hf_specificity300_manifest.csv"
+    },
+    {
+      "dataset": "drtid_paired",
+      "manifest": "results/drtid_untouched_certification/certification_manifest.csv"
+    },
+    {
+      "dataset": "deepdrid",
+      "manifest": "results/deepdrid_manifest.csv"
+    }
+  ],
+  "manifest_output": "results/l4_development_combined_manifest.csv",
+  "missing_images_sample": [],
+  "n_eye_keys": 6585,
+  "n_missing_images_dropped": 0,
+  "n_group_keys": 6187,
+  "n_rows": 8927,
+  "referable_counts": {
+    "0": 4180,
+    "1": 4747
+  },
+  "split_counts": {
+    "test": 1256,
+    "train": 6292,
+    "valid": 1379
+  },
+  "status": "AUTONOMY_ROUTE_MANIFEST_READY",
+  "train_frac": 0.7,
+  "unavailable_inputs": [],
+  "valid_frac": 0.15
+}

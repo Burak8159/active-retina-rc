@@ -1,0 +1,5 @@
+rule,validation_specificity,validation_misses,validation_referral_rate,test_n,test_gradable_nonreferable,test_gradable_referable_dr,test_known_ungradable,test_false_referrals_on_gradable_nonreferable,test_missed_referable_dr,test_missed_known_ungradable,test_specificity_gradable_nonreferable,test_sensitivity_referable_dr,test_ungradable_routed_to_refer,test_case_action_coverage,test_referral_rate
+fused,0.3023952095808383,0,0.884703196347032,827,357,341,129,252,3,0,0.29411764705882354,0.9912023460410557,1.0,1.0,0.8694074969770254
+max_views,0.27844311377245506,0,0.8938356164383562,827,357,341,129,272,1,0,0.23809523809523808,0.9970674486803519,1.0,1.0,0.8960096735187424
+max_any_view,0.27844311377245506,0,0.8938356164383562,827,357,341,129,272,1,0,0.23809523809523808,0.9970674486803519,1.0,1.0,0.8960096735187424
+mean_fused_views,0.2904191616766467,0,0.889269406392694,827,357,341,129,267,1,0,0.25210084033613445,0.9970674486803519,1.0,1.0,0.8899637243047158
