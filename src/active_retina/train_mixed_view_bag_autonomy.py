@@ -137,6 +137,7 @@ class MixedViewModel(nn.Module):
             if risk_pooling != "fused"
             else None
         )
+        self.encoder_frozen = False
         if self.view_risk_head is not None:
             self.risk_head.requires_grad_(False)
         self.quality_head = nn.Sequential(nn.Linear(width * 3, width // 2), nn.GELU(), nn.Dropout(0.2), nn.Linear(width // 2, 1))
@@ -147,6 +148,31 @@ class MixedViewModel(nn.Module):
         cfg["input_size"] = (3, image_size, image_size)
         self.train_transform = timm.data.create_transform(**cfg, is_training=True)
         self.eval_transform = timm.data.create_transform(**cfg, is_training=False)
+
+    def configure_trainable_components(self, mode: str) -> dict[str, int | str]:
+        if mode not in {"all", "view-risk-only"}:
+            raise ValueError(f"Unsupported trainable component mode: {mode}")
+        if mode == "view-risk-only" and self.view_risk_head is None:
+            raise ValueError("view-risk-only training requires a non-fused risk head")
+        for parameter in self.parameters():
+            parameter.requires_grad_(mode == "all")
+        if self.view_risk_head is not None:
+            self.risk_head.requires_grad_(False)
+        if mode == "view-risk-only":
+            for parameter in self.view_risk_head.parameters():
+                parameter.requires_grad_(True)
+        self.encoder_frozen = mode == "view-risk-only"
+        return {
+            "mode": mode,
+            "trainable_parameters": sum(p.numel() for p in self.parameters() if p.requires_grad),
+            "frozen_parameters": sum(p.numel() for p in self.parameters() if not p.requires_grad),
+        }
+
+    def train(self, mode: bool = True):
+        super().train(mode)
+        if mode and self.encoder_frozen:
+            self.encoder.eval()
+        return self
 
     def forward(self, images: torch.Tensor, view_mask: torch.Tensor):
         batch, views, channels, height, width = images.shape
@@ -455,6 +481,8 @@ def main() -> None:
     parser.add_argument("--risk-pooling", choices=("fused", "mean", "max", "logmeanexp"), default="fused",
                         help="Use an eye-level multiple-instance disease head over view embeddings; view labels are never fabricated.")
     parser.add_argument("--risk-pool-temperature", type=float, default=0.25)
+    parser.add_argument("--trainable-components", choices=("all", "view-risk-only"), default="all",
+                        help="Freeze the encoder and non-risk heads to test optimization stability of the eye-level risk head.")
     parser.add_argument("--image-size", type=int, default=224)
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=2)
@@ -506,6 +534,7 @@ def main() -> None:
                     "Warm-start checkpoint is structurally incompatible; only the new view_risk_head may be missing. "
                     f"missing={incompatible.missing_keys}, unexpected={incompatible.unexpected_keys}"
                 )
+    trainable_info = model.configure_trainable_components(args.trainable_components)
     train_rows = select_manifest_sources(splits["train"], args.training_sources, "train")
     valid_rows = select_manifest_sources(splits["valid"], args.evaluation_sources, "validation")
     test_rows = select_manifest_sources(splits["test"], args.evaluation_sources, "test")
@@ -539,16 +568,17 @@ def main() -> None:
     test_loader = None if test_data is None else DataLoader(
         test_data, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=pin
     )
-    optimizer = torch.optim.AdamW(
-        [
-            {"params": model.encoder.parameters(), "lr": args.backbone_lr},
-            {"params": list(model.grade_head.parameters()) +
-             [parameter for parameter in model.risk_head.parameters() if parameter.requires_grad] +
-             ([] if model.view_risk_head is None else list(model.view_risk_head.parameters())) +
-             list(model.quality_head.parameters()), "lr": args.head_lr},
-        ],
-        weight_decay=args.weight_decay,
-    )
+    optimizer_groups = []
+    encoder_params = [p for p in model.encoder.parameters() if p.requires_grad]
+    if encoder_params:
+        optimizer_groups.append({"params": encoder_params, "lr": args.backbone_lr})
+    head_params = [p for module in (model.grade_head, model.risk_head, model.view_risk_head, model.quality_head)
+                   if module is not None for p in module.parameters() if p.requires_grad]
+    if head_params:
+        optimizer_groups.append({"params": head_params, "lr": args.head_lr})
+    if not optimizer_groups:
+        raise ValueError("The selected trainable component mode produced no optimizer parameters")
+    optimizer = torch.optim.AdamW(optimizer_groups, weight_decay=args.weight_decay)
     amp = device.type == "cuda"
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
     out = Path(args.output_dir)
@@ -596,6 +626,7 @@ def main() -> None:
         record = {
             "epoch": epoch,
             "risk_pooling": args.risk_pooling,
+            "trainable_components": args.trainable_components,
             "train_loss": total_loss / max(1, n_examples),
             "validation_policy": policy,
             "validation_metrics": evaluate_policy(
@@ -660,6 +691,7 @@ def main() -> None:
         "model_name": args.model_name,
         "risk_pooling": args.risk_pooling,
         "risk_pool_temperature": args.risk_pool_temperature,
+        "trainable_components": trainable_info,
         "training_sources": args.training_sources,
         "evaluation_sources": args.evaluation_sources,
         "best_epoch": best_record,

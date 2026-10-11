@@ -1,0 +1,810 @@
+{
+  "backbone": "RETFound ViT-L/16 (EyePACS-pretrained checkpoint), strict-loaded into timm vit_large_patch16_224 at 256px with average pooling",
+  "checkpoint_sha256": "9b7d5a3395d6b7839278327afce723f388398b7a0c5d24f864ecaa6f39683bd0",
+  "best_candidate": "ordinal_grade_logistic_c01_balanced",
+  "candidate_results": {
+    "linear_svc_c001": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.9817518248175182,
+          "specificity": 0.01824817518248175
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9910714285714286,
+          "specificity": 0.008928571428571428
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 0.9849624060150376,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.0
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.038461538461538464
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.031496062992125984
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9918533604887984,
+      "specificity": 0.015544041450777202,
+      "threshold": -2.686340318490602,
+      "true_negative_clearances": 6,
+      "ungradable_referral_rate": 0.9849624060150376
+    },
+    "logistic_c0001": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.9416058394160584,
+          "specificity": 0.058394160583941604
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9821428571428571,
+          "specificity": 0.017857142857142856
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 1.0,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.05314009661835749
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.057692307692307696
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.031496062992125984
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9816700610997964,
+      "specificity": 0.046632124352331605,
+      "threshold": -2.8403339385986333,
+      "true_negative_clearances": 18,
+      "ungradable_referral_rate": 1.0
+    },
+    "logistic_c001": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.9744525547445255,
+          "specificity": 0.025547445255474453
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9910714285714286,
+          "specificity": 0.008928571428571428
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 0.9849624060150376,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.01932367149758454
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.038461538461538464
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.015748031496062992
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9898167006109979,
+      "specificity": 0.02072538860103627,
+      "threshold": -4.211810588836671,
+      "true_negative_clearances": 8,
+      "ungradable_referral_rate": 0.9849624060150376
+    },
+    "logistic_c01": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.9744525547445255,
+          "specificity": 0.025547445255474453
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9910714285714286,
+          "specificity": 0.008928571428571428
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 0.9849624060150376,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.0
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.038461538461538464
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.047244094488188976
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9898167006109979,
+      "specificity": 0.02072538860103627,
+      "threshold": -7.789966106414797,
+      "true_negative_clearances": 8,
+      "ungradable_referral_rate": 0.9849624060150376
+    },
+    "ordinal_grade_logistic_c001": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.9452554744525548,
+          "specificity": 0.05474452554744526
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9732142857142857,
+          "specificity": 0.026785714285714284
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 0.9849624060150376,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.04830917874396135
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.019230769230769232
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.05511811023622047
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9796334012219959,
+      "specificity": 0.046632124352331605,
+      "threshold": 0.012626255862414615,
+      "true_negative_clearances": 18,
+      "ungradable_referral_rate": 0.9849624060150376
+    },
+    "ordinal_grade_logistic_c001_balanced": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.948905109489051,
+          "specificity": 0.051094890510948905
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9821428571428571,
+          "specificity": 0.017857142857142856
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 0.9849624060150376,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.043478260869565216
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.038461538461538464
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.03937007874015748
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9816700610997964,
+      "specificity": 0.04145077720207254,
+      "threshold": 0.019549345597624557,
+      "true_negative_clearances": 16,
+      "ungradable_referral_rate": 0.9849624060150376
+    },
+    "ordinal_grade_logistic_c01": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.9379562043795621,
+          "specificity": 0.06204379562043796
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9732142857142857,
+          "specificity": 0.026785714285714284
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 0.9849624060150376,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.01932367149758454
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.07692307692307693
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.09448818897637795
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9775967413441955,
+      "specificity": 0.05181347150259067,
+      "threshold": 0.0006543020717797443,
+      "true_negative_clearances": 20,
+      "ungradable_referral_rate": 0.9849624060150376
+    },
+    "ordinal_grade_logistic_c01_balanced": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 0.8905109489051095,
+          "specificity": 0.10948905109489052
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 0.9642857142857143,
+          "specificity": 0.03571428571428571
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 0.9849624060150376,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.043478260869565216
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.1346153846153846
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.14173228346456693
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 0.9633401221995926,
+      "specificity": 0.08808290155440414,
+      "threshold": 0.002777034416794555,
+      "true_negative_clearances": 34,
+      "ungradable_referral_rate": 0.9849624060150376
+    },
+    "rbf_svc_c001": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 1.0,
+          "specificity": 0.0
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 1.0,
+          "specificity": 0.0
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 1.0,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.0
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.0
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.0
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 1.0,
+      "specificity": 0.0,
+      "threshold": -1.4060215115506225,
+      "true_negative_clearances": 0,
+      "ungradable_referral_rate": 1.0
+    },
+    "rbf_svc_c01": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 1.0,
+          "specificity": 0.0
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 1.0,
+          "specificity": 0.0
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 1.0,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.0
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.0
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.0
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 1.0,
+      "specificity": 0.0,
+      "threshold": -1.5280713921163698,
+      "true_negative_clearances": 0,
+      "ungradable_referral_rate": 1.0
+    },
+    "retfound_pretrained_max_view_referable_probability": {
+      "binary_action_coverage_including_ungradable_referral": 1.0,
+      "by_grade": {
+        "0": {
+          "misses": 0,
+          "n": 274,
+          "referral_rate": 1.0,
+          "specificity": 0.0
+        },
+        "1": {
+          "misses": 0,
+          "n": 112,
+          "referral_rate": 1.0,
+          "specificity": 0.0
+        },
+        "2": {
+          "misses": 0,
+          "n": 223,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "3": {
+          "misses": 0,
+          "n": 103,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "4": {
+          "misses": 0,
+          "n": 137,
+          "referral_rate": 1.0,
+          "specificity": null
+        },
+        "5": {
+          "misses": 0,
+          "n": 133,
+          "referral_rate": 1.0,
+          "specificity": null
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "misses": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.0
+        },
+        "deepdrid_paired": {
+          "misses": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.0
+        },
+        "drtid_paired": {
+          "misses": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.0
+        }
+      },
+      "false_negative_clearances": 0,
+      "n_eyes": 982,
+      "n_gradable": 849,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "referral_rate": 1.0,
+      "specificity": 0.0,
+      "threshold": -Infinity,
+      "true_negative_clearances": 0,
+      "ungradable_referral_rate": 1.0
+    }
+  },
+  "checkpoint": "C:\\Users\\bataa\\active_retina\\external\\model_cache\\hub\\models--bswift--RETfound_eyepacs_DR\\snapshots\\d5a8cd8ced974f1f23b27633891c1768b9176527\\model.safetensors",
+  "claim_boundary": "All project datasets have been inspected; this is not untouched certification. Only train and validation images were loaded; test split was not opened.",
+  "head_training": "train-split binary and 5-grade classifiers on concatenated mean, max, and absolute-difference eye embeddings; grade-5 DDR cases are excluded from fitting, and all outputs including grade-5 predictions are determined only by model scores",
+  "n_fitted_gradable_train_eyes": 4107,
+  "n_train_eyes": 4675,
+  "n_validation_eyes": 982,
+  "n_validation_gradable_eyes": 849,
+  "ranked_candidates": [
+    "ordinal_grade_logistic_c01_balanced",
+    "ordinal_grade_logistic_c01",
+    "ordinal_grade_logistic_c001",
+    "logistic_c0001",
+    "ordinal_grade_logistic_c001_balanced",
+    "logistic_c001",
+    "logistic_c01",
+    "linear_svc_c001",
+    "retfound_pretrained_max_view_referable_probability",
+    "rbf_svc_c001",
+    "rbf_svc_c01"
+  ],
+  "selection_rule": "Within each candidate, choose the largest clearance threshold that yields zero missed gradable referable validation eyes; rank candidates by validation specificity then lower referral rate. Ungradable referrals are reported from model output, not forced by labels.",
+  "status": "VALIDATION_ONLY_DEVELOPMENT_DIAGNOSTIC"
+}

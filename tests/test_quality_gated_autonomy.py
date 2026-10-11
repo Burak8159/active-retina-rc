@@ -13,6 +13,7 @@ from active_retina.train_mixed_view_bag_autonomy import (
     BoundaryFocusedEyeBatchSampler,
     BoundaryPairBatchSampler,
     EyeBags,
+    MixedViewModel,
     SourceBalancedEyeBatchSampler,
     aggregate_pretrained_view_risk,
     filter_prediction_sources,
@@ -30,6 +31,7 @@ from active_retina.audit_mixed_view_ordinal_head import ordinal_referable_probab
 from active_retina.train_mixed_view_cumulative_ordinal import CumulativeOrdinalHead
 from active_retina.audit_mixed_view_inference_fusion import make_policy_input
 from active_retina.build_autonomy_route_manifest import drop_incomplete_paired_eyes
+from active_retina.audit_retfound_embedding_autonomy import zero_miss_metrics
 
 
 def test_policy_routes_ungradable_and_preserves_zero_miss_on_validation():
@@ -199,6 +201,39 @@ def test_view_level_mil_rejects_eyes_without_any_valid_view():
         assert "at least one valid view" in str(error)
     else:
         raise AssertionError("An empty eye bag must fail closed")
+
+
+def test_view_risk_only_mode_freezes_encoder_and_auxiliary_heads():
+    model = object.__new__(MixedViewModel)
+    torch.nn.Module.__init__(model)
+    model.encoder = torch.nn.Sequential(torch.nn.Linear(2, 2), torch.nn.BatchNorm1d(2))
+    model.grade_head = torch.nn.Linear(2, 2)
+    model.risk_head = torch.nn.Linear(2, 1)
+    model.view_risk_head = torch.nn.Linear(2, 1)
+    model.quality_head = torch.nn.Linear(2, 1)
+    model.encoder_frozen = False
+
+    info = model.configure_trainable_components("view-risk-only")
+    model.train()
+
+    assert info["trainable_parameters"] == sum(p.numel() for p in model.view_risk_head.parameters())
+    assert all(p.requires_grad for p in model.view_risk_head.parameters())
+    assert all(not p.requires_grad for name, p in model.named_parameters() if not name.startswith("view_risk_head."))
+    assert not model.encoder.training
+
+
+def test_retfound_binary_action_does_not_force_refer_from_ground_truth_ungradable_label():
+    eyes = [
+        {"grade": 0, "referable": 0, "source_dataset": "ddr"},
+        {"grade": 2, "referable": 1, "source_dataset": "ddr"},
+        {"grade": 5, "referable": 0, "source_dataset": "ddr"},
+    ]
+    metrics = zero_miss_metrics(np.array([-1.0, 1.0, -2.0]), eyes, threshold=0.0)
+
+    assert metrics["specificity"] == 1.0
+    assert metrics["false_negative_clearances"] == 0
+    assert metrics["ungradable_referral_rate"] == 0.0
+    assert metrics["binary_action_coverage_including_ungradable_referral"] == 1.0
 
 
 def test_manifest_view_counts_do_not_load_test_images():

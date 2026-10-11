@@ -1,0 +1,156 @@
+{
+  "artifact": "models\\active_retina_retfound_lastblock_20261011.pt",
+  "backbone": "RETFound ViT-L/16 EyePACS five-grade checkpoint; all weights strict-loaded; final transformer block, fc_norm and expanded six-class head trainable; earlier blocks frozen.",
+  "best_epoch": {
+    "epoch": 1,
+    "train_loss": 2.547466696205768,
+    "validation": {
+      "binary_action_coverage": 1.0,
+      "by_grade": {
+        "0": {
+          "n": 274,
+          "referral_rate": 0.9525547445255474
+        },
+        "1": {
+          "n": 112,
+          "referral_rate": 0.9821428571428571
+        },
+        "2": {
+          "n": 223,
+          "referral_rate": 1.0
+        },
+        "3": {
+          "n": 103,
+          "referral_rate": 1.0
+        },
+        "4": {
+          "n": 137,
+          "referral_rate": 1.0
+        },
+        "5": {
+          "n": 133,
+          "referral_rate": 1.0
+        }
+      },
+      "by_source": {
+        "ddr_hf_specificity300": {
+          "missed_referable": 0,
+          "missed_ungradable": 0,
+          "negative_n": 207,
+          "referable_n": 286,
+          "specificity": 0.057971014492753624,
+          "ungradable_n": 133
+        },
+        "deepdrid_paired": {
+          "missed_referable": 0,
+          "missed_ungradable": 0,
+          "negative_n": 52,
+          "referable_n": 54,
+          "specificity": 0.0,
+          "ungradable_n": 0
+        },
+        "drtid_paired": {
+          "missed_referable": 0,
+          "missed_ungradable": 0,
+          "negative_n": 127,
+          "referable_n": 123,
+          "specificity": 0.023622047244094488,
+          "ungradable_n": 0
+        }
+      },
+      "missed_referable": 0,
+      "missed_ungradable": 0,
+      "n_eyes": 982,
+      "n_gradable_nonreferable": 386,
+      "n_referable": 463,
+      "n_ungradable": 133,
+      "referral_rate": 0.984725050916497,
+      "specificity": 0.038860103626943004,
+      "threshold": 0.0007019328176288476,
+      "true_negative_clearances": 15,
+      "ungradable_refer_rate": 1.0
+    }
+  },
+  "claim_boundary": "All available datasets have informed development. Only patient-disjoint train/validation were loaded; untouched certification and clinical validation are absent.",
+  "pretrained_checkpoint_sha256": "9b7d5a3395d6b7839278327afce723f388398b7a0c5d24f864ecaa6f39683bd0",
+  "expanded_class_5": "ungradable; trained only from DDR grade-5 labels; predictions are model outputs, not ground-truth overrides",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.547466696205768,
+      "validation": {
+        "binary_action_coverage": 1.0,
+        "by_grade": {
+          "0": {
+            "n": 274,
+            "referral_rate": 0.9525547445255474
+          },
+          "1": {
+            "n": 112,
+            "referral_rate": 0.9821428571428571
+          },
+          "2": {
+            "n": 223,
+            "referral_rate": 1.0
+          },
+          "3": {
+            "n": 103,
+            "referral_rate": 1.0
+          },
+          "4": {
+            "n": 137,
+            "referral_rate": 1.0
+          },
+          "5": {
+            "n": 133,
+            "referral_rate": 1.0
+          }
+        },
+        "by_source": {
+          "ddr_hf_specificity300": {
+            "missed_referable": 0,
+            "missed_ungradable": 0,
+            "negative_n": 207,
+            "referable_n": 286,
+            "specificity": 0.057971014492753624,
+            "ungradable_n": 133
+          },
+          "deepdrid_paired": {
+            "missed_referable": 0,
+            "missed_ungradable": 0,
+            "negative_n": 52,
+            "referable_n": 54,
+            "specificity": 0.0,
+            "ungradable_n": 0
+          },
+          "drtid_paired": {
+            "missed_referable": 0,
+            "missed_ungradable": 0,
+            "negative_n": 127,
+            "referable_n": 123,
+            "specificity": 0.023622047244094488,
+            "ungradable_n": 0
+          }
+        },
+        "missed_referable": 0,
+        "missed_ungradable": 0,
+        "n_eyes": 982,
+        "n_gradable_nonreferable": 386,
+        "n_referable": 463,
+        "n_ungradable": 133,
+        "referral_rate": 0.984725050916497,
+        "specificity": 0.038860103626943004,
+        "threshold": 0.0007019328176288476,
+        "true_negative_clearances": 15,
+        "ungradable_refer_rate": 1.0
+      }
+    }
+  ],
+  "loss": "six-class cross entropy + referable-or-ungradable binary BCE + 0.5 cumulative ordinal BCE across grade thresholds 1-4",
+  "patient_overlap": 0,
+  "status": "STOPPED_BY_EPOCH1_GATE",
+  "test_images_loaded": 0,
+  "train_eyes": 4675,
+  "trainable_parameters": 12604422,
+  "validation_eyes": 982
+}
