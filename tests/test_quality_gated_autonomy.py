@@ -1,7 +1,9 @@
+import csv
 import numpy as np
 from pathlib import Path
 
 import torch
+from PIL import Image
 
 from active_retina.train_quality_gated_autonomy import (
     evaluate_policy,
@@ -23,6 +25,11 @@ from active_retina.train_mixed_view_bag_autonomy import (
     select_manifest_sources,
     select_filtered_policy,
     stratified_policy_metrics,
+    HardBoundaryPairBatchSampler,
+    LesionBalancedBatchSampler,
+    ordinal_referable_logit,
+    ordinal_referable_score,
+    write_predictions,
 )
 from active_retina.autonomy_extra_signal_search import select_best_validated
 from active_retina.autonomy_zero_miss_90_search import select_best_validated as select_zero_miss_search_candidate
@@ -263,6 +270,104 @@ def test_stratified_policy_diagnostics_reuse_one_locked_policy():
     assert metrics["grade:0"]["false_referrals_on_gradable_nonreferable"] == 0
     assert metrics["grade:1"]["false_referrals_on_gradable_nonreferable"] == 0
     assert metrics["grade:2"]["missed_referable_dr"] == 0
+
+
+def test_ordinal_policy_score_is_used_for_diagnostics_and_saved_actions(tmp_path):
+    scores = {
+        "grade": np.array([0, 2]),
+        "risk": np.array([0.8, 0.1]),
+        "ordinal_risk": np.array([0.1, 0.9]),
+        "quality": np.zeros(2),
+        "quality_known": np.zeros(2, dtype=int),
+        "ungradable": np.zeros(2, dtype=int),
+        "source_dataset": np.array(["a", "a"]),
+        "eye_id": np.array(["e0", "e1"]),
+        "patient_id": np.array(["p0", "p1"]),
+        "referable": np.array([0, 1]),
+        "image_ids": np.array(["i0", "i1"]),
+    }
+    policy = {"risk_threshold": 0.5, "quality_threshold": 2.0}
+
+    metrics = stratified_policy_metrics(scores, policy, "ordinal_risk")
+    output = tmp_path / "predictions.csv"
+    write_predictions(output, "valid", scores, policy, "ordinal_risk")
+    with output.open(newline="", encoding="utf-8") as stream:
+        actions = [int(row["refer_action"]) for row in csv.DictReader(stream)]
+
+    assert metrics["source:a"]["specificity_gradable_nonreferable"] == 1.0
+    assert metrics["source:a"]["missed_referable_dr"] == 0
+    assert actions == [0, 1]
+
+
+def test_eye_bags_only_marks_explicit_lesion_annotations_as_known(tmp_path):
+    image_path = tmp_path / "external" / "DDR_hf_specificity300" / "DR_grading" / "train" / "case.jpg"
+    image_path.parent.mkdir(parents=True)
+    Image.new("RGB", (8, 8)).save(image_path)
+    row = {
+        "eye_id": "ddr:case",
+        "patient_id": "ddr:case",
+        "source_dataset": "ddr_hf_specificity300",
+        "grade": 1,
+        "referable_dr": 0,
+        "field": "single_fundus",
+        "image_path": "external/DDR_hf_specificity300/DR_grading/train/case.jpg",
+        "image_id": "ddr:case",
+    }
+    transform = lambda _image: torch.zeros(3, 8, 8)
+
+    labeled = EyeBags([row], transform, tmp_path, {"case.jpg": (1, 0, 1, 0)})[0]
+    unlabeled = EyeBags([row], transform, tmp_path)[0]
+
+    assert labeled[-2].tolist() == [1.0, 0.0, 1.0, 0.0]
+    assert labeled[-1] == 1
+    assert unlabeled[-2].tolist() == [0.0, 0.0, 0.0, 0.0]
+    assert unlabeled[-1] == 0
+
+
+def test_lesion_balanced_sampler_includes_known_mask_label_per_batch():
+    items = [
+        {"lesion_known": 1},
+        {"lesion_known": 0},
+        {"lesion_known": 0},
+        {"lesion_known": 1},
+    ]
+    sampler = LesionBalancedBatchSampler(items, batches_per_epoch=12, seed=17)
+
+    batches = list(sampler)
+
+    assert len(batches) == 12
+    assert all(len(batch) == 2 and batch[0] != batch[1] for batch in batches)
+    assert all(any(items[index]["lesion_known"] for index in batch) for batch in batches)
+    assert len({batch[0] for batch in batches[:2]}) == 2
+    assert all(not items[batch[1]]["lesion_known"] for batch in batches)
+
+
+def test_ordinal_rank_logit_matches_deployed_referable_probability():
+    logits = torch.tensor([[2.0, 1.0, 0.2, -0.3, -1.0, -2.0],
+                           [-1.0, 0.0, 0.4, 1.0, 0.2, -0.5]])
+    probability = ordinal_referable_score(logits)
+    rank_logit = ordinal_referable_logit(logits)
+
+    assert torch.allclose(torch.sigmoid(rank_logit), probability, atol=1e-6)
+
+
+def test_hard_boundary_sampler_uses_only_train_scores_for_same_source_pairs():
+    items = []
+    scores = []
+    for grade, values in ((0, [0.0]), (1, [0.1, 0.8, 0.9, 0.7]),
+                          (2, [0.2, 0.3, 0.95, 0.4]), (3, [0.5]), (5, [0.6])):
+        for score in values:
+            items.append({"source_dataset": "train_source", "grade": grade})
+            scores.append(score)
+    sampler = HardBoundaryPairBatchSampler(items, np.array(scores), 10, 7, 0.5)
+
+    batches = list(sampler)
+    boundary = [batch for i, batch in enumerate(batches) if i % 10 not in (8, 9)]
+    assert len(batches) == 10
+    assert all({items[i]["grade"] for i in batch} == {1, 2} for batch in boundary)
+    assert all(items[batch[0]]["grade"] == 1 and items[batch[1]]["grade"] == 2 for batch in boundary)
+    assert sampler.hard_grade1["train_source"] == [3, 2]
+    assert sampler.hard_grade2["train_source"] == [5, 6]
 
 
 def test_boundary_focused_sampler_emits_one_eye_and_periodic_quality_controls():
