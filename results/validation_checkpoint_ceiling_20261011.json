@@ -1,0 +1,123 @@
+{
+  "aggregate": {
+    "case_action_coverage": 1.0,
+    "false_referrals_on_gradable_nonreferable": 180,
+    "gradable_nonreferable": 385,
+    "gradable_referable_dr": 463,
+    "known_ungradable": 133,
+    "missed_known_ungradable": 0,
+    "missed_referable_dr": 0,
+    "n": 981,
+    "specificity_gradable_nonreferable": 0.5324675324675325
+  },
+  "best_by_source": {
+    "ddr_hf_specificity300": {
+      "metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 88,
+        "gradable_nonreferable": 206,
+        "gradable_referable_dr": 286,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 625,
+        "referral_rate": 0.8112,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.5728155339805825,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 625,
+        "n_gradable_nonreferable": 206,
+        "n_referable_dr": 286,
+        "n_ungradable": 133,
+        "quality_threshold": 0.0018598887836560607,
+        "referral_rate": 0.8112,
+        "risk_threshold": -1.367407202720642,
+        "specificity_gradable_nonreferable": 0.5728155339805825
+      },
+      "prediction_file": "results/rtx_aptos_replay_laststage_20261011/validation_predictions.csv",
+      "run": "rtx_aptos_replay_laststage_20261011",
+      "score_column": "max_grade_margin",
+      "source": "ddr_hf_specificity300"
+    },
+    "deepdrid_paired": {
+      "metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 11,
+        "gradable_nonreferable": 52,
+        "gradable_referable_dr": 54,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 106,
+        "referral_rate": 0.6132075471698113,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.7884615384615384,
+        "ungradable_routed_to_refer": null
+      },
+      "policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 106,
+        "n_gradable_nonreferable": 52,
+        "n_referable_dr": 54,
+        "n_ungradable": 0,
+        "quality_threshold": 2.0,
+        "referral_rate": 0.6132075471698113,
+        "risk_threshold": 0.005048107355833054,
+        "specificity_gradable_nonreferable": 0.7884615384615384
+      },
+      "prediction_file": "results/rtx_fundus_b5_all_sources_20261011/validation_predictions.csv",
+      "run": "rtx_fundus_b5_all_sources_20261011",
+      "score_column": "risk",
+      "source": "deepdrid_paired"
+    },
+    "drtid_paired": {
+      "metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 81,
+        "gradable_nonreferable": 127,
+        "gradable_referable_dr": 123,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 250,
+        "referral_rate": 0.816,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.36220472440944884,
+        "ungradable_routed_to_refer": null
+      },
+      "policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 250,
+        "n_gradable_nonreferable": 127,
+        "n_referable_dr": 123,
+        "n_ungradable": 0,
+        "quality_threshold": 2.0,
+        "referral_rate": 0.816,
+        "risk_threshold": 0.001816780655644834,
+        "specificity_gradable_nonreferable": 0.36220472440944884
+      },
+      "prediction_file": "results/rtx_convnext_drtid_weighted_hard_boundary_20261011/validation_predictions.csv",
+      "run": "rtx_convnext_drtid_weighted_hard_boundary_20261011",
+      "score_column": "risk",
+      "source": "drtid_paired"
+    }
+  },
+  "candidate_count": 195,
+  "excluded_eye_ids": [
+    "ddr_hf_specificity300:ddr_test_20170417105537128"
+  ],
+  "score_columns": [
+    "risk",
+    "ordinal_risk",
+    "max_grade_margin",
+    "grade_boundary_margin"
+  ],
+  "selection_boundary": "Each source's checkpoint, score column, and policy are selected and evaluated on the same repeatedly inspected validation set. This is an optimistic development upper bound, not an independent performance estimate. Ungradable routing is computed from the model quality score, not hard-coded from the grade label.",
+  "status": "VALIDATION_ONLY_OPTIMISTIC_CHECKPOINT_CEILING"
+}
