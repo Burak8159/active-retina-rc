@@ -39,7 +39,9 @@ from active_retina.augmented_full_binary_gap import select_best_validated as sel
 from active_retina.audit_mixed_view_ordinal_head import ordinal_referable_probability
 from active_retina.train_mixed_view_cumulative_ordinal import CumulativeOrdinalHead
 from active_retina.audit_mixed_view_inference_fusion import make_policy_input
+from active_retina.audit_source_conditioned_policy import source_policy_audit
 from active_retina.build_autonomy_route_manifest import drop_incomplete_paired_eyes
+from active_retina.extend_training_manifest import extend_manifest, heldout_digest
 from active_retina.audit_retfound_embedding_autonomy import zero_miss_metrics
 
 
@@ -399,6 +401,44 @@ def test_hard_boundary_sampler_uses_only_train_scores_for_same_source_pairs():
     assert sampler.hard_grade2["train_source"] == [5, 6]
 
 
+def test_hard_boundary_sampler_supports_reproducible_source_weighting():
+    items = [
+        {"source_dataset": source, "grade": grade}
+        for source in ("ddr", "deepdrid", "drtid")
+        for grade in (0, 1, 2, 3, 5)
+    ]
+    scores = np.array([float(item["grade"]) for item in items])
+    weights = {"ddr": 1.0, "deepdrid": 1.0, "drtid": 4.0}
+    sampler = HardBoundaryPairBatchSampler(items, scores, 5000, 41, 1.0, source_weights=weights)
+
+    batches = list(sampler)
+    boundary_sources = [items[batch[0]]["source_dataset"] for step, batch in enumerate(batches) if step % 10 not in (8, 9)]
+    drtid_fraction = boundary_sources.count("drtid") / len(boundary_sources)
+
+    assert len(batches) == 5000
+    assert 0.62 < drtid_fraction < 0.71
+    assert all(
+        {items[index]["grade"] for index in batch} == {1, 2}
+        for step, batch in enumerate(batches) if step % 10 not in (8, 9)
+    )
+
+
+def test_hard_boundary_sampler_rejects_incomplete_source_weights():
+    items = [
+        {"source_dataset": source, "grade": grade}
+        for source in ("ddr", "drtid")
+        for grade in (0, 1, 2, 3, 5)
+    ]
+    scores = np.array([float(item["grade"]) for item in items])
+
+    try:
+        HardBoundaryPairBatchSampler(items, scores, 10, 3, 0.5, source_weights={"ddr": 1.0})
+    except ValueError as exc:
+        assert "every source" in str(exc)
+    else:
+        raise AssertionError("Incomplete source weights must be rejected")
+
+
 def test_boundary_focused_sampler_emits_one_eye_and_periodic_quality_controls():
     items = []
     for source in ("ddr", "drtid"):
@@ -578,3 +618,71 @@ def test_ordinal_referable_score_sums_grades_two_through_four():
 
     assert risk[0] < 0.3
     assert risk[1] > 0.9
+
+
+def test_training_manifest_extension_preserves_heldout_rows_and_dataset_identity(tmp_path):
+    base = [{
+        "patient_id": "paired:p1", "eye_id": "paired:e1", "image_id": "paired:i1",
+        "field": "macula", "grade": "2", "referable_dr": "1",
+        "image_path": "external/valid.jpg", "source_split": "drtid_paired_valid",
+        "original_source_split": "validation", "source_dataset": "drtid_paired",
+    }]
+    (tmp_path / "external").mkdir()
+    (tmp_path / "external" / "new.jpg").write_bytes(b"fixture")
+    additions = [{
+        "patient_id": "ddr_train_001", "eye_id": "ddr_train_001", "image_id": "ddr_train_001",
+        "field": "single_fundus", "grade": "0", "referable_dr": "0",
+        "image_path": r"external\new.jpg", "source_split": "ddr_train",
+    }]
+
+    rows, summary = extend_manifest(base, additions, "ddr_full", tmp_path)
+
+    assert rows[0] == base[0]
+    assert heldout_digest(rows) == heldout_digest(base)
+    assert rows[1]["source_dataset"] == "ddr_full"
+    assert rows[1]["source_split"] == "ddr_full_train"
+    assert rows[1]["patient_id"] == "ddr_full:ddr_train_001"
+    assert summary["added_train_rows"] == 1
+    assert summary["validation_rows"] == 1
+
+
+def test_training_manifest_extension_rejects_nontrain_additions(tmp_path):
+    base = [{
+        "patient_id": "p", "eye_id": "e", "image_id": "i", "field": "single_fundus",
+        "grade": "0", "referable_dr": "0", "image_path": "x.jpg",
+        "source_split": "source_train", "original_source_split": "train", "source_dataset": "source",
+    }]
+    try:
+        extend_manifest(base, [{"grade": "0", "referable_dr": "0", "image_path": "new.jpg", "source_split": "ddr_test"}], "ddr_full", tmp_path)
+    except ValueError as exc:
+        assert "train-only" in str(exc)
+    else:
+        raise AssertionError("Non-training additions must be rejected")
+
+
+def test_source_conditioned_policy_keeps_binary_coverage_and_zero_misses():
+    rows = []
+    for source, positive_score, negative_score in (("a", 0.8, 0.2), ("b", 0.6, 0.3)):
+        for index in range(2):
+            rows.append({
+                "split": "valid", "source_dataset": source, "grade": "2", "referable": "1",
+                "quality_known": "0", "ungradable": "0", "risk": str(positive_score),
+                "ordinal_risk": str(positive_score), "max_grade_margin": "0", "grade_boundary_margin": "0",
+                "quality": "0", "eye_id": f"{source}p{index}",
+            })
+            rows.append({
+                "split": "valid", "source_dataset": source, "grade": "0", "referable": "0",
+                "quality_known": "0", "ungradable": "0", "risk": str(negative_score),
+                "ordinal_risk": str(negative_score), "max_grade_margin": "0", "grade_boundary_margin": "0",
+                "quality": "0", "eye_id": f"{source}n{index}",
+            })
+
+    summary, actions = source_policy_audit(rows)
+
+    assert summary["gradable_nonreferable_cleared"] == 4
+    assert summary["specificity_gradable_nonreferable"] == 1.0
+    assert summary["missed_referable_dr"] == 0
+    assert summary["missed_known_ungradable"] == 0
+    assert summary["case_action_coverage"] == 1.0
+    assert len(actions) == len(rows)
+    assert all(row["source_policy_action"] in {"CLEAR", "REFER"} for row in actions)

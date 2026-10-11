@@ -119,6 +119,8 @@ def main() -> None:
     parser.add_argument("--summary-output", default="results/ddr_hf_summary.json")
     parser.add_argument("--download-images", action="store_true")
     parser.add_argument("--download-workers", type=int, default=8)
+    parser.add_argument("--splits", nargs="+", choices=tuple(LABEL_FILES), default=list(LABEL_FILES),
+                        help="Dataset splits to prepare; use train only when expanding model training data.")
     parser.add_argument("--limit-per-split", type=int)
     parser.add_argument("--limit-per-grade-per-split", type=int)
     args = parser.parse_args()
@@ -127,7 +129,8 @@ def main() -> None:
     local_dir.mkdir(parents=True, exist_ok=True)
     label_paths = download_labels(local_dir)
     label_rows: list[dict[str, Any]] = []
-    for split, path in label_paths.items():
+    for split in args.splits:
+        path = label_paths[split]
         label_rows.extend(read_label_file(path, split, args.limit_per_split, args.limit_per_grade_per_split))
 
     downloaded_paths: dict[tuple[str, str], Path] = {}

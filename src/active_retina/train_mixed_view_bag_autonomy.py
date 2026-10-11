@@ -10,6 +10,7 @@ import argparse
 import copy
 import csv
 import json
+import math
 import random
 from pathlib import Path
 from typing import Any
@@ -325,6 +326,7 @@ class HardBoundaryPairBatchSampler(Sampler[list[int]]):
         batches_per_epoch: int,
         seed: int,
         hard_fraction: float,
+        source_weights: dict[str, float] | None = None,
     ) -> None:
         if len(items) != len(ordinal_scores):
             raise ValueError("Training scores must align one-to-one with training eyes")
@@ -342,6 +344,14 @@ class HardBoundaryPairBatchSampler(Sampler[list[int]]):
         ]
         if not self.boundary_sources:
             raise ValueError("Hard-boundary mining requires same-source grade-1/grade-2 training pairs")
+        if source_weights is None:
+            self.source_weights = {source: 1.0 for source in self.boundary_sources}
+        else:
+            if set(source_weights) != set(self.boundary_sources):
+                raise ValueError("Hard-boundary source weights must name every source with grade-1/2 training pairs")
+            if any(not math.isfinite(value) or value <= 0 for value in source_weights.values()):
+                raise ValueError("Hard-boundary source weights must be finite and positive")
+            self.source_weights = dict(source_weights)
 
         self.hard_grade1: dict[str, list[int]] = {}
         self.hard_grade2: dict[str, list[int]] = {}
@@ -367,7 +377,11 @@ class HardBoundaryPairBatchSampler(Sampler[list[int]]):
             elif step % 10 == 9:
                 yield [rng.choice(self.grade_zero), rng.choice(self.grade_severe)]
             else:
-                source = self.boundary_sources[(step // 2) % len(self.boundary_sources)]
+                source = rng.choices(
+                    self.boundary_sources,
+                    weights=[self.source_weights[name] for name in self.boundary_sources],
+                    k=1,
+                )[0]
                 yield [rng.choice(self.hard_grade1[source]), rng.choice(self.hard_grade2[source])]
 
     def __len__(self) -> int:
@@ -699,6 +713,8 @@ def main() -> None:
     parser.add_argument("--hard-boundary-batches", type=int, default=0,
                         help="Mine hard grade-1/2 pairs using scores computed only on the training split.")
     parser.add_argument("--hard-boundary-fraction", type=float, default=0.25)
+    parser.add_argument("--hard-boundary-source-weights", nargs="+", default=None,
+                        help="Optional source=weight entries for train-only hard-pair sampling; specify every boundary source.")
     parser.add_argument("--boundary-focused-samples", type=int, default=0,
                         help="Use stratified one-eye updates around grades 1/2; requires batch size 1.")
     parser.add_argument("--source-balanced-batches", type=int, default=0,
@@ -838,8 +854,20 @@ def main() -> None:
         }
         if set(scored["eye_id"].tolist()) != expected_boundary_ids:
             raise ValueError("Hard-mining scores do not cover exactly the training grade-1/grade-2 eyes")
+        source_weights = None
+        if args.hard_boundary_source_weights:
+            source_weights = {}
+            for entry in args.hard_boundary_source_weights:
+                source, separator, raw_weight = entry.partition("=")
+                if not separator or not source or source in source_weights:
+                    raise ValueError(f"Invalid or duplicate --hard-boundary-source-weights entry: {entry}")
+                try:
+                    source_weights[source] = float(raw_weight)
+                except ValueError as exc:
+                    raise ValueError(f"Invalid source weight: {entry}") from exc
         hard_sampler = HardBoundaryPairBatchSampler(
-            train_data.items, train_scores, args.hard_boundary_batches, args.seed, args.hard_boundary_fraction
+            train_data.items, train_scores, args.hard_boundary_batches, args.seed, args.hard_boundary_fraction,
+            source_weights=source_weights,
         )
         train_loader = DataLoader(train_data, batch_sampler=hard_sampler, num_workers=args.num_workers, pin_memory=pin)
     elif args.source_balanced_batches:
@@ -1071,6 +1099,7 @@ def main() -> None:
             record["training_sampler"] = "train_only_hard_grade1_grade2_pairs"
             record["hard_boundary_batches"] = args.hard_boundary_batches
             record["hard_boundary_fraction"] = args.hard_boundary_fraction
+            record["hard_boundary_source_weights"] = hard_sampler.source_weights
             record["mined_training_eyes_by_source"] = {
                 source: {
                     "grade1": len(hard_sampler.hard_grade1[source]),

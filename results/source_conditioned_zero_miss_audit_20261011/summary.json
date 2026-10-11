@@ -1,0 +1,99 @@
+{
+  "case_action_coverage": 1.0,
+  "claim_boundary": "Each source threshold was selected and scored on the same repeatedly inspected validation set. Diagnostic only; not independent confirmation and not evidence of 100% population coverage.",
+  "gradable_nonreferable_cleared": 187,
+  "gradable_nonreferable_total": 386,
+  "missed_known_ungradable": 0,
+  "missed_referable_dr": 0,
+  "n_cases": 982,
+  "n_sources": 3,
+  "score_key": "ordinal_risk",
+  "source_policies": {
+    "ddr_hf_specificity300": {
+      "metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 95,
+        "gradable_nonreferable": 207,
+        "gradable_referable_dr": 286,
+        "known_ungradable": 133,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 626,
+        "referral_rate": 0.8210862619808307,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.5410628019323671,
+        "ungradable_routed_to_refer": 1.0
+      },
+      "policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 626,
+        "n_gradable_nonreferable": 207,
+        "n_referable_dr": 286,
+        "n_ungradable": 133,
+        "quality_threshold": 9.639427389629418e-07,
+        "referral_rate": 0.8210862619808307,
+        "risk_threshold": 0.0020668874494731426,
+        "specificity_gradable_nonreferable": 0.5410628019323671
+      }
+    },
+    "deepdrid_paired": {
+      "metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 20,
+        "gradable_nonreferable": 52,
+        "gradable_referable_dr": 54,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 106,
+        "referral_rate": 0.6981132075471698,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.6153846153846154,
+        "ungradable_routed_to_refer": null
+      },
+      "policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 106,
+        "n_gradable_nonreferable": 52,
+        "n_referable_dr": 54,
+        "n_ungradable": 0,
+        "quality_threshold": 2.0,
+        "referral_rate": 0.6981132075471698,
+        "risk_threshold": 0.013076020404696465,
+        "specificity_gradable_nonreferable": 0.6153846153846154
+      }
+    },
+    "drtid_paired": {
+      "metrics": {
+        "case_action_coverage": 1.0,
+        "false_referrals_on_gradable_nonreferable": 84,
+        "gradable_nonreferable": 127,
+        "gradable_referable_dr": 123,
+        "known_ungradable": 0,
+        "missed_known_ungradable": 0,
+        "missed_referable_dr": 0,
+        "n": 250,
+        "referral_rate": 0.828,
+        "sensitivity_referable_dr": 1.0,
+        "specificity_gradable_nonreferable": 0.33858267716535434,
+        "ungradable_routed_to_refer": null
+      },
+      "policy": {
+        "missed_referable_dr": 0,
+        "missed_ungradable": 0,
+        "n": 250,
+        "n_gradable_nonreferable": 127,
+        "n_referable_dr": 123,
+        "n_ungradable": 0,
+        "quality_threshold": 2.0,
+        "referral_rate": 0.828,
+        "risk_threshold": 0.0019731076899915934,
+        "specificity_gradable_nonreferable": 0.33858267716535434
+      }
+    }
+  },
+  "specificity_gradable_nonreferable": 0.4844559585492228,
+  "status": "DEVELOPMENT_ONLY_SOURCE_CONDITIONED_POLICY_AUDIT"
+}

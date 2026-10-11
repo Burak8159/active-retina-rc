@@ -1,0 +1,22 @@
+{
+  "added_grade_counts": {
+    "0": 2833,
+    "1": 15,
+    "2": 1938,
+    "4": 156,
+    "5": 275
+  },
+  "added_train_rows": 5217,
+  "base_rows": 8922,
+  "claim_boundary": "Training-only data expansion; held-out development partitions remain unchanged and are not an untouched certification cohort.",
+  "dataset_added": "ddr_hf_specificity300",
+  "duplicate_paths_skipped": 1618,
+  "heldout_rows_preserved_verbatim": true,
+  "heldout_sha256": "72ae8fd2c6fdd9fbf4b5b1aca55321c9dd87b60b9997a8400fd5b84c46008902",
+  "manifest_output": "results\\autonomy_route_full_ddr_train_20261011.csv",
+  "status": "TRAIN_ONLY_MANIFEST_EXTENSION_READY",
+  "test_rows": 1236,
+  "total_rows": 14139,
+  "train_rows": 11565,
+  "validation_rows": 1338
+}
