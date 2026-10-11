@@ -1,0 +1,132 @@
+{
+  "status": "EXPOSED_VALIDATION_POSTHOC_DEVELOPMENT_ONLY",
+  "interpretation": "Exploratory upper bound only. Score recipes and thresholds were selected after inspecting these same validation labels. Not an untouched test result, independent confirmation, clinical performance claim, or deployable model artifact.",
+  "target_definition": "specificity among gradable nonreferable cases; zero observed referable misses; every case receives a refer/referral binary action",
+  "pooled_results": {
+    "mapping_invariant_recipe": {
+      "true_negatives": 270,
+      "gradable_nonreferable_denominator": 385,
+      "specificity_percent": 70.12987012987013,
+      "observed_missed_referable": 0,
+      "action_coverage_percent": 100.0
+    },
+    "legacy_suffix_branch_as_named": {
+      "true_negatives": 268,
+      "gradable_nonreferable_denominator": 385,
+      "specificity_percent": 69.6103896103896,
+      "observed_missed_referable": 0,
+      "action_coverage_percent": 100.0
+    },
+    "legacy_suffix_branch_swapped": {
+      "true_negatives": 258,
+      "gradable_nonreferable_denominator": 385,
+      "specificity_percent": 67.01298701298701,
+      "observed_missed_referable": 0,
+      "action_coverage_percent": 100.0
+    }
+  },
+  "source_results": {
+    "DDR": {
+      "n_cases": 625,
+      "n_gradable_nonreferable": 206,
+      "n_referable": 419,
+      "n_ungradable": 133,
+      "true_negatives": 134,
+      "false_positive_referrals": 72,
+      "missed_referable": 0,
+      "missed_ungradable": 0,
+      "specificity": 0.6504854368932039,
+      "action_coverage": 1.0,
+      "threshold": 0.22224000000000002
+    },
+    "DeepDRiD": {
+      "n_cases": 106,
+      "n_gradable_nonreferable": 52,
+      "n_referable": 54,
+      "n_ungradable": 0,
+      "true_negatives": 51,
+      "false_positive_referrals": 1,
+      "missed_referable": 0,
+      "missed_ungradable": 0,
+      "specificity": 0.9807692307692307,
+      "action_coverage": 1.0,
+      "threshold": 0.43584905660377365
+    },
+    "DRTiD_mapping_invariant_fusion": {
+      "n_cases": 250,
+      "n_gradable_nonreferable": 127,
+      "n_referable": 123,
+      "n_ungradable": 0,
+      "true_negatives": 85,
+      "false_positive_referrals": 42,
+      "missed_referable": 0,
+      "missed_ungradable": 0,
+      "specificity": 0.6692913385826772,
+      "action_coverage": 1.0,
+      "threshold": 0.34496000000000004
+    },
+    "DRTiD_suffix_branch_as_named_in_legacy_predictions": {
+      "n_cases": 250,
+      "n_gradable_nonreferable": 127,
+      "n_referable": 123,
+      "n_ungradable": 0,
+      "true_negatives": 83,
+      "false_positive_referrals": 44,
+      "missed_referable": 0,
+      "missed_ungradable": 0,
+      "specificity": 0.6535433070866141,
+      "action_coverage": 1.0,
+      "threshold": 0.4904
+    },
+    "DRTiD_swapped_suffix_branch_sensitivity": {
+      "n_cases": 250,
+      "n_gradable_nonreferable": 127,
+      "n_referable": 123,
+      "n_ungradable": 0,
+      "true_negatives": 73,
+      "false_positive_referrals": 54,
+      "missed_referable": 0,
+      "missed_ungradable": 0,
+      "specificity": 0.5748031496062992,
+      "action_coverage": 1.0,
+      "threshold": 0.4448
+    }
+  },
+  "recipes": {
+    "DDR": {
+      "risk_rank_blend": "0.5*rank(aptos_replay.max_grade_margin) + 0.1*rank(ordinal_attention.max_grade_margin) + 0.4*rank(max_grade_margin_audit.max_grade_margin)",
+      "quality_route": "aptos_replay.quality >= 0.0018598887836560607",
+      "risk_cutoff": "minimum blended score among referable or ungradable rows not already quality-routed"
+    },
+    "DeepDRiD": {
+      "risk_rank_blend": "0.2*rank(ordinal_attention.quality) + 0.4*rank(convnext_sourcebalanced.max_grade_margin) + 0.4*rank(fundus_b5.risk)",
+      "risk_cutoff": "minimum blended score among referable rows"
+    },
+    "DRTiD": {
+      "risk_rank_blend": "0.8*(0.9*rank(rankheavy_frozen.paired) + 0.1*rank(fundus_b5.max_grade_margin)) + 0.2*rank(warmstart_geometry.paired)",
+      "risk_cutoff": "minimum blended score among referable rows",
+      "mapping_caveat": "The pooled recipe is invariant to suffix-to-anatomy assignment. A separate legacy branch/disagreement score sensitivity is reported and changes from 83/127 to 73/127 when branch assignment is swapped."
+    }
+  },
+  "baseline_comparison": {
+    "prior_source_specific_development_counts": {
+      "DDR": 118,
+      "DeepDRiD": 41,
+      "DRTiD": 80
+    },
+    "prior_pooled": "239/385 = 62.08%",
+    "current_best_pooled": "270/385 = 70.13%",
+    "legacy_named_branch_pooled": "268/385 = 69.61%",
+    "legacy_swapped_branch_pooled": "258/385 = 67.01%"
+  },
+  "input_sha256": {
+    "rtx_aptos_replay_laststage_20261011/validation_predictions.csv": "3acf8e6d77bc53618b8c730d2e185d3946030a0cd6f0cf12998935e8fd6d725c",
+    "max_grade_margin_audit_20261011/validation_predictions.csv": "5aeda5b1b8160bc34c47cacb221aff61c6c4076a5216c00bb073d895eb1665f3",
+    "rtx_ordinal_attention_residual_20261011/validation_predictions.csv": "d780b5f3ebf38ff4fde8e4b51d6dcb2b1d1976225eae7ca7261f6cff7eb264cd",
+    "rtx_convnext_sourcebalanced_20261011/validation_predictions.csv": "2396625b960306ac01ba75f4f4425002b33ea6ae9c622e3ce59f44e0bf9f2626",
+    "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv": "d3a2f3f5030eef2ef41aafc76105b7d334fdc3ff98dc04a17e69d06415f24d03",
+    "rtx_warmstart_geometry_corrected_20261011/pooled_predictions_tta_flips.csv": "a7df169b3e5f6e1c732a2ae94e041c5aa7c7962702301cf06f917a769f521610",
+    "rtx_drtid_rankheavy_viewaux_flipaug_current_split/pooled_validation_frozen/predictions.csv": "7d4f900ae2249c888e2c89608280304eee364d9c605df55b3bf6c31c69954684",
+    "rtx_rich_logits_tta_flips/predictions.csv": "00bb2be41bbdca4e2b147be8db7ccbb6153b8308b4ded37fbf652294a3cfe735"
+  }
+}
