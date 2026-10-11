@@ -34,11 +34,12 @@ from active_retina.train_mixed_view_bag_autonomy import (
     write_predictions,
 )
 from active_retina.autonomy_extra_signal_search import select_best_validated
+from active_retina.audit_mixed_view_inference_fusion import select_source_experts_from_reports
 from active_retina.autonomy_zero_miss_90_search import select_best_validated as select_zero_miss_search_candidate
 from active_retina.augmented_full_binary_gap import select_best_validated as select_full_binary_gap_candidate
 from active_retina.audit_mixed_view_ordinal_head import ordinal_referable_probability
 from active_retina.train_mixed_view_cumulative_ordinal import CumulativeOrdinalHead
-from active_retina.audit_mixed_view_inference_fusion import make_policy_input
+from active_retina.audit_mixed_view_inference_fusion import make_policy_input, source_conditioned_evaluation
 from active_retina.audit_source_conditioned_policy import source_policy_audit
 from active_retina.build_autonomy_route_manifest import drop_incomplete_paired_eyes
 from active_retina.extend_training_manifest import extend_manifest, heldout_digest
@@ -78,6 +79,69 @@ def test_policy_supports_cohorts_without_quality_labels():
     assert metrics["known_ungradable"] == 0
     assert metrics["case_action_coverage"] == 1.0
     assert metrics["sensitivity_referable_dr"] == 1.0
+
+
+def test_source_conditioned_policy_uses_validation_threshold_on_test_unchanged():
+    valid = {
+        "grade": np.array([0, 2, 0, 2]),
+        "risk": np.array([0.1, 0.9, 0.2, 0.8]),
+        "quality": np.zeros(4),
+        "quality_known": np.zeros(4, dtype=int),
+        "ungradable": np.zeros(4, dtype=int),
+    }
+    test = {
+        "grade": np.array([0, 2, 0, 2]),
+        "risk": np.array([0.1, 0.2, 0.2, 0.8]),
+        "quality": np.zeros(4),
+        "quality_known": np.zeros(4, dtype=int),
+        "ungradable": np.zeros(4, dtype=int),
+    }
+    sources = np.array(["a", "a", "b", "b"])
+
+    result = source_conditioned_evaluation(valid, sources, test, sources)
+
+    assert result["a"]["policy_selected_on_validation"]["risk_threshold"] == 0.9
+    assert result["a"]["validation_metrics"]["missed_referable_dr"] == 0
+    assert result["a"]["test_metrics_development_only"]["missed_referable_dr"] == 1
+
+
+def test_source_expert_selection_uses_validation_and_aggregates_fixed_test_counts():
+    def entry(valid_spec, valid_miss, test_spec, test_miss):
+        def metrics(spec, misses):
+            return {
+                "specificity_gradable_nonreferable": spec,
+                "missed_referable_dr": misses,
+                "missed_known_ungradable": 0,
+                "referral_rate": 1.0 - spec,
+                "gradable_nonreferable": 10,
+                "false_referrals_on_gradable_nonreferable": int(round((1.0 - spec) * 10)),
+                "gradable_referable_dr": 10,
+                "known_ungradable": 0,
+                "n": 20,
+            }
+        return {
+            "validation_metrics": metrics(valid_spec, valid_miss),
+            "test_metrics_development_only": metrics(test_spec, test_miss),
+        }
+
+    def report(a, b):
+        return {"validation_selected_rules": {"fused": {
+            "source_conditioned_policies_development_only": {"a": a, "b": b}
+        }}}
+
+    result = select_source_experts_from_reports({
+        "candidate_one": report(entry(.8, 0, .5, 1), entry(.7, 0, .6, 0)),
+        "candidate_two": report(entry(.9, 1, .9, 0), entry(.6, 0, .4, 2)),
+    })
+
+    assert result["selected_expert_by_source"]["a"]["checkpoint"] == "candidate_one"
+    assert result["selected_expert_by_source"]["b"]["checkpoint"] == "candidate_one"
+    aggregate = result["aggregate_test_diagnostic"]
+    assert aggregate["gradable_nonreferable"] == 20
+    assert aggregate["false_referrals_on_gradable_nonreferable"] == 9
+    assert aggregate["missed_referable_dr"] == 1
+    assert aggregate["specificity_gradable_nonreferable"] == .55
+    assert aggregate["case_action_coverage"] == 1.0
 
 
 def test_unlabeled_quality_batch_has_finite_zero_loss_and_gradient():
