@@ -1,0 +1,31 @@
+{
+  "status": "EXPOSED_LABEL_INFORMED_DIAGNOSTIC_ONLY",
+  "sources": {
+    "DDR": {
+      "negative_count": 206,
+      "current_true_negatives": 134,
+      "oracle_true_negatives": 148,
+      "oracle_only_additions": 14,
+      "current_threshold_label_derived": 0.216,
+      "candidate_score_count": 76
+    },
+    "DeepDRiD": {
+      "negative_count": 52,
+      "current_true_negatives": 51,
+      "oracle_true_negatives": 51,
+      "oracle_only_additions": 0,
+      "current_threshold_label_derived": 0.49056603773584906,
+      "candidate_score_count": 67
+    },
+    "DRTiD": {
+      "negative_count": 127,
+      "current_true_negatives": 85,
+      "oracle_true_negatives": 94,
+      "oracle_only_additions": 9,
+      "current_threshold_label_derived": 0.344,
+      "candidate_score_count": 188
+    }
+  },
+  "oracle_only_additions_pooled": 23,
+  "interpretation": "Each listed case is an exposed validation negative cleared by at least one score whose threshold was chosen from the same cohort's positive/ungradable labels. The list diagnoses complementarity; it does not show that a deployable selector can identify these cases."
+}
