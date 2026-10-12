@@ -1,0 +1,1568 @@
+{
+  "status": "EXPOSED_DATA_NESTED_PATIENT_CROSSFIT_DEVELOPMENT_ONLY",
+  "claim_boundary": "All source labels and base-model outputs have been inspected in prior development. Nested patient folds limit selector self-fitting but do not make this independent or clinically confirmatory.",
+  "outer_folds": 5,
+  "sources": {
+    "DDR": {
+      "positive": 419,
+      "negative": 206,
+      "misses": 2,
+      "true_negatives": 121,
+      "specificity": 0.587378640776699,
+      "binary_coverage": 1.0,
+      "baseline_true_negatives_same_cohort": 134,
+      "baseline_specificity_same_cohort": 0.6504854368932039,
+      "features": [
+        "current_fused_recipe",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::ordinal_risk",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::max_grade_margin",
+        "ordinal_head_audit_dev_20261010/validation_predictions.csv::risk",
+        "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin",
+        "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk"
+      ],
+      "folds": [
+        {
+          "outer_fold": 0,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.1,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.1,
+              "misses": 1,
+              "true_negatives": 105,
+              "negatives": 163,
+              "specificity": 0.6441717791411042
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 99,
+                "negatives": 163,
+                "specificity": 0.6073619631901841
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 99,
+                "negatives": 163,
+                "specificity": 0.6073619631901841
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 99,
+                "negatives": 163,
+                "specificity": 0.6073619631901841
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 98,
+                "negatives": 163,
+                "specificity": 0.6012269938650306
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 95,
+                "negatives": 163,
+                "specificity": 0.5828220858895705
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 100,
+                "negatives": 163,
+                "specificity": 0.6134969325153374
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 105,
+                "negatives": 163,
+                "specificity": 0.6441717791411042
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 105,
+                "negatives": 163,
+                "specificity": 0.6441717791411042
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 106,
+                "negatives": 163,
+                "specificity": 0.6503067484662577
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 1,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.001,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.001,
+              "misses": 1,
+              "true_negatives": 98,
+              "negatives": 163,
+              "specificity": 0.6012269938650306
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 95,
+                "negatives": 163,
+                "specificity": 0.5828220858895705
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 98,
+                "negatives": 163,
+                "specificity": 0.6012269938650306
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 100,
+                "negatives": 163,
+                "specificity": 0.6134969325153374
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 98,
+                "negatives": 163,
+                "specificity": 0.6012269938650306
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 101,
+                "negatives": 163,
+                "specificity": 0.6196319018404908
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 3,
+                "true_negatives": 106,
+                "negatives": 163,
+                "specificity": 0.6503067484662577
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 3,
+                "true_negatives": 111,
+                "negatives": 163,
+                "specificity": 0.6809815950920245
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 4,
+                "true_negatives": 109,
+                "negatives": 163,
+                "specificity": 0.6687116564417178
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 2,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.1,
+          "train_n": 356,
+          "test_n": 88,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.1,
+              "misses": 2,
+              "true_negatives": 109,
+              "negatives": 164,
+              "specificity": 0.6646341463414634
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 97,
+                "negatives": 164,
+                "specificity": 0.5914634146341463
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 97,
+                "negatives": 164,
+                "specificity": 0.5914634146341463
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 97,
+                "negatives": 164,
+                "specificity": 0.5914634146341463
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 99,
+                "negatives": 164,
+                "specificity": 0.6036585365853658
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 100,
+                "negatives": 164,
+                "specificity": 0.6097560975609756
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 98,
+                "negatives": 164,
+                "specificity": 0.5975609756097561
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 3,
+                "true_negatives": 102,
+                "negatives": 164,
+                "specificity": 0.6219512195121951
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 109,
+                "negatives": 164,
+                "specificity": 0.6646341463414634
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 109,
+                "negatives": 164,
+                "specificity": 0.6646341463414634
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 3,
+                "true_negatives": 105,
+                "negatives": 164,
+                "specificity": 0.6402439024390244
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 3,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.01,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.01,
+              "misses": 4,
+              "true_negatives": 106,
+              "negatives": 163,
+              "specificity": 0.6503067484662577
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 4,
+                "true_negatives": 103,
+                "negatives": 163,
+                "specificity": 0.6319018404907976
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 4,
+                "true_negatives": 102,
+                "negatives": 163,
+                "specificity": 0.6257668711656442
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 4,
+                "true_negatives": 102,
+                "negatives": 163,
+                "specificity": 0.6257668711656442
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 4,
+                "true_negatives": 103,
+                "negatives": 163,
+                "specificity": 0.6319018404907976
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 4,
+                "true_negatives": 105,
+                "negatives": 163,
+                "specificity": 0.6441717791411042
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 4,
+                "true_negatives": 102,
+                "negatives": 163,
+                "specificity": 0.6257668711656442
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 4,
+                "true_negatives": 106,
+                "negatives": 163,
+                "specificity": 0.6503067484662577
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 5,
+                "true_negatives": 109,
+                "negatives": 163,
+                "specificity": 0.6687116564417178
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 6,
+                "true_negatives": 108,
+                "negatives": 163,
+                "specificity": 0.6625766871165644
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 5,
+                "true_negatives": 107,
+                "negatives": 163,
+                "specificity": 0.656441717791411
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 4,
+          "selected_family": "logistic",
+          "selected_C": 0.001,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.001,
+              "misses": 2,
+              "true_negatives": 101,
+              "negatives": 163,
+              "specificity": 0.6196319018404908
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 101,
+                "negatives": 163,
+                "specificity": 0.6196319018404908
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 100,
+                "negatives": 163,
+                "specificity": 0.6134969325153374
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 98,
+                "negatives": 163,
+                "specificity": 0.6012269938650306
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 89,
+                "negatives": 163,
+                "specificity": 0.5460122699386503
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 100,
+                "negatives": 163,
+                "specificity": 0.6134969325153374
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 4,
+                "true_negatives": 104,
+                "negatives": 163,
+                "specificity": 0.6380368098159509
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 3,
+                "true_negatives": 107,
+                "negatives": 163,
+                "specificity": 0.656441717791411
+              }
+            ]
+          }
+        }
+      ],
+      "cases": 625,
+      "unique_patients": 625
+    },
+    "DeepDRiD": {
+      "positive": 54,
+      "negative": 52,
+      "misses": 1,
+      "true_negatives": 51,
+      "specificity": 0.9807692307692307,
+      "binary_coverage": 1.0,
+      "baseline_true_negatives_same_cohort": 51,
+      "baseline_specificity_same_cohort": 0.9807692307692307,
+      "features": [
+        "current_fused_recipe"
+      ],
+      "folds": [
+        {
+          "outer_fold": 0,
+          "selected_family": "logistic",
+          "selected_C": 0.001,
+          "train_n": 84,
+          "test_n": 22,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.001,
+              "misses": 1,
+              "true_negatives": 39,
+              "negatives": 40,
+              "specificity": 0.975
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 1,
+          "selected_family": "logistic",
+          "selected_C": 0.001,
+          "train_n": 86,
+          "test_n": 20,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.001,
+              "misses": 1,
+              "true_negatives": 42,
+              "negatives": 43,
+              "specificity": 0.9767441860465116
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 2,
+          "selected_family": "logistic",
+          "selected_C": 0.001,
+          "train_n": 86,
+          "test_n": 20,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.001,
+              "misses": 2,
+              "true_negatives": 42,
+              "negatives": 43,
+              "specificity": 0.9767441860465116
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 3,
+          "selected_family": "logistic",
+          "selected_C": 0.001,
+          "train_n": 84,
+          "test_n": 22,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.001,
+              "misses": 2,
+              "true_negatives": 41,
+              "negatives": 41,
+              "specificity": 1.0
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 4,
+          "selected_family": "logistic",
+          "selected_C": 0.001,
+          "train_n": 84,
+          "test_n": 22,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.001,
+              "misses": 1,
+              "true_negatives": 40,
+              "negatives": 41,
+              "specificity": 0.975609756097561
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              }
+            ]
+          }
+        }
+      ],
+      "cases": 106,
+      "unique_patients": 53
+    },
+    "DRTiD": {
+      "positive": 123,
+      "negative": 127,
+      "misses": 2,
+      "true_negatives": 73,
+      "specificity": 0.5748031496062992,
+      "binary_coverage": 1.0,
+      "baseline_true_negatives_same_cohort": 85,
+      "baseline_specificity_same_cohort": 0.6692913385826772,
+      "features": [
+        "current_fused_recipe",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk",
+        "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::risk",
+        "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired",
+        "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired",
+        "rtx_rankheavy_d4_tta_20261012/predictions.csv::view0_grade_4",
+        "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4"
+      ],
+      "folds": [
+        {
+          "outer_fold": 0,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.01,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.01,
+              "misses": 1,
+              "true_negatives": 58,
+              "negatives": 101,
+              "specificity": 0.5742574257425742
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 55,
+                "negatives": 101,
+                "specificity": 0.5445544554455446
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 55,
+                "negatives": 101,
+                "specificity": 0.5445544554455446
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 54,
+                "negatives": 101,
+                "specificity": 0.5346534653465347
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 54,
+                "negatives": 101,
+                "specificity": 0.5346534653465347
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 58,
+                "negatives": 101,
+                "specificity": 0.5742574257425742
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 55,
+                "negatives": 101,
+                "specificity": 0.5445544554455446
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 58,
+                "negatives": 101,
+                "specificity": 0.5742574257425742
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 3,
+                "true_negatives": 68,
+                "negatives": 101,
+                "specificity": 0.6732673267326733
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 5,
+                "true_negatives": 68,
+                "negatives": 101,
+                "specificity": 0.6732673267326733
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 5,
+                "true_negatives": 68,
+                "negatives": 101,
+                "specificity": 0.6732673267326733
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 1,
+          "selected_family": "pairwise_rank",
+          "selected_C": 1.0,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 1.0,
+              "misses": 2,
+              "true_negatives": 59,
+              "negatives": 102,
+              "specificity": 0.5784313725490197
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 3,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 3,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 3,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 3,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 3,
+                "true_negatives": 56,
+                "negatives": 102,
+                "specificity": 0.5490196078431373
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 3,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 3,
+                "true_negatives": 57,
+                "negatives": 102,
+                "specificity": 0.5588235294117647
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 3,
+                "true_negatives": 57,
+                "negatives": 102,
+                "specificity": 0.5588235294117647
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 59,
+                "negatives": 102,
+                "specificity": 0.5784313725490197
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 57,
+                "negatives": 102,
+                "specificity": 0.5588235294117647
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 2,
+          "selected_family": "logistic",
+          "selected_C": 10.0,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 10.0,
+              "misses": 0,
+              "true_negatives": 55,
+              "negatives": 102,
+              "specificity": 0.5392156862745098
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 54,
+                "negatives": 102,
+                "specificity": 0.5294117647058824
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 54,
+                "negatives": 102,
+                "specificity": 0.5294117647058824
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 54,
+                "negatives": 102,
+                "specificity": 0.5294117647058824
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 55,
+                "negatives": 102,
+                "specificity": 0.5392156862745098
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 54,
+                "negatives": 102,
+                "specificity": 0.5294117647058824
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 55,
+                "negatives": 102,
+                "specificity": 0.5392156862745098
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 56,
+                "negatives": 102,
+                "specificity": 0.5490196078431373
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 56,
+                "negatives": 102,
+                "specificity": 0.5490196078431373
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 3,
+          "selected_family": "logistic",
+          "selected_C": 0.001,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.001,
+              "misses": 1,
+              "true_negatives": 59,
+              "negatives": 101,
+              "specificity": 0.5841584158415841
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 59,
+                "negatives": 101,
+                "specificity": 0.5841584158415841
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 59,
+                "negatives": 101,
+                "specificity": 0.5841584158415841
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 57,
+                "negatives": 101,
+                "specificity": 0.5643564356435643
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 57,
+                "negatives": 101,
+                "specificity": 0.5643564356435643
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 4,
+                "true_negatives": 59,
+                "negatives": 101,
+                "specificity": 0.5841584158415841
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 3,
+                "true_negatives": 57,
+                "negatives": 101,
+                "specificity": 0.5643564356435643
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 4,
+                "true_negatives": 59,
+                "negatives": 101,
+                "specificity": 0.5841584158415841
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 5,
+                "true_negatives": 63,
+                "negatives": 101,
+                "specificity": 0.6237623762376238
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 5,
+                "true_negatives": 64,
+                "negatives": 101,
+                "specificity": 0.6336633663366337
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 4,
+                "true_negatives": 64,
+                "negatives": 101,
+                "specificity": 0.6336633663366337
+              }
+            ]
+          }
+        },
+        {
+          "outer_fold": 4,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.001,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.001,
+              "misses": 1,
+              "true_negatives": 55,
+              "negatives": 102,
+              "specificity": 0.5392156862745098
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 51,
+                "negatives": 102,
+                "specificity": 0.5
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 51,
+                "negatives": 102,
+                "specificity": 0.5
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 51,
+                "negatives": 102,
+                "specificity": 0.5
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 55,
+                "negatives": 102,
+                "specificity": 0.5392156862745098
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 60,
+                "negatives": 102,
+                "specificity": 0.5882352941176471
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 55,
+                "negatives": 102,
+                "specificity": 0.5392156862745098
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 62,
+                "negatives": 102,
+                "specificity": 0.6078431372549019
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 64,
+                "negatives": 102,
+                "specificity": 0.6274509803921569
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 63,
+                "negatives": 102,
+                "specificity": 0.6176470588235294
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 62,
+                "negatives": 102,
+                "specificity": 0.6078431372549019
+              }
+            ]
+          }
+        }
+      ],
+      "cases": 250,
+      "unique_patients": 250
+    }
+  },
+  "pooled": {
+    "negatives": 385,
+    "misses": 5,
+    "true_negatives": 245,
+    "specificity": 0.6363636363636364,
+    "coverage": 1.0,
+    "cases": 981,
+    "unique_patients": 928
+  }
+}

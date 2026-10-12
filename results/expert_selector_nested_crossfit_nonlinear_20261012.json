@@ -1,0 +1,3873 @@
+{
+  "status": "EXPOSED_DATA_NESTED_PATIENT_CROSSFIT_DEVELOPMENT_ONLY",
+  "claim_boundary": "All source labels and base-model outputs have been inspected in prior development. Nested patient folds limit selector self-fitting but do not make this independent or clinically confirmatory.",
+  "outer_folds": 5,
+  "sources": {
+    "DDR": {
+      "cases": 625,
+      "positive": 419,
+      "negative": 206,
+      "misses": 1,
+      "true_negatives": 89,
+      "specificity": 0.4320388349514563,
+      "binary_coverage": 1.0,
+      "unique_patients": 625,
+      "nested_single_expert_selector": {
+        "cases": 625,
+        "positive": 419,
+        "negative": 206,
+        "misses": 1,
+        "true_negatives": 112,
+        "specificity": 0.5436893203883495,
+        "binary_coverage": 1.0,
+        "unique_patients": 625
+      },
+      "nested_crossfit_or_union": {
+        "cases": 625,
+        "unique_patients": 625,
+        "positive": 419,
+        "negative": 206,
+        "misses": 1,
+        "true_negatives": 103,
+        "specificity": 0.5,
+        "binary_coverage": 1.0
+      },
+      "baseline_true_negatives_same_cohort": 134,
+      "baseline_specificity_same_cohort": 0.6504854368932039,
+      "features": [
+        "current_fused_recipe",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::ordinal_risk",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::max_grade_margin",
+        "ordinal_head_audit_dev_20261010/validation_predictions.csv::risk",
+        "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin",
+        "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv::ordinal_risk",
+        "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk"
+      ],
+      "folds": [
+        {
+          "outer_fold": 0,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.001,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.001,
+              "misses": 0,
+              "true_negatives": 81,
+              "negatives": 163,
+              "specificity": 0.49693251533742333
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 5,
+                "true_negatives": 120,
+                "negatives": 163,
+                "specificity": 0.7361963190184049
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 3,
+                "true_negatives": 114,
+                "negatives": 163,
+                "specificity": 0.6993865030674846
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 105,
+                "negatives": 163,
+                "specificity": 0.6441717791411042
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 99,
+                "negatives": 163,
+                "specificity": 0.6073619631901841
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 95,
+                "negatives": 163,
+                "specificity": 0.5828220858895705
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 81,
+                "negatives": 163,
+                "specificity": 0.49693251533742333
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 86,
+                "negatives": 163,
+                "specificity": 0.5276073619631901
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 12,
+                "true_negatives": 74,
+                "negatives": 163,
+                "specificity": 0.4539877300613497
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 25,
+                "negatives": 163,
+                "specificity": 0.15337423312883436
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 7,
+              "misses": 1,
+              "true_negatives": 104,
+              "negatives": 163,
+              "specificity": 0.6380368098159509
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 2,
+                "true_negatives": 103,
+                "negatives": 163,
+                "specificity": 0.6319018404907976
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 72,
+                "negatives": 163,
+                "specificity": 0.44171779141104295
+              },
+              {
+                "column": 2,
+                "misses": 1,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "column": 4,
+                "misses": 1,
+                "true_negatives": 81,
+                "negatives": 163,
+                "specificity": 0.49693251533742333
+              },
+              {
+                "column": 5,
+                "misses": 1,
+                "true_negatives": 90,
+                "negatives": 163,
+                "specificity": 0.5521472392638037
+              },
+              {
+                "column": 6,
+                "misses": 1,
+                "true_negatives": 91,
+                "negatives": 163,
+                "specificity": 0.558282208588957
+              },
+              {
+                "column": 7,
+                "misses": 1,
+                "true_negatives": 104,
+                "negatives": 163,
+                "specificity": 0.6380368098159509
+              },
+              {
+                "column": 8,
+                "misses": 2,
+                "true_negatives": 99,
+                "negatives": 163,
+                "specificity": 0.6073619631901841
+              },
+              {
+                "column": 9,
+                "misses": 1,
+                "true_negatives": 6,
+                "negatives": 163,
+                "specificity": 0.03680981595092025
+              },
+              {
+                "column": 10,
+                "misses": 2,
+                "true_negatives": 77,
+                "negatives": 163,
+                "specificity": 0.4723926380368098
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.6,
+              "misses": 0,
+              "true_negatives": 83,
+              "negatives": 163,
+              "specificity": 0.50920245398773
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 71,
+                "negatives": 163,
+                "specificity": 0.43558282208588955
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 83,
+                "negatives": 163,
+                "specificity": 0.50920245398773
+              },
+              {
+                "shrink": 0.7,
+                "misses": 1,
+                "true_negatives": 94,
+                "negatives": 163,
+                "specificity": 0.5766871165644172
+              },
+              {
+                "shrink": 0.8,
+                "misses": 3,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "shrink": 0.9,
+                "misses": 3,
+                "true_negatives": 109,
+                "negatives": 163,
+                "specificity": 0.6687116564417178
+              },
+              {
+                "shrink": 1.0,
+                "misses": 5,
+                "true_negatives": 120,
+                "negatives": 163,
+                "specificity": 0.7361963190184049
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.2894736842105263,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.21052631578947367,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::ordinal_risk": 0.24436090225563908,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::max_grade_margin": 0.24812030075187969,
+              "ordinal_head_audit_dev_20261010/validation_predictions.csv::risk": 0.22180451127819548,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::ordinal_risk": 0.2631578947368421,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin": 0.2706766917293233,
+              "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk": 0.2669172932330827,
+              "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk": 0.2706766917293233,
+              "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv::ordinal_risk": 0.02631578947368421,
+              "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk": 0.19548872180451127
+            }
+          }
+        },
+        {
+          "outer_fold": 1,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.1,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.1,
+              "misses": 0,
+              "true_negatives": 85,
+              "negatives": 163,
+              "specificity": 0.5214723926380368
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 5,
+                "true_negatives": 123,
+                "negatives": 163,
+                "specificity": 0.754601226993865
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 3,
+                "true_negatives": 118,
+                "negatives": 163,
+                "specificity": 0.7239263803680982
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 106,
+                "negatives": 163,
+                "specificity": 0.6503067484662577
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 99,
+                "negatives": 163,
+                "specificity": 0.6073619631901841
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 92,
+                "negatives": 163,
+                "specificity": 0.5644171779141104
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 83,
+                "negatives": 163,
+                "specificity": 0.50920245398773
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 91,
+                "negatives": 163,
+                "specificity": 0.558282208588957
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 79,
+                "negatives": 163,
+                "specificity": 0.48466257668711654
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 78,
+                "negatives": 163,
+                "specificity": 0.4785276073619632
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 1,
+                "true_negatives": 30,
+                "negatives": 163,
+                "specificity": 0.18404907975460122
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 55,
+                "negatives": 163,
+                "specificity": 0.3374233128834356
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 8,
+              "misses": 0,
+              "true_negatives": 97,
+              "negatives": 163,
+              "specificity": 0.5950920245398773
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 1,
+                "true_negatives": 109,
+                "negatives": 163,
+                "specificity": 0.6687116564417178
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 68,
+                "negatives": 163,
+                "specificity": 0.4171779141104294
+              },
+              {
+                "column": 2,
+                "misses": 1,
+                "true_negatives": 87,
+                "negatives": 163,
+                "specificity": 0.5337423312883436
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 86,
+                "negatives": 163,
+                "specificity": 0.5276073619631901
+              },
+              {
+                "column": 4,
+                "misses": 1,
+                "true_negatives": 73,
+                "negatives": 163,
+                "specificity": 0.44785276073619634
+              },
+              {
+                "column": 5,
+                "misses": 0,
+                "true_negatives": 94,
+                "negatives": 163,
+                "specificity": 0.5766871165644172
+              },
+              {
+                "column": 6,
+                "misses": 1,
+                "true_negatives": 93,
+                "negatives": 163,
+                "specificity": 0.5705521472392638
+              },
+              {
+                "column": 7,
+                "misses": 1,
+                "true_negatives": 94,
+                "negatives": 163,
+                "specificity": 0.5766871165644172
+              },
+              {
+                "column": 8,
+                "misses": 0,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "column": 9,
+                "misses": 1,
+                "true_negatives": 6,
+                "negatives": 163,
+                "specificity": 0.03680981595092025
+              },
+              {
+                "column": 10,
+                "misses": 1,
+                "true_negatives": 77,
+                "negatives": 163,
+                "specificity": 0.4723926380368098
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.6,
+              "misses": 4,
+              "true_negatives": 79,
+              "negatives": 163,
+              "specificity": 0.48466257668711654
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 4,
+                "true_negatives": 73,
+                "negatives": 163,
+                "specificity": 0.44785276073619634
+              },
+              {
+                "shrink": 0.6,
+                "misses": 4,
+                "true_negatives": 79,
+                "negatives": 163,
+                "specificity": 0.48466257668711654
+              },
+              {
+                "shrink": 0.7,
+                "misses": 6,
+                "true_negatives": 90,
+                "negatives": 163,
+                "specificity": 0.5521472392638037
+              },
+              {
+                "shrink": 0.8,
+                "misses": 7,
+                "true_negatives": 100,
+                "negatives": 163,
+                "specificity": 0.6134969325153374
+              },
+              {
+                "shrink": 0.9,
+                "misses": 9,
+                "true_negatives": 112,
+                "negatives": 163,
+                "specificity": 0.6871165644171779
+              },
+              {
+                "shrink": 1.0,
+                "misses": 12,
+                "true_negatives": 127,
+                "negatives": 163,
+                "specificity": 0.7791411042944786
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.3157894736842105,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.21052631578947367,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::ordinal_risk": 0.2593984962406015,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::max_grade_margin": 0.2518796992481203,
+              "ordinal_head_audit_dev_20261010/validation_predictions.csv::risk": 0.20599250936329588,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::ordinal_risk": 0.25842696629213485,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin": 0.26591760299625467,
+              "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk": 0.2857142857142857,
+              "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk": 0.2744360902255639,
+              "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv::ordinal_risk": 0.011278195488721804,
+              "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk": 0.18796992481203006
+            }
+          }
+        },
+        {
+          "outer_fold": 2,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.1,
+          "train_n": 356,
+          "test_n": 88,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.1,
+              "misses": 0,
+              "true_negatives": 94,
+              "negatives": 164,
+              "specificity": 0.573170731707317
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 4,
+                "true_negatives": 119,
+                "negatives": 164,
+                "specificity": 0.725609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 3,
+                "true_negatives": 116,
+                "negatives": 164,
+                "specificity": 0.7073170731707317
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 106,
+                "negatives": 164,
+                "specificity": 0.6463414634146342
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 97,
+                "negatives": 164,
+                "specificity": 0.5914634146341463
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 88,
+                "negatives": 164,
+                "specificity": 0.5365853658536586
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 84,
+                "negatives": 164,
+                "specificity": 0.5121951219512195
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 88,
+                "negatives": 164,
+                "specificity": 0.5365853658536586
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 94,
+                "negatives": 164,
+                "specificity": 0.573170731707317
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 99,
+                "negatives": 164,
+                "specificity": 0.6036585365853658
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 96,
+                "negatives": 164,
+                "specificity": 0.5853658536585366
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 2,
+                "true_negatives": 36,
+                "negatives": 164,
+                "specificity": 0.21951219512195122
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 29,
+                "negatives": 164,
+                "specificity": 0.17682926829268292
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 32,
+                "negatives": 164,
+                "specificity": 0.1951219512195122
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 164,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 7,
+              "misses": 0,
+              "true_negatives": 99,
+              "negatives": 164,
+              "specificity": 0.6036585365853658
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 1,
+                "true_negatives": 105,
+                "negatives": 164,
+                "specificity": 0.6402439024390244
+              },
+              {
+                "column": 1,
+                "misses": 2,
+                "true_negatives": 77,
+                "negatives": 164,
+                "specificity": 0.4695121951219512
+              },
+              {
+                "column": 2,
+                "misses": 1,
+                "true_negatives": 96,
+                "negatives": 164,
+                "specificity": 0.5853658536585366
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 89,
+                "negatives": 164,
+                "specificity": 0.5426829268292683
+              },
+              {
+                "column": 4,
+                "misses": 1,
+                "true_negatives": 74,
+                "negatives": 164,
+                "specificity": 0.45121951219512196
+              },
+              {
+                "column": 5,
+                "misses": 0,
+                "true_negatives": 86,
+                "negatives": 164,
+                "specificity": 0.524390243902439
+              },
+              {
+                "column": 6,
+                "misses": 0,
+                "true_negatives": 86,
+                "negatives": 164,
+                "specificity": 0.524390243902439
+              },
+              {
+                "column": 7,
+                "misses": 0,
+                "true_negatives": 99,
+                "negatives": 164,
+                "specificity": 0.6036585365853658
+              },
+              {
+                "column": 8,
+                "misses": 1,
+                "true_negatives": 96,
+                "negatives": 164,
+                "specificity": 0.5853658536585366
+              },
+              {
+                "column": 9,
+                "misses": 1,
+                "true_negatives": 3,
+                "negatives": 164,
+                "specificity": 0.018292682926829267
+              },
+              {
+                "column": 10,
+                "misses": 2,
+                "true_negatives": 72,
+                "negatives": 164,
+                "specificity": 0.43902439024390244
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.8,
+              "misses": 1,
+              "true_negatives": 100,
+              "negatives": 164,
+              "specificity": 0.6097560975609756
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 1,
+                "true_negatives": 70,
+                "negatives": 164,
+                "specificity": 0.4268292682926829
+              },
+              {
+                "shrink": 0.6,
+                "misses": 1,
+                "true_negatives": 75,
+                "negatives": 164,
+                "specificity": 0.4573170731707317
+              },
+              {
+                "shrink": 0.7,
+                "misses": 1,
+                "true_negatives": 90,
+                "negatives": 164,
+                "specificity": 0.5487804878048781
+              },
+              {
+                "shrink": 0.8,
+                "misses": 1,
+                "true_negatives": 100,
+                "negatives": 164,
+                "specificity": 0.6097560975609756
+              },
+              {
+                "shrink": 0.9,
+                "misses": 2,
+                "true_negatives": 110,
+                "negatives": 164,
+                "specificity": 0.6707317073170732
+              },
+              {
+                "shrink": 1.0,
+                "misses": 6,
+                "true_negatives": 116,
+                "negatives": 164,
+                "specificity": 0.7073170731707317
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.30337078651685395,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.19850187265917604,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::ordinal_risk": 0.27715355805243447,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::max_grade_margin": 0.27715355805243447,
+              "ordinal_head_audit_dev_20261010/validation_predictions.csv::risk": 0.2247191011235955,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::ordinal_risk": 0.25842696629213485,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin": 0.25842696629213485,
+              "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk": 0.2958801498127341,
+              "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk": 0.2846441947565543,
+              "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv::ordinal_risk": 0.011235955056179775,
+              "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk": 0.20224719101123595
+            }
+          }
+        },
+        {
+          "outer_fold": 3,
+          "selected_family": "shallow_tree",
+          "selected_C": 1.0,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "shallow_tree",
+              "C": 1,
+              "misses": 0,
+              "true_negatives": 34,
+              "negatives": 163,
+              "specificity": 0.2085889570552147
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 8,
+                "true_negatives": 124,
+                "negatives": 163,
+                "specificity": 0.7607361963190185
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 7,
+                "true_negatives": 119,
+                "negatives": 163,
+                "specificity": 0.7300613496932515
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 5,
+                "true_negatives": 114,
+                "negatives": 163,
+                "specificity": 0.6993865030674846
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 4,
+                "true_negatives": 107,
+                "negatives": 163,
+                "specificity": 0.656441717791411
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 4,
+                "true_negatives": 104,
+                "negatives": 163,
+                "specificity": 0.6380368098159509
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 87,
+                "negatives": 163,
+                "specificity": 0.5337423312883436
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 4,
+                "true_negatives": 101,
+                "negatives": 163,
+                "specificity": 0.6196319018404908
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 6,
+                "true_negatives": 101,
+                "negatives": 163,
+                "specificity": 0.6196319018404908
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 5,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 163,
+                "specificity": 0.2085889570552147
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 29,
+                "negatives": 163,
+                "specificity": 0.17791411042944785
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 10,
+              "misses": 0,
+              "true_negatives": 65,
+              "negatives": 163,
+              "specificity": 0.3987730061349693
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 1,
+                "true_negatives": 107,
+                "negatives": 163,
+                "specificity": 0.656441717791411
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 72,
+                "negatives": 163,
+                "specificity": 0.44171779141104295
+              },
+              {
+                "column": 2,
+                "misses": 2,
+                "true_negatives": 92,
+                "negatives": 163,
+                "specificity": 0.5644171779141104
+              },
+              {
+                "column": 3,
+                "misses": 2,
+                "true_negatives": 95,
+                "negatives": 163,
+                "specificity": 0.5828220858895705
+              },
+              {
+                "column": 4,
+                "misses": 1,
+                "true_negatives": 77,
+                "negatives": 163,
+                "specificity": 0.4723926380368098
+              },
+              {
+                "column": 5,
+                "misses": 1,
+                "true_negatives": 92,
+                "negatives": 163,
+                "specificity": 0.5644171779141104
+              },
+              {
+                "column": 6,
+                "misses": 1,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "column": 7,
+                "misses": 1,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "column": 8,
+                "misses": 1,
+                "true_negatives": 97,
+                "negatives": 163,
+                "specificity": 0.5950920245398773
+              },
+              {
+                "column": 9,
+                "misses": 1,
+                "true_negatives": 4,
+                "negatives": 163,
+                "specificity": 0.024539877300613498
+              },
+              {
+                "column": 10,
+                "misses": 0,
+                "true_negatives": 65,
+                "negatives": 163,
+                "specificity": 0.3987730061349693
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.6,
+              "misses": 1,
+              "true_negatives": 79,
+              "negatives": 163,
+              "specificity": 0.48466257668711654
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 1,
+                "true_negatives": 70,
+                "negatives": 163,
+                "specificity": 0.4294478527607362
+              },
+              {
+                "shrink": 0.6,
+                "misses": 1,
+                "true_negatives": 79,
+                "negatives": 163,
+                "specificity": 0.48466257668711654
+              },
+              {
+                "shrink": 0.7,
+                "misses": 2,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "shrink": 0.8,
+                "misses": 4,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "shrink": 0.9,
+                "misses": 4,
+                "true_negatives": 107,
+                "negatives": 163,
+                "specificity": 0.656441717791411
+              },
+              {
+                "shrink": 1.0,
+                "misses": 7,
+                "true_negatives": 118,
+                "negatives": 163,
+                "specificity": 0.7239263803680982
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.2894736842105263,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.20300751879699247,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::ordinal_risk": 0.2518796992481203,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::max_grade_margin": 0.24812030075187969,
+              "ordinal_head_audit_dev_20261010/validation_predictions.csv::risk": 0.19924812030075187,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::ordinal_risk": 0.2518796992481203,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin": 0.2593984962406015,
+              "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk": 0.2669172932330827,
+              "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk": 0.2744360902255639,
+              "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv::ordinal_risk": 0.007518796992481203,
+              "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk": 0.18045112781954886
+            }
+          }
+        },
+        {
+          "outer_fold": 4,
+          "selected_family": "pairwise_rank",
+          "selected_C": 10.0,
+          "train_n": 355,
+          "test_n": 89,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 10.0,
+              "misses": 0,
+              "true_negatives": 86,
+              "negatives": 163,
+              "specificity": 0.5276073619631901
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 5,
+                "true_negatives": 126,
+                "negatives": 163,
+                "specificity": 0.7730061349693251
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 3,
+                "true_negatives": 121,
+                "negatives": 163,
+                "specificity": 0.7423312883435583
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 110,
+                "negatives": 163,
+                "specificity": 0.6748466257668712
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 99,
+                "negatives": 163,
+                "specificity": 0.6073619631901841
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 86,
+                "negatives": 163,
+                "specificity": 0.5276073619631901
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 82,
+                "negatives": 163,
+                "specificity": 0.5030674846625767
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 87,
+                "negatives": 163,
+                "specificity": 0.5337423312883436
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 81,
+                "negatives": 163,
+                "specificity": 0.49693251533742333
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 86,
+                "negatives": 163,
+                "specificity": 0.5276073619631901
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 29,
+                "negatives": 163,
+                "specificity": 0.17791411042944785
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 163,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 6,
+              "misses": 0,
+              "true_negatives": 91,
+              "negatives": 163,
+              "specificity": 0.558282208588957
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 1,
+                "true_negatives": 103,
+                "negatives": 163,
+                "specificity": 0.6319018404907976
+              },
+              {
+                "column": 1,
+                "misses": 2,
+                "true_negatives": 72,
+                "negatives": 163,
+                "specificity": 0.44171779141104295
+              },
+              {
+                "column": 2,
+                "misses": 1,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 86,
+                "negatives": 163,
+                "specificity": 0.5276073619631901
+              },
+              {
+                "column": 4,
+                "misses": 1,
+                "true_negatives": 85,
+                "negatives": 163,
+                "specificity": 0.5214723926380368
+              },
+              {
+                "column": 5,
+                "misses": 1,
+                "true_negatives": 90,
+                "negatives": 163,
+                "specificity": 0.5521472392638037
+              },
+              {
+                "column": 6,
+                "misses": 0,
+                "true_negatives": 91,
+                "negatives": 163,
+                "specificity": 0.558282208588957
+              },
+              {
+                "column": 7,
+                "misses": 1,
+                "true_negatives": 89,
+                "negatives": 163,
+                "specificity": 0.5460122699386503
+              },
+              {
+                "column": 8,
+                "misses": 1,
+                "true_negatives": 91,
+                "negatives": 163,
+                "specificity": 0.558282208588957
+              },
+              {
+                "column": 9,
+                "misses": 1,
+                "true_negatives": 5,
+                "negatives": 163,
+                "specificity": 0.03067484662576687
+              },
+              {
+                "column": 10,
+                "misses": 1,
+                "true_negatives": 78,
+                "negatives": 163,
+                "specificity": 0.4785276073619632
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.6,
+              "misses": 0,
+              "true_negatives": 79,
+              "negatives": 163,
+              "specificity": 0.48466257668711654
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 69,
+                "negatives": 163,
+                "specificity": 0.4233128834355828
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 79,
+                "negatives": 163,
+                "specificity": 0.48466257668711654
+              },
+              {
+                "shrink": 0.7,
+                "misses": 1,
+                "true_negatives": 96,
+                "negatives": 163,
+                "specificity": 0.588957055214724
+              },
+              {
+                "shrink": 0.8,
+                "misses": 3,
+                "true_negatives": 104,
+                "negatives": 163,
+                "specificity": 0.6380368098159509
+              },
+              {
+                "shrink": 0.9,
+                "misses": 7,
+                "true_negatives": 109,
+                "negatives": 163,
+                "specificity": 0.6687116564417178
+              },
+              {
+                "shrink": 1.0,
+                "misses": 8,
+                "true_negatives": 121,
+                "negatives": 163,
+                "specificity": 0.7423312883435583
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.2932330827067669,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.20676691729323307,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::ordinal_risk": 0.22932330827067668,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::max_grade_margin": 0.21804511278195488,
+              "ordinal_head_audit_dev_20261010/validation_predictions.csv::risk": 0.21722846441947566,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::ordinal_risk": 0.2706766917293233,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::max_grade_margin": 0.2744360902255639,
+              "rtx_convnext384_full_unfreeze_hard_20261011/validation_predictions.csv::ordinal_risk": 0.23684210526315788,
+              "rtx_convnext384_laststage_lesionbalanced_20261011/validation_predictions.csv::ordinal_risk": 0.24436090225563908,
+              "rtx_fundus_b5_all_sources_20261011/validation_predictions.csv::ordinal_risk": 0.011278195488721804,
+              "rtx_mixed_view_bag_dev_20261010/validation_predictions.csv::risk": 0.22556390977443608
+            }
+          }
+        }
+      ]
+    },
+    "DeepDRiD": {
+      "cases": 106,
+      "positive": 54,
+      "negative": 52,
+      "misses": 0,
+      "true_negatives": 45,
+      "specificity": 0.8653846153846154,
+      "binary_coverage": 1.0,
+      "unique_patients": 53,
+      "nested_single_expert_selector": {
+        "cases": 106,
+        "positive": 54,
+        "negative": 52,
+        "misses": 1,
+        "true_negatives": 50,
+        "specificity": 0.9615384615384616,
+        "binary_coverage": 1.0,
+        "unique_patients": 53
+      },
+      "nested_crossfit_or_union": {
+        "cases": 106,
+        "unique_patients": 53,
+        "positive": 54,
+        "negative": 52,
+        "misses": 0,
+        "true_negatives": 47,
+        "specificity": 0.9038461538461539,
+        "binary_coverage": 1.0
+      },
+      "baseline_true_negatives_same_cohort": 51,
+      "baseline_specificity_same_cohort": 0.9807692307692307,
+      "features": [
+        "current_fused_recipe"
+      ],
+      "folds": [
+        {
+          "outer_fold": 0,
+          "selected_family": "logistic",
+          "selected_C": 0.01,
+          "train_n": 84,
+          "test_n": 22,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.01,
+              "misses": 0,
+              "true_negatives": 39,
+              "negatives": 40,
+              "specificity": 0.975
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 38,
+                "negatives": 40,
+                "specificity": 0.95
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 38,
+                "negatives": 40,
+                "specificity": 0.95
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 38,
+                "negatives": 40,
+                "specificity": 0.95
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 24,
+                "negatives": 40,
+                "specificity": 0.6
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 29,
+                "negatives": 40,
+                "specificity": 0.725
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 30,
+                "negatives": 40,
+                "specificity": 0.75
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 30,
+                "negatives": 40,
+                "specificity": 0.75
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 30,
+                "negatives": 40,
+                "specificity": 0.75
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 40,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 40,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 40,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 40,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "current_fused_recipe",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 0,
+              "misses": 0,
+              "true_negatives": 39,
+              "negatives": 40,
+              "specificity": 0.975
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 0,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.9,
+              "misses": 0,
+              "true_negatives": 35,
+              "negatives": 40,
+              "specificity": 0.875
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 20,
+                "negatives": 40,
+                "specificity": 0.5
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 21,
+                "negatives": 40,
+                "specificity": 0.525
+              },
+              {
+                "shrink": 0.7,
+                "misses": 0,
+                "true_negatives": 28,
+                "negatives": 40,
+                "specificity": 0.7
+              },
+              {
+                "shrink": 0.8,
+                "misses": 0,
+                "true_negatives": 32,
+                "negatives": 40,
+                "specificity": 0.8
+              },
+              {
+                "shrink": 0.9,
+                "misses": 0,
+                "true_negatives": 35,
+                "negatives": 40,
+                "specificity": 0.875
+              },
+              {
+                "shrink": 1.0,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 40,
+                "specificity": 0.975
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.46774193548387094
+            }
+          }
+        },
+        {
+          "outer_fold": 1,
+          "selected_family": "logistic",
+          "selected_C": 0.1,
+          "train_n": 86,
+          "test_n": 20,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.1,
+              "misses": 0,
+              "true_negatives": 42,
+              "negatives": 43,
+              "specificity": 0.9767441860465116
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 27,
+                "negatives": 43,
+                "specificity": 0.627906976744186
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 32,
+                "negatives": 43,
+                "specificity": 0.7441860465116279
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 32,
+                "negatives": 43,
+                "specificity": 0.7441860465116279
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 43,
+                "specificity": 0.7906976744186046
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 40,
+                "negatives": 43,
+                "specificity": 0.9302325581395349
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "current_fused_recipe",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 0,
+              "misses": 0,
+              "true_negatives": 42,
+              "negatives": 43,
+              "specificity": 0.9767441860465116
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 0,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.9,
+              "misses": 0,
+              "true_negatives": 38,
+              "negatives": 43,
+              "specificity": 0.8837209302325582
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 19,
+                "negatives": 43,
+                "specificity": 0.4418604651162791
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 26,
+                "negatives": 43,
+                "specificity": 0.6046511627906976
+              },
+              {
+                "shrink": 0.7,
+                "misses": 0,
+                "true_negatives": 26,
+                "negatives": 43,
+                "specificity": 0.6046511627906976
+              },
+              {
+                "shrink": 0.8,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 43,
+                "specificity": 0.7906976744186046
+              },
+              {
+                "shrink": 0.9,
+                "misses": 0,
+                "true_negatives": 38,
+                "negatives": 43,
+                "specificity": 0.8837209302325582
+              },
+              {
+                "shrink": 1.0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 43,
+                "specificity": 0.9302325581395349
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.5
+            }
+          }
+        },
+        {
+          "outer_fold": 2,
+          "selected_family": "logistic",
+          "selected_C": 0.01,
+          "train_n": 86,
+          "test_n": 20,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 0.01,
+              "misses": 0,
+              "true_negatives": 42,
+              "negatives": 43,
+              "specificity": 0.9767441860465116
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 42,
+                "negatives": 43,
+                "specificity": 0.9767441860465116
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 41,
+                "negatives": 43,
+                "specificity": 0.9534883720930233
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 41,
+                "negatives": 43,
+                "specificity": 0.9534883720930233
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 41,
+                "negatives": 43,
+                "specificity": 0.9534883720930233
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 26,
+                "negatives": 43,
+                "specificity": 0.6046511627906976
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 43,
+                "specificity": 0.7906976744186046
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 43,
+                "specificity": 0.7906976744186046
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 35,
+                "negatives": 43,
+                "specificity": 0.813953488372093
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 35,
+                "negatives": 43,
+                "specificity": 0.813953488372093
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 43,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "current_fused_recipe",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 0,
+              "misses": 0,
+              "true_negatives": 40,
+              "negatives": 43,
+              "specificity": 0.9302325581395349
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 0,
+                "true_negatives": 40,
+                "negatives": 43,
+                "specificity": 0.9302325581395349
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.9,
+              "misses": 0,
+              "true_negatives": 38,
+              "negatives": 43,
+              "specificity": 0.8837209302325582
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 21,
+                "negatives": 43,
+                "specificity": 0.4883720930232558
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 24,
+                "negatives": 43,
+                "specificity": 0.5581395348837209
+              },
+              {
+                "shrink": 0.7,
+                "misses": 0,
+                "true_negatives": 30,
+                "negatives": 43,
+                "specificity": 0.6976744186046512
+              },
+              {
+                "shrink": 0.8,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 43,
+                "specificity": 0.7906976744186046
+              },
+              {
+                "shrink": 0.9,
+                "misses": 0,
+                "true_negatives": 38,
+                "negatives": 43,
+                "specificity": 0.8837209302325582
+              },
+              {
+                "shrink": 1.0,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 43,
+                "specificity": 0.9069767441860465
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.484375
+            }
+          }
+        },
+        {
+          "outer_fold": 3,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.01,
+          "train_n": 84,
+          "test_n": 22,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.01,
+              "misses": 0,
+              "true_negatives": 33,
+              "negatives": 41,
+              "specificity": 0.8048780487804879
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 41,
+                "negatives": 41,
+                "specificity": 1.0
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 27,
+                "negatives": 41,
+                "specificity": 0.6585365853658537
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 33,
+                "negatives": 41,
+                "specificity": 0.8048780487804879
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 33,
+                "negatives": 41,
+                "specificity": 0.8048780487804879
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 33,
+                "negatives": 41,
+                "specificity": 0.8048780487804879
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 33,
+                "negatives": 41,
+                "specificity": 0.8048780487804879
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "current_fused_recipe",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 0,
+              "misses": 0,
+              "true_negatives": 40,
+              "negatives": 41,
+              "specificity": 0.975609756097561
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 0,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.9,
+              "misses": 0,
+              "true_negatives": 35,
+              "negatives": 41,
+              "specificity": 0.8536585365853658
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 21,
+                "negatives": 41,
+                "specificity": 0.5121951219512195
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 24,
+                "negatives": 41,
+                "specificity": 0.5853658536585366
+              },
+              {
+                "shrink": 0.7,
+                "misses": 0,
+                "true_negatives": 28,
+                "negatives": 41,
+                "specificity": 0.6829268292682927
+              },
+              {
+                "shrink": 0.8,
+                "misses": 0,
+                "true_negatives": 32,
+                "negatives": 41,
+                "specificity": 0.7804878048780488
+              },
+              {
+                "shrink": 0.9,
+                "misses": 0,
+                "true_negatives": 35,
+                "negatives": 41,
+                "specificity": 0.8536585365853658
+              },
+              {
+                "shrink": 1.0,
+                "misses": 1,
+                "true_negatives": 39,
+                "negatives": 41,
+                "specificity": 0.9512195121951219
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.4838709677419355
+            }
+          }
+        },
+        {
+          "outer_fold": 4,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.01,
+          "train_n": 84,
+          "test_n": 22,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.01,
+              "misses": 0,
+              "true_negatives": 34,
+              "negatives": 41,
+              "specificity": 0.8292682926829268
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 25,
+                "negatives": 41,
+                "specificity": 0.6097560975609756
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 41,
+                "specificity": 0.8292682926829268
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 41,
+                "specificity": 0.8292682926829268
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 41,
+                "specificity": 0.8292682926829268
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 41,
+                "specificity": 0.8292682926829268
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 41,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "current_fused_recipe",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 0,
+              "misses": 1,
+              "true_negatives": 40,
+              "negatives": 41,
+              "specificity": 0.975609756097561
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 1,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 1.0,
+              "misses": 0,
+              "true_negatives": 40,
+              "negatives": 41,
+              "specificity": 0.975609756097561
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 19,
+                "negatives": 41,
+                "specificity": 0.4634146341463415
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 22,
+                "negatives": 41,
+                "specificity": 0.5365853658536586
+              },
+              {
+                "shrink": 0.7,
+                "misses": 0,
+                "true_negatives": 25,
+                "negatives": 41,
+                "specificity": 0.6097560975609756
+              },
+              {
+                "shrink": 0.8,
+                "misses": 0,
+                "true_negatives": 31,
+                "negatives": 41,
+                "specificity": 0.7560975609756098
+              },
+              {
+                "shrink": 0.9,
+                "misses": 0,
+                "true_negatives": 34,
+                "negatives": 41,
+                "specificity": 0.8292682926829268
+              },
+              {
+                "shrink": 1.0,
+                "misses": 0,
+                "true_negatives": 40,
+                "negatives": 41,
+                "specificity": 0.975609756097561
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.45161290322580644
+            }
+          }
+        }
+      ]
+    },
+    "DRTiD": {
+      "cases": 250,
+      "positive": 123,
+      "negative": 127,
+      "misses": 0,
+      "true_negatives": 62,
+      "specificity": 0.4881889763779528,
+      "binary_coverage": 1.0,
+      "unique_patients": 250,
+      "nested_single_expert_selector": {
+        "cases": 250,
+        "positive": 123,
+        "negative": 127,
+        "misses": 0,
+        "true_negatives": 63,
+        "specificity": 0.49606299212598426,
+        "binary_coverage": 1.0,
+        "unique_patients": 250
+      },
+      "nested_crossfit_or_union": {
+        "cases": 250,
+        "unique_patients": 250,
+        "positive": 123,
+        "negative": 127,
+        "misses": 0,
+        "true_negatives": 56,
+        "specificity": 0.4409448818897638,
+        "binary_coverage": 1.0
+      },
+      "baseline_true_negatives_same_cohort": 85,
+      "baseline_specificity_same_cohort": 0.6692913385826772,
+      "features": [
+        "current_fused_recipe",
+        "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk",
+        "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::risk",
+        "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired",
+        "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired",
+        "rtx_rankheavy_d4_tta_20261012/predictions.csv::view0_grade_4",
+        "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4"
+      ],
+      "folds": [
+        {
+          "outer_fold": 0,
+          "selected_family": "logistic",
+          "selected_C": 10.0,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 10.0,
+              "misses": 0,
+              "true_negatives": 50,
+              "negatives": 101,
+              "specificity": 0.49504950495049505
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 5,
+                "true_negatives": 64,
+                "negatives": 101,
+                "specificity": 0.6336633663366337
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 4,
+                "true_negatives": 63,
+                "negatives": 101,
+                "specificity": 0.6237623762376238
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 58,
+                "negatives": 101,
+                "specificity": 0.5742574257425742
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 51,
+                "negatives": 101,
+                "specificity": 0.504950495049505
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 50,
+                "negatives": 101,
+                "specificity": 0.49504950495049505
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 45,
+                "negatives": 101,
+                "specificity": 0.44554455445544555
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 45,
+                "negatives": 101,
+                "specificity": 0.44554455445544555
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 46,
+                "negatives": 101,
+                "specificity": 0.45544554455445546
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 45,
+                "negatives": 101,
+                "specificity": 0.44554455445544555
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 45,
+                "negatives": 101,
+                "specificity": 0.44554455445544555
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 101,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 101,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 101,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 101,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 6,
+              "misses": 0,
+              "true_negatives": 36,
+              "negatives": 101,
+              "specificity": 0.3564356435643564
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 1,
+                "true_negatives": 67,
+                "negatives": 101,
+                "specificity": 0.6633663366336634
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 45,
+                "negatives": 101,
+                "specificity": 0.44554455445544555
+              },
+              {
+                "column": 2,
+                "misses": 0,
+                "true_negatives": 19,
+                "negatives": 101,
+                "specificity": 0.18811881188118812
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 58,
+                "negatives": 101,
+                "specificity": 0.5742574257425742
+              },
+              {
+                "column": 4,
+                "misses": 2,
+                "true_negatives": 55,
+                "negatives": 101,
+                "specificity": 0.5445544554455446
+              },
+              {
+                "column": 5,
+                "misses": 1,
+                "true_negatives": 24,
+                "negatives": 101,
+                "specificity": 0.2376237623762376
+              },
+              {
+                "column": 6,
+                "misses": 0,
+                "true_negatives": 36,
+                "negatives": 101,
+                "specificity": 0.3564356435643564
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.7,
+              "misses": 0,
+              "true_negatives": 60,
+              "negatives": 101,
+              "specificity": 0.594059405940594
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 45,
+                "negatives": 101,
+                "specificity": 0.44554455445544555
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 52,
+                "negatives": 101,
+                "specificity": 0.5148514851485149
+              },
+              {
+                "shrink": 0.7,
+                "misses": 0,
+                "true_negatives": 60,
+                "negatives": 101,
+                "specificity": 0.594059405940594
+              },
+              {
+                "shrink": 0.8,
+                "misses": 1,
+                "true_negatives": 68,
+                "negatives": 101,
+                "specificity": 0.6732673267326733
+              },
+              {
+                "shrink": 0.9,
+                "misses": 2,
+                "true_negatives": 73,
+                "negatives": 101,
+                "specificity": 0.7227722772277227
+              },
+              {
+                "shrink": 1.0,
+                "misses": 4,
+                "true_negatives": 76,
+                "negatives": 101,
+                "specificity": 0.7524752475247525
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.32,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.19333333333333333,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::risk": 0.09333333333333334,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired": 0.3,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired": 0.26,
+              "rtx_rankheavy_d4_tta_20261012/predictions.csv::view0_grade_4": 0.12,
+              "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4": 0.18
+            }
+          }
+        },
+        {
+          "outer_fold": 1,
+          "selected_family": "pairwise_rank",
+          "selected_C": 0.001,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 0.001,
+              "misses": 0,
+              "true_negatives": 44,
+              "negatives": 102,
+              "specificity": 0.43137254901960786
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 5,
+                "true_negatives": 64,
+                "negatives": 102,
+                "specificity": 0.6274509803921569
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 5,
+                "true_negatives": 63,
+                "negatives": 102,
+                "specificity": 0.6176470588235294
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 3,
+                "true_negatives": 56,
+                "negatives": 102,
+                "specificity": 0.5490196078431373
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 3,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 3,
+                "true_negatives": 46,
+                "negatives": 102,
+                "specificity": 0.45098039215686275
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 44,
+                "negatives": 102,
+                "specificity": 0.43137254901960786
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 44,
+                "negatives": 102,
+                "specificity": 0.43137254901960786
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 41,
+                "negatives": 102,
+                "specificity": 0.4019607843137255
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 41,
+                "negatives": 102,
+                "specificity": 0.4019607843137255
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 1,
+                "true_negatives": 41,
+                "negatives": 102,
+                "specificity": 0.4019607843137255
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 6,
+              "misses": 0,
+              "true_negatives": 30,
+              "negatives": 102,
+              "specificity": 0.29411764705882354
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 1,
+                "true_negatives": 69,
+                "negatives": 102,
+                "specificity": 0.6764705882352942
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 30,
+                "negatives": 102,
+                "specificity": 0.29411764705882354
+              },
+              {
+                "column": 2,
+                "misses": 0,
+                "true_negatives": 20,
+                "negatives": 102,
+                "specificity": 0.19607843137254902
+              },
+              {
+                "column": 3,
+                "misses": 3,
+                "true_negatives": 64,
+                "negatives": 102,
+                "specificity": 0.6274509803921569
+              },
+              {
+                "column": 4,
+                "misses": 2,
+                "true_negatives": 56,
+                "negatives": 102,
+                "specificity": 0.5490196078431373
+              },
+              {
+                "column": 5,
+                "misses": 0,
+                "true_negatives": 17,
+                "negatives": 102,
+                "specificity": 0.16666666666666666
+              },
+              {
+                "column": 6,
+                "misses": 0,
+                "true_negatives": 30,
+                "negatives": 102,
+                "specificity": 0.29411764705882354
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.5,
+              "misses": 0,
+              "true_negatives": 42,
+              "negatives": 102,
+              "specificity": 0.4117647058823529
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 42,
+                "negatives": 102,
+                "specificity": 0.4117647058823529
+              },
+              {
+                "shrink": 0.6,
+                "misses": 2,
+                "true_negatives": 44,
+                "negatives": 102,
+                "specificity": 0.43137254901960786
+              },
+              {
+                "shrink": 0.7,
+                "misses": 2,
+                "true_negatives": 56,
+                "negatives": 102,
+                "specificity": 0.5490196078431373
+              },
+              {
+                "shrink": 0.8,
+                "misses": 5,
+                "true_negatives": 67,
+                "negatives": 102,
+                "specificity": 0.6568627450980392
+              },
+              {
+                "shrink": 0.9,
+                "misses": 6,
+                "true_negatives": 68,
+                "negatives": 102,
+                "specificity": 0.6666666666666666
+              },
+              {
+                "shrink": 1.0,
+                "misses": 8,
+                "true_negatives": 76,
+                "negatives": 102,
+                "specificity": 0.7450980392156863
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.34,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.12666666666666668,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::risk": 0.10666666666666667,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired": 0.31333333333333335,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired": 0.2733333333333333,
+              "rtx_rankheavy_d4_tta_20261012/predictions.csv::view0_grade_4": 0.12,
+              "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4": 0.16
+            }
+          }
+        },
+        {
+          "outer_fold": 2,
+          "selected_family": "logistic",
+          "selected_C": 10.0,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 10.0,
+              "misses": 0,
+              "true_negatives": 47,
+              "negatives": 102,
+              "specificity": 0.46078431372549017
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 4,
+                "true_negatives": 61,
+                "negatives": 102,
+                "specificity": 0.5980392156862745
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 4,
+                "true_negatives": 60,
+                "negatives": 102,
+                "specificity": 0.5882352941176471
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 1,
+                "true_negatives": 56,
+                "negatives": 102,
+                "specificity": 0.5490196078431373
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 47,
+                "negatives": 102,
+                "specificity": 0.46078431372549017
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 43,
+                "negatives": 102,
+                "specificity": 0.4215686274509804
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 46,
+                "negatives": 102,
+                "specificity": 0.45098039215686275
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 0,
+                "true_negatives": 43,
+                "negatives": 102,
+                "specificity": 0.4215686274509804
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 42,
+                "negatives": 102,
+                "specificity": 0.4117647058823529
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 42,
+                "negatives": 102,
+                "specificity": 0.4117647058823529
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 3,
+              "misses": 1,
+              "true_negatives": 54,
+              "negatives": 102,
+              "specificity": 0.5294117647058824
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 2,
+                "true_negatives": 66,
+                "negatives": 102,
+                "specificity": 0.6470588235294118
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 33,
+                "negatives": 102,
+                "specificity": 0.3235294117647059
+              },
+              {
+                "column": 2,
+                "misses": 2,
+                "true_negatives": 28,
+                "negatives": 102,
+                "specificity": 0.27450980392156865
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 54,
+                "negatives": 102,
+                "specificity": 0.5294117647058824
+              },
+              {
+                "column": 4,
+                "misses": 2,
+                "true_negatives": 51,
+                "negatives": 102,
+                "specificity": 0.5
+              },
+              {
+                "column": 5,
+                "misses": 1,
+                "true_negatives": 35,
+                "negatives": 102,
+                "specificity": 0.3431372549019608
+              },
+              {
+                "column": 6,
+                "misses": 1,
+                "true_negatives": 41,
+                "negatives": 102,
+                "specificity": 0.4019607843137255
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.6,
+              "misses": 0,
+              "true_negatives": 51,
+              "negatives": 102,
+              "specificity": 0.5
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 47,
+                "negatives": 102,
+                "specificity": 0.46078431372549017
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 51,
+                "negatives": 102,
+                "specificity": 0.5
+              },
+              {
+                "shrink": 0.7,
+                "misses": 1,
+                "true_negatives": 60,
+                "negatives": 102,
+                "specificity": 0.5882352941176471
+              },
+              {
+                "shrink": 0.8,
+                "misses": 1,
+                "true_negatives": 67,
+                "negatives": 102,
+                "specificity": 0.6568627450980392
+              },
+              {
+                "shrink": 0.9,
+                "misses": 4,
+                "true_negatives": 73,
+                "negatives": 102,
+                "specificity": 0.7156862745098039
+              },
+              {
+                "shrink": 1.0,
+                "misses": 4,
+                "true_negatives": 76,
+                "negatives": 102,
+                "specificity": 0.7450980392156863
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.31333333333333335,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.14666666666666667,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::risk": 0.1,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired": 0.24666666666666667,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired": 0.26,
+              "rtx_rankheavy_d4_tta_20261012/predictions.csv::view0_grade_4": 0.18666666666666668,
+              "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4": 0.2
+            }
+          }
+        },
+        {
+          "outer_fold": 3,
+          "selected_family": "logistic",
+          "selected_C": 1.0,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "logistic",
+              "C": 1.0,
+              "misses": 0,
+              "true_negatives": 57,
+              "negatives": 101,
+              "specificity": 0.5643564356435643
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 5,
+                "true_negatives": 67,
+                "negatives": 101,
+                "specificity": 0.6633663366336634
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 4,
+                "true_negatives": 66,
+                "negatives": 101,
+                "specificity": 0.6534653465346535
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 4,
+                "true_negatives": 62,
+                "negatives": 101,
+                "specificity": 0.6138613861386139
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 0,
+                "true_negatives": 57,
+                "negatives": 101,
+                "specificity": 0.5643564356435643
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 59,
+                "negatives": 101,
+                "specificity": 0.5841584158415841
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 51,
+                "negatives": 101,
+                "specificity": 0.504950495049505
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 2,
+                "true_negatives": 57,
+                "negatives": 101,
+                "specificity": 0.5643564356435643
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 3,
+                "true_negatives": 61,
+                "negatives": 101,
+                "specificity": 0.6039603960396039
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 4,
+                "true_negatives": 64,
+                "negatives": 101,
+                "specificity": 0.6336633663366337
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 6,
+                "true_negatives": 65,
+                "negatives": 101,
+                "specificity": 0.6435643564356436
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 101,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 17,
+                "negatives": 101,
+                "specificity": 0.16831683168316833
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 101,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 101,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "current_fused_recipe",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 0,
+              "misses": 0,
+              "true_negatives": 69,
+              "negatives": 101,
+              "specificity": 0.6831683168316832
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 0,
+                "true_negatives": 69,
+                "negatives": 101,
+                "specificity": 0.6831683168316832
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 33,
+                "negatives": 101,
+                "specificity": 0.32673267326732675
+              },
+              {
+                "column": 2,
+                "misses": 0,
+                "true_negatives": 14,
+                "negatives": 101,
+                "specificity": 0.13861386138613863
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 56,
+                "negatives": 101,
+                "specificity": 0.5544554455445545
+              },
+              {
+                "column": 4,
+                "misses": 2,
+                "true_negatives": 61,
+                "negatives": 101,
+                "specificity": 0.6039603960396039
+              },
+              {
+                "column": 5,
+                "misses": 2,
+                "true_negatives": 24,
+                "negatives": 101,
+                "specificity": 0.2376237623762376
+              },
+              {
+                "column": 6,
+                "misses": 1,
+                "true_negatives": 34,
+                "negatives": 101,
+                "specificity": 0.33663366336633666
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.6,
+              "misses": 0,
+              "true_negatives": 54,
+              "negatives": 101,
+              "specificity": 0.5346534653465347
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 47,
+                "negatives": 101,
+                "specificity": 0.46534653465346537
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 54,
+                "negatives": 101,
+                "specificity": 0.5346534653465347
+              },
+              {
+                "shrink": 0.7,
+                "misses": 2,
+                "true_negatives": 59,
+                "negatives": 101,
+                "specificity": 0.5841584158415841
+              },
+              {
+                "shrink": 0.8,
+                "misses": 3,
+                "true_negatives": 66,
+                "negatives": 101,
+                "specificity": 0.6534653465346535
+              },
+              {
+                "shrink": 0.9,
+                "misses": 3,
+                "true_negatives": 72,
+                "negatives": 101,
+                "specificity": 0.7128712871287128
+              },
+              {
+                "shrink": 1.0,
+                "misses": 5,
+                "true_negatives": 78,
+                "negatives": 101,
+                "specificity": 0.7722772277227723
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.36666666666666664,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.16666666666666666,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::risk": 0.10666666666666667,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired": 0.3,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired": 0.31333333333333335,
+              "rtx_rankheavy_d4_tta_20261012/predictions.csv::view0_grade_4": 0.14,
+              "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4": 0.16666666666666666
+            }
+          }
+        },
+        {
+          "outer_fold": 4,
+          "selected_family": "pairwise_rank",
+          "selected_C": 10.0,
+          "train_n": 200,
+          "test_n": 50,
+          "inner_selection": {
+            "selected": {
+              "family": "pairwise_rank",
+              "C": 10.0,
+              "misses": 0,
+              "true_negatives": 58,
+              "negatives": 102,
+              "specificity": 0.5686274509803921
+            },
+            "grid": [
+              {
+                "family": "logistic",
+                "C": 0.001,
+                "misses": 6,
+                "true_negatives": 62,
+                "negatives": 102,
+                "specificity": 0.6078431372549019
+              },
+              {
+                "family": "logistic",
+                "C": 0.01,
+                "misses": 5,
+                "true_negatives": 60,
+                "negatives": 102,
+                "specificity": 0.5882352941176471
+              },
+              {
+                "family": "logistic",
+                "C": 0.1,
+                "misses": 4,
+                "true_negatives": 58,
+                "negatives": 102,
+                "specificity": 0.5686274509803921
+              },
+              {
+                "family": "logistic",
+                "C": 1.0,
+                "misses": 3,
+                "true_negatives": 54,
+                "negatives": 102,
+                "specificity": 0.5294117647058824
+              },
+              {
+                "family": "logistic",
+                "C": 10.0,
+                "misses": 2,
+                "true_negatives": 60,
+                "negatives": 102,
+                "specificity": 0.5882352941176471
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.001,
+                "misses": 0,
+                "true_negatives": 46,
+                "negatives": 102,
+                "specificity": 0.45098039215686275
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.01,
+                "misses": 0,
+                "true_negatives": 53,
+                "negatives": 102,
+                "specificity": 0.5196078431372549
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 0.1,
+                "misses": 2,
+                "true_negatives": 61,
+                "negatives": 102,
+                "specificity": 0.5980392156862745
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 1.0,
+                "misses": 1,
+                "true_negatives": 59,
+                "negatives": 102,
+                "specificity": 0.5784313725490197
+              },
+              {
+                "family": "pairwise_rank",
+                "C": 10.0,
+                "misses": 0,
+                "true_negatives": 58,
+                "negatives": 102,
+                "specificity": 0.5686274509803921
+              },
+              {
+                "family": "shallow_tree",
+                "C": 1,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 2,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 3,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              },
+              {
+                "family": "shallow_tree",
+                "C": 4,
+                "misses": 0,
+                "true_negatives": 0,
+                "negatives": 102,
+                "specificity": 0.0
+              }
+            ]
+          },
+          "selected_single_expert": "current_fused_recipe",
+          "single_expert_inner_selection": {
+            "selected": {
+              "column": 0,
+              "misses": 0,
+              "true_negatives": 63,
+              "negatives": 102,
+              "specificity": 0.6176470588235294
+            },
+            "grid": [
+              {
+                "column": 0,
+                "misses": 0,
+                "true_negatives": 63,
+                "negatives": 102,
+                "specificity": 0.6176470588235294
+              },
+              {
+                "column": 1,
+                "misses": 1,
+                "true_negatives": 30,
+                "negatives": 102,
+                "specificity": 0.29411764705882354
+              },
+              {
+                "column": 2,
+                "misses": 0,
+                "true_negatives": 14,
+                "negatives": 102,
+                "specificity": 0.13725490196078433
+              },
+              {
+                "column": 3,
+                "misses": 1,
+                "true_negatives": 58,
+                "negatives": 102,
+                "specificity": 0.5686274509803921
+              },
+              {
+                "column": 4,
+                "misses": 1,
+                "true_negatives": 50,
+                "negatives": 102,
+                "specificity": 0.49019607843137253
+              },
+              {
+                "column": 5,
+                "misses": 1,
+                "true_negatives": 22,
+                "negatives": 102,
+                "specificity": 0.21568627450980393
+              },
+              {
+                "column": 6,
+                "misses": 1,
+                "true_negatives": 31,
+                "negatives": 102,
+                "specificity": 0.30392156862745096
+              }
+            ]
+          },
+          "union_inner_selection": {
+            "selected": {
+              "shrink": 0.6,
+              "misses": 0,
+              "true_negatives": 46,
+              "negatives": 102,
+              "specificity": 0.45098039215686275
+            },
+            "grid": [
+              {
+                "shrink": 0.5,
+                "misses": 0,
+                "true_negatives": 41,
+                "negatives": 102,
+                "specificity": 0.4019607843137255
+              },
+              {
+                "shrink": 0.6,
+                "misses": 0,
+                "true_negatives": 46,
+                "negatives": 102,
+                "specificity": 0.45098039215686275
+              },
+              {
+                "shrink": 0.7,
+                "misses": 1,
+                "true_negatives": 50,
+                "negatives": 102,
+                "specificity": 0.49019607843137253
+              },
+              {
+                "shrink": 0.8,
+                "misses": 1,
+                "true_negatives": 62,
+                "negatives": 102,
+                "specificity": 0.6078431372549019
+              },
+              {
+                "shrink": 0.9,
+                "misses": 2,
+                "true_negatives": 67,
+                "negatives": 102,
+                "specificity": 0.6568627450980392
+              },
+              {
+                "shrink": 1.0,
+                "misses": 4,
+                "true_negatives": 72,
+                "negatives": 102,
+                "specificity": 0.7058823529411765
+              }
+            ],
+            "calibration_thresholds": {
+              "current_fused_recipe": 0.32666666666666666,
+              "grade_boundary_margin_audit_20261011/validation_predictions.csv::risk": 0.14666666666666667,
+              "rtx_aptos_replay_laststage_20261011/validation_predictions.csv::risk": 0.06,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_frozen/predictions.csv::paired": 0.28,
+              "rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired": 0.26,
+              "rtx_rankheavy_d4_tta_20261012/predictions.csv::view0_grade_4": 0.12,
+              "rtx_rich_logits_tta_flips/predictions.csv::paired_grade_4": 0.17333333333333334
+            }
+          }
+        }
+      ]
+    }
+  },
+  "pooled": {
+    "cases": 981,
+    "unique_patients": 928,
+    "negatives": 385,
+    "misses": 1,
+    "true_negatives": 196,
+    "specificity": 0.509090909090909,
+    "coverage": 1.0
+  }
+}
