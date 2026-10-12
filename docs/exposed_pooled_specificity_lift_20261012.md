@@ -6,6 +6,19 @@ The best reconstructed source-specific recipe yields **270/385 = 70.13% eye-leve
 
 This is an **exposed, post-hoc validation result**, not a frozen model result, independent validation, certification, or clinical performance claim. The component scores and cutoffs were selected after inspecting these same labels. In particular, each risk cutoff is set from the minimum score among observed positives in the evaluated cohort. Do not use the headline as prospective evidence or as an authorization for clinical use.
 
+## Frozen development reference
+
+The team is freezing **70.13% (270/385), zero observed misses, 100% binary action assignment** as the current development high-water mark. Freeze scope is the reported result and its audit recipe only; it does **not** freeze or qualify a deployable model.
+
+- Reference implementation: `src/active_retina/audit_exposed_pooled_specificity.py`
+- Reference output and exact input SHA-256 fingerprints: `results/exposed_pooled_specificity_audit_20261012.json`
+- Source breakdown: DDR 134/206; DeepDRiD 51/52; DRTiD 85/127.
+- The code, report, and JSON record were committed together in Git revision `bd4ec7c` (`Audit exposed pooled specificity development result`).
+- Do not alter this recipe in place and continue calling it the frozen 70.13 result. Any new data, changed fusion, or changed cutoff is a new candidate with a new identifier and result record.
+- Re-running the audit is a reproducibility check on the same local prediction inputs, not a new independent evaluation. The prediction CSVs are local inputs and are not included in that Git commit; the hashes identify the expected files but do not make them available to other users.
+
+The rank normalization is cohort-relative and the cutoff is derived from observed positive labels. Therefore the frozen result is not yet an individual-case inference procedure. Its valid claim remains retrospective development evidence on the evaluated eye cohorts, not `70.13%` expected specificity on future cases.
+
 ## What changed the count
 
 | Source | Prior true negatives / denominator | Current true negatives / denominator | Net change | Current observed misses |

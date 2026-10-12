@@ -1,0 +1,28 @@
+{
+  "freeze_id": "active-retina-pooled-development-70.13-20261012",
+  "freeze_scope": "reported retrospective development result and exact audit recipe only; not a frozen deployable model",
+  "status": "FROZEN_DEVELOPMENT_ONLY_NOT_INDEPENDENTLY_VALIDATED",
+  "metric": {
+    "specificity_percent": 70.12987012987013,
+    "true_negatives": 270,
+    "gradable_nonreferable_eyes": 385,
+    "observed_referable_misses": 0,
+    "binary_action_coverage_percent": 100.0,
+    "unit": "eye"
+  },
+  "source_breakdown": {
+    "DDR": {"true_negatives": 134, "gradable_nonreferable_eyes": 206, "observed_referable_misses": 0},
+    "DeepDRiD": {"true_negatives": 51, "gradable_nonreferable_eyes": 52, "observed_referable_misses": 0},
+    "DRTiD": {"true_negatives": 85, "gradable_nonreferable_eyes": 127, "observed_referable_misses": 0}
+  },
+  "audit_code": "src/active_retina/audit_exposed_pooled_specificity.py",
+  "audit_record": "results/exposed_pooled_specificity_audit_20261012.json",
+  "audit_reference_commit": "bd4ec7c",
+  "limitations": [
+    "Recipes and cutoffs were selected after inspecting the same validation labels.",
+    "Rank normalization is cohort-relative and the cutoff is derived from observed positive labels; this is not a standalone per-case inference artifact.",
+    "This is not an untouched test, independent confirmation, clinical certification, or future-population performance estimate.",
+    "The source prediction CSVs are local inputs, not included in the reference commit; their SHA-256 fingerprints are in the audit record."
+  ],
+  "change_control": "Preserve this record unchanged. Any changed input, recipe, cutoff, or evaluation cohort must receive a new freeze_id and a separate result record."
+}
