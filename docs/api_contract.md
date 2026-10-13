@@ -5,6 +5,12 @@ Status: `VERIFIED_LOCAL_API`
 The clinical station exposes a local JSON API for integration with a hardware
 sequence, camera-import process, or external operator UI.
 
+The browser station is intentionally simpler than the research workspace:
+upload a retinal image, select whether it is visibly clear, and receive one
+plain-language assessment plus the next step. It does not display development
+baseline names or cohort metrics. The result remains a clinician-reviewed
+model assessment, not an autonomous diagnosis.
+
 ## Endpoint
 
 `POST /api/analyze`

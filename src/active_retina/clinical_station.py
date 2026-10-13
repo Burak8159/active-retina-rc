@@ -28,27 +28,27 @@ def page(body: str) -> bytes:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ActiveRetina-RC Clinical Station</title>
+  <title>ActiveRetina Scan</title>
   <style>
     :root {{ color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
-    body {{ margin: 0; background: #f6f7f9; color: #15202b; }}
-    header {{ background: #102a43; color: white; padding: 18px 28px; }}
-    main {{ max-width: 980px; margin: 0 auto; padding: 24px; }}
-    section {{ background: white; border: 1px solid #d8dee8; border-radius: 8px; padding: 20px; margin-bottom: 18px; }}
-    label {{ display: block; font-weight: 650; margin-top: 14px; }}
-    input, select {{ width: 100%; box-sizing: border-box; margin-top: 6px; padding: 10px; border: 1px solid #b8c2cc; border-radius: 6px; }}
-    button {{ margin-top: 18px; background: #0b6bcb; color: white; border: 0; border-radius: 6px; padding: 11px 16px; font-weight: 700; cursor: pointer; }}
-    .warn {{ color: #9b2226; font-weight: 800; }}
-    .ok {{ color: #0f766e; font-weight: 800; }}
-    table {{ border-collapse: collapse; width: 100%; }}
-    th, td {{ border-bottom: 1px solid #e2e8f0; text-align: left; padding: 9px; }}
-    code {{ background: #eef2f7; padding: 2px 5px; border-radius: 4px; }}
+    body {{ margin: 0; background: #f5f7f8; color: #17252c; }}
+    header {{ background: #173b3d; color: white; padding: 16px 24px; }}
+    header h1 {{ margin: 0; font-size: 22px; }}
+    main {{ max-width: 680px; margin: 0 auto; padding: 24px; }}
+    section {{ background: white; border: 1px solid #d5dfe0; border-radius: 6px; padding: 22px; }}
+    label {{ display: block; font-weight: 650; margin-top: 16px; }}
+    input, select {{ width: 100%; box-sizing: border-box; margin-top: 7px; padding: 11px; border: 1px solid #aebcbe; border-radius: 4px; }}
+    button {{ margin-top: 20px; background: #087e78; color: white; border: 0; border-radius: 4px; padding: 12px 18px; font-weight: 700; cursor: pointer; }}
+    .notice {{ color: #475a60; font-size: 14px; line-height: 1.5; }}
+    .result {{ font-size: 24px; font-weight: 750; line-height: 1.25; }}
+    .next {{ border-top: 1px solid #d5dfe0; margin-top: 18px; padding-top: 16px; }}
+    .alert {{ color: #963b22; font-weight: 700; }}
+    a {{ color: #075e86; }}
   </style>
 </head>
 <body>
 <header>
-  <h1>ActiveRetina-RC Clinical Station</h1>
-  <p>Clinician-reviewed acquisition assistant. Autonomous diagnosis is disabled.</p>
+  <h1>ActiveRetina</h1>
 </header>
 <main>{body}</main>
 </body>
@@ -59,36 +59,37 @@ def form_page() -> bytes:
     return page(
         """
 <section>
-  <p class="warn">Manual clinician review is required for every case. This station supports image acquisition workflow and reporting; it does not independently diagnose.</p>
+  <h2>Retinal scan</h2>
+  <p class="notice">Upload a retinal image to receive a screening assessment. A clinician must confirm the result.</p>
   <form method="post" action="/run" enctype="multipart/form-data">
-    <label>Case ID</label>
-    <input name="case_id" required placeholder="CASE-0001">
-    <label>Operator ID</label>
-    <input name="operator_id" required placeholder="operator initials or station login">
-    <label>First fundus image</label>
+    <label>Retinal image</label>
     <input type="file" name="first_image" accept="image/*" required>
-    <label>Second fundus image</label>
+    <label>Second retinal view (optional)</label>
     <input type="file" name="second_image" accept="image/*">
-    <label>Image quality gate</label>
+    <label>Image quality</label>
     <select name="quality_ok">
-      <option value="yes">Quality checked by operator</option>
-      <option value="no">Quality failed or uncertain</option>
+      <option value="yes">Image is clear and the retina is visible</option>
+      <option value="no">Image is blurry, dark, or incomplete</option>
     </select>
-    <button type="submit">Run Case</button>
+    <button type="submit">Analyze scan</button>
   </form>
-</section>
-<section>
-  <h2>Station Rules</h2>
-  <table>
-    <tr><th>Rule</th><th>Behavior</th></tr>
-    <tr><td>Uncertain case</td><td>Acquire second view or defer to clinician.</td></tr>
-    <tr><td>Low/high score</td><td>Show recommendation, but require manual review.</td></tr>
-    <tr><td>Quality failure</td><td>Defer to clinician; do not rely on model output.</td></tr>
-    <tr><td>Audit</td><td>Save JSON result, report HTML, image hashes, and timestamp.</td></tr>
-  </table>
 </section>
 """
     )
+
+
+def assessment_summary(decision: dict[str, Any]) -> dict[str, str]:
+    """Translate internal policy labels to a concise, cautious scan result."""
+    recommendation = decision.get("recommendation", "")
+    if recommendation == "manual_review_image_quality_failed":
+        return {"result": "Image quality is not sufficient", "next": "Capture a clearer retinal image."}
+    if recommendation == "second_view_required_before_recommendation":
+        return {"result": "A second retinal image is needed", "next": "Capture the other retinal view, then review again."}
+    if recommendation in {"manual_review_likely_referable", "manual_review_likely_referable_after_pair"}:
+        return {"result": "Possible referable diabetic retinopathy", "next": "Arrange clinician assessment."}
+    if recommendation in {"manual_review_low_referable_risk", "manual_review_low_referable_risk_after_pair"}:
+        return {"result": "Lower likelihood of referable diabetic retinopathy", "next": "A clinician must confirm this assessment."}
+    return {"result": "Clinician review needed", "next": "Do not make a screening decision from this result alone."}
 
 
 def get_field_text(form: cgi.FieldStorage, name: str, default: str = "") -> str:
@@ -205,7 +206,7 @@ class StationHandler(BaseHTTPRequestHandler):
         )
         raw_case_id = get_field_text(form, "case_id", f"case-{datetime.now(timezone.utc).timestamp()}")
         case_id = sanitize_case_id(raw_case_id)
-        operator_id = get_field_text(form, "operator_id", "unknown")
+        operator_id = get_field_text(form, "operator_id", "local_station")
         quality_ok = get_field_text(form, "quality_ok", "yes") == "yes"
         case_dir = CASE_DIR / case_id
         case_dir.mkdir(parents=True, exist_ok=True)
@@ -217,19 +218,18 @@ class StationHandler(BaseHTTPRequestHandler):
 
         result = analyze_case(self.artifact, self.model, self.transform, case_id, operator_id, first_path, second_path, quality_ok)
         persist_case(case_id, result)
-        decision = result["decision"]
+        assessment = assessment_summary(result["decision"])
         self.write(
             200,
             page(
                 f"""
 <section>
-  <h2>Case Complete</h2>
-  <p class="ok">Report generated for <code>{html.escape(case_id)}</code>.</p>
-  <p><strong>Action:</strong> {html.escape(decision['action'])}</p>
-  <p><strong>Recommendation:</strong> {html.escape(decision['recommendation'])}</p>
-  <p><strong>Referable DR score:</strong> {decision['referable_score']:.4f}</p>
-  <p><strong>Manual review:</strong> required</p>
-  <p><a href="/case?id={html.escape(case_id)}">Open clinician report</a></p>
+  <h2>Scan result</h2>
+  <p class="result">{html.escape(assessment['result'])}</p>
+  <p class="next">{html.escape(assessment['next'])}</p>
+  <p class="notice alert">This is a model assessment, not a diagnosis. Clinician confirmation is required.</p>
+  <p><a href="/case?id={html.escape(case_id)}">View detailed report</a></p>
+  <p><a href="/">Scan another image</a></p>
 </section>
 """
             ),
@@ -282,7 +282,10 @@ def run(host: str, port: int, artifact_path: Path) -> None:
 def smoke() -> None:
     artifact = joblib.load(DEFAULT_ARTIFACT)
     assert artifact.get("version")
-    assert b"ActiveRetina-RC Clinical Station" in form_page()
+    form = form_page().decode("utf-8")
+    assert "Analyze scan" in form
+    assert "70.13" not in form and "63.12" not in form
+    assert assessment_summary({"recommendation": "manual_review_likely_referable"})["result"] == "Possible referable diabetic retinopathy"
     print("clinical station smoke passed")
 
 
