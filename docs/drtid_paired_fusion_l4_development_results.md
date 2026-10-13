@@ -32,11 +32,22 @@ The earlier combined DDR+DRTiD RTX failure audit also identified a data/target i
 
 Any next experiment must materially change the intervention (for example, full-encoder fine-tuning with discriminative learning rates and a separately trained gradability gate), use only development data for iteration, and reserve a genuinely untouched patient-level cohort for one locked evaluation. No result from the runs recorded here supports forced binary diagnosis for every image.
 
-## Next RTX development candidate (not yet run)
+## Follow-up experiments (2026-10-11)
 
-The next candidate is implemented in `src/active_retina/train_drtid_paired_fusion.py` and adds a distinct per-view quality head. DRTiD supplies the paired DR task; DeepDRiD's official training partition supplies image-level `overall quality` labels (`1` means quality is adequate for retinal-disease diagnosis, `0` means it is not). The encoder is fully fine-tuned with a lower learning rate for early layers, a higher rate for layer 4, and the highest rate for task heads. The two datasets are split independently by patient; DeepDRiD official validation and online evaluation partitions are excluded.
+Two materially different candidates were tested on the same patient-ID-separated 800/200 split of the official DRTiD training rows. The official DRTiD testing partition was not used for training or checkpoint selection.
 
-This is a development experiment, not a guaranteed route to 80/0/100. DRTiD has no matching quality labels in the current manifest, so DeepDRiD quality performance can be measured on its patient-disjoint quality holdout, but quality-gate transport to DRTiD cannot be confirmed from DR labels alone. A quality failure can be conservatively routed to referral for a forced binary workflow, but that tradeoff must be reported in specificity and evaluated on data with independently labeled image quality.
+| Candidate | Epochs retained | DRTiD holdout AUROC | Zero-miss specificity | Decision |
+| --- | ---: | ---: | ---: | --- |
+| Full-encoder paired fusion with DeepDRiD overall-quality auxiliary supervision | 3 (stopped early) | 0.7494 | 9.65% at epoch 2 | Reject; quality AUROC 0.531 at epoch 3 |
+| Full-encoder spatial cross-attention over paired ResNet feature maps | 2 (stopped early) | 0.5829 | 4.39% at epoch 2 | Reject; substantially below the paired-fusion baseline |
+
+The first experiment used DeepDRiD official-training quality labels only; its quality holdout AUROC remained near chance. The second is an ActiveRetina cross-field-attention experiment, **not an exact reproduction of CrossFiT**: it uses a compact three-layer token transformer, ImageNet-pretrained ResNet-50, and 224-pixel inputs, without CrossFiT's localization-derived aligned positional encoding or fundus attention mask. Both runs were stopped because their validation discrimination and zero-miss specificity were clearly below the established paired-fusion results. Neither checkpoint is promoted.
+
+The grade-wise error audit of the selected zero-miss DRTiD source policy found 43/103 grade-0 negatives cleared and 0/24 grade-1 negatives cleared; all 123 referable eyes were referred. In the optimistic pooled per-source ceiling, non-DRTiD sources contribute 159/258 cleared negatives. Reaching 65% on the 385-negative pooled development cohort therefore requires at least 251 true-negative clearances, including at least 92/127 DRTiD negatives (72.4%) if the other source-specific counts remain unchanged. This is a development arithmetic target, not a generalization estimate.
+
+### Next model direction
+
+Do not continue generic pooling/attention variants or auxiliary quality transfer. The next distinct comparator is a faithful, resource-adjusted implementation of the published CrossFiT components on the DRTiD official training partition: spatial cross-field attention, shared geometry-aware positional encoding, and a localization-derived fundus attention mask. The official paper reports 88.50% macro-AUC for its full method on DRTiD, but that multiclass metric does not imply 65% specificity at zero referable misses. Any local reproduction must be labeled as such, report five-class metrics and the requested binary operating point separately, and keep the previously inspected official test partition development-only.
 
 ## Artifacts
 

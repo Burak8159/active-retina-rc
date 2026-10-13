@@ -204,20 +204,32 @@ def sampler_weights(
     grade2_boost: float,
     grade1_boost: float,
     grade0_boost: float,
+    source_balanced: bool = False,
 ) -> list[float]:
+    source_counts: dict[str, int] = {}
+    if source_balanced:
+        for row in rows:
+            source = str(row.get("source_dataset", ""))
+            if not source:
+                raise ValueError("source-balanced sampling requires source_dataset in every row")
+            source_counts[source] = source_counts.get(source, 0) + 1
     out = []
     for row in rows:
         grade = int(row["grade"])
         referable = int(row["referable_dr"])
-        weight = 1.0
-        if referable:
-            weight *= 3.0
-        if grade == 0:
-            weight *= grade0_boost
-        if grade == 2:
-            weight *= grade2_boost
-        if grade == 1:
-            weight *= grade1_boost
+        source = str(row.get("source_dataset", ""))
+        if source_balanced:
+            weight = 1.0 / source_counts[source]
+        else:
+            weight = 1.0
+            if referable:
+                weight *= 3.0
+            if grade == 0:
+                weight *= grade0_boost
+            if grade == 2:
+                weight *= grade2_boost
+            if grade == 1:
+                weight *= grade1_boost
         out.append(weight)
     return out
 
@@ -380,7 +392,7 @@ def main() -> None:
     parser.add_argument("--grade2-boost", type=float, default=12.0)
     parser.add_argument("--grade1-boost", type=float, default=4.0)
     parser.add_argument("--class-weighting", choices=("inverse", "uniform"), default="inverse")
-    parser.add_argument("--sampling", choices=("weighted", "natural"), default="weighted")
+    parser.add_argument("--sampling", choices=("weighted", "natural", "source_balanced"), default="weighted")
     parser.add_argument("--boundary-margin-weight", type=float, default=0.5)
     parser.add_argument("--binary-weight", type=float, default=1.0)
     parser.add_argument("--rank-weight", type=float, default=2.0)
@@ -422,9 +434,15 @@ def main() -> None:
     valid_dataset = FundusDataset(by_split["valid"], wrapper.eval_transform, root)
     test_dataset = FundusDataset(by_split["test"], wrapper.eval_transform, root)
     sampler = None
-    if args.sampling == "weighted":
+    if args.sampling in {"weighted", "source_balanced"}:
         sampler = WeightedRandomSampler(
-            sampler_weights(by_split["train"], args.grade2_boost, args.grade1_boost, args.grade0_boost),
+            sampler_weights(
+                by_split["train"],
+                args.grade2_boost,
+                args.grade1_boost,
+                args.grade0_boost,
+                source_balanced=args.sampling == "source_balanced",
+            ),
             num_samples=len(by_split["train"]),
             replacement=True,
         )

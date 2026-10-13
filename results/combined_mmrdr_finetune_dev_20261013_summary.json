@@ -1,0 +1,220 @@
+{
+  "best_epoch": 6,
+  "checkpoint": "models\\combined_mmrdr_layer4_ft_448_20261013.pt",
+  "dataset": "MMRDR-UWF",
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": null,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 564,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9992526158445441,
+        "sensitivity": 1.0,
+        "specificity": 0.0017699115044247787,
+        "threshold": -2.449103832244873,
+        "true_negative": 1,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 1,
+      "train_loss": 3.5398040233390016,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 530,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9738415545590433,
+        "sensitivity": 1.0,
+        "specificity": 0.061946902654867256,
+        "threshold": -1.6319013833999634,
+        "true_negative": 35,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 3.1911228023464755,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 519,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9656203288490284,
+        "sensitivity": 1.0,
+        "specificity": 0.08141592920353982,
+        "threshold": -1.6761096715927124,
+        "true_negative": 46,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 3.0803515627820612,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 538,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9798206278026906,
+        "sensitivity": 1.0,
+        "specificity": 0.047787610619469026,
+        "threshold": -2.3367855548858643,
+        "true_negative": 27,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 4,
+      "train_loss": 3.0269282363172065,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 526,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9708520179372198,
+        "sensitivity": 1.0,
+        "specificity": 0.06902654867256637,
+        "threshold": -2.109140157699585,
+        "true_negative": 39,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 5,
+      "train_loss": 2.94340248443022,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 528,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9723467862481315,
+        "sensitivity": 1.0,
+        "specificity": 0.06548672566371681,
+        "threshold": -1.9575412273406982,
+        "true_negative": 37,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 6,
+      "train_loss": 2.8479328547107325,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 485,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9402092675635276,
+        "sensitivity": 1.0,
+        "specificity": 0.1415929203539823,
+        "threshold": -1.4522664546966553,
+        "true_negative": 80,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 7,
+      "train_loss": 2.752855494350815,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 511,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9596412556053812,
+        "sensitivity": 1.0,
+        "specificity": 0.09557522123893805,
+        "threshold": -2.25124454498291,
+        "true_negative": 54,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 8,
+      "train_loss": 2.652049805382155,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 496,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9484304932735426,
+        "sensitivity": 1.0,
+        "specificity": 0.12212389380530973,
+        "threshold": -2.104801893234253,
+        "true_negative": 69,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 9,
+      "train_loss": 2.5290060576847235,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 504,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9544095665171899,
+        "sensitivity": 1.0,
+        "specificity": 0.1079646017699115,
+        "threshold": -2.646393299102783,
+        "true_negative": 61,
+        "true_positive": 773
+      }
+    },
+    {
+      "epoch": 10,
+      "train_loss": 2.495690868699145,
+      "validation_zero_miss": {
+        "false_negative_clearance": 0,
+        "false_positive_referral": 485,
+        "n": 1338,
+        "negative": 565,
+        "positive": 773,
+        "refer_rate": 0.9402092675635276,
+        "sensitivity": 1.0,
+        "specificity": 0.1415929203539823,
+        "threshold": -3.5300815105438232,
+        "true_negative": 80,
+        "true_positive": 773
+      }
+    }
+  ],
+  "model_name": "resnet50.a1_in1k",
+  "status": "DEVELOPMENT_CANDIDATE_TEST_NOT_READ",
+  "task": "binary referable DR = grade >= 2; grade 0-1 negative",
+  "test_evaluated": false,
+  "trainable_info": {
+    "fragments": [
+      "layer4",
+      "fc"
+    ],
+    "frozen_parameters": 8543296,
+    "mode": "filtered",
+    "trainable_parameters": 14977030
+  },
+  "validation_metrics_at_zero_miss_threshold": {
+    "false_negative_clearance": 0,
+    "false_positive_referral": 485,
+    "n": 1338,
+    "negative": 565,
+    "positive": 773,
+    "refer_rate": 0.9402092675635276,
+    "sensitivity": 1.0,
+    "specificity": 0.1415929203539823,
+    "threshold": -1.4522664546966553,
+    "true_negative": 80,
+    "true_positive": 773
+  }
+}

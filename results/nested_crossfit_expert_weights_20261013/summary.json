@@ -1,0 +1,305 @@
+{
+  "status": "NESTED_CROSSFIT_DEVELOPMENT_ONLY",
+  "caveat": "The component-model family and cohort were previously inspected. Nested patient folds prevent this run's outer patients from selecting blend weights or thresholds, but this is not independent confirmation.",
+  "outer_folds": 5,
+  "inner_folds": 4,
+  "patient_disjoint": true,
+  "cases": 981,
+  "gradable_negatives": 385,
+  "true_negatives": 248,
+  "specificity_percent": 64.41558441558442,
+  "misses_referable_or_ungradable": 5,
+  "action_coverage_percent": 100.0,
+  "reference_same_cohort_70_13": {
+    "specificity_percent": 70.12987012987013,
+    "true_negatives": 270,
+    "misses": 0
+  },
+  "fold_results": [
+    {
+      "source": "DDR",
+      "fold": 1,
+      "calibration_patients": 499,
+      "heldout_patients": 126,
+      "patient_disjoint": true,
+      "weights": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "inner_true_negatives": 108,
+      "inner_negatives": 164,
+      "inner_misses": 0,
+      "true_negatives": 26,
+      "negatives": 42,
+      "misses": 0,
+      "threshold": 0.22444889779559118
+    },
+    {
+      "source": "DDR",
+      "fold": 2,
+      "calibration_patients": 500,
+      "heldout_patients": 125,
+      "patient_disjoint": true,
+      "weights": [
+        0.6,
+        0.3,
+        0.1
+      ],
+      "inner_true_negatives": 106,
+      "inner_negatives": 165,
+      "inner_misses": 1,
+      "true_negatives": 32,
+      "negatives": 41,
+      "misses": 1,
+      "threshold": 0.2122
+    },
+    {
+      "source": "DDR",
+      "fold": 3,
+      "calibration_patients": 500,
+      "heldout_patients": 125,
+      "patient_disjoint": true,
+      "weights": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "inner_true_negatives": 111,
+      "inner_negatives": 165,
+      "inner_misses": 0,
+      "true_negatives": 21,
+      "negatives": 41,
+      "misses": 0,
+      "threshold": 0.229
+    },
+    {
+      "source": "DDR",
+      "fold": 4,
+      "calibration_patients": 500,
+      "heldout_patients": 125,
+      "patient_disjoint": true,
+      "weights": [
+        0.8,
+        0.0,
+        0.2
+      ],
+      "inner_true_negatives": 102,
+      "inner_negatives": 165,
+      "inner_misses": 0,
+      "true_negatives": 22,
+      "negatives": 41,
+      "misses": 0,
+      "threshold": 0.22
+    },
+    {
+      "source": "DDR",
+      "fold": 5,
+      "calibration_patients": 501,
+      "heldout_patients": 124,
+      "patient_disjoint": true,
+      "weights": [
+        0.3,
+        0.4,
+        0.3
+      ],
+      "inner_true_negatives": 104,
+      "inner_negatives": 165,
+      "inner_misses": 0,
+      "true_negatives": 28,
+      "negatives": 41,
+      "misses": 1,
+      "threshold": 0.21397205588822354
+    },
+    {
+      "source": "DeepDRiD",
+      "fold": 1,
+      "calibration_patients": 41,
+      "heldout_patients": 12,
+      "patient_disjoint": true,
+      "weights": [
+        0.3,
+        0.6,
+        0.1
+      ],
+      "inner_true_negatives": 32,
+      "inner_negatives": 41,
+      "inner_misses": 0,
+      "true_negatives": 10,
+      "negatives": 11,
+      "misses": 0,
+      "threshold": 0.4365853658536585
+    },
+    {
+      "source": "DeepDRiD",
+      "fold": 2,
+      "calibration_patients": 42,
+      "heldout_patients": 11,
+      "patient_disjoint": true,
+      "weights": [
+        0.0,
+        0.4,
+        0.6
+      ],
+      "inner_true_negatives": 38,
+      "inner_negatives": 42,
+      "inner_misses": 0,
+      "true_negatives": 10,
+      "negatives": 10,
+      "misses": 0,
+      "threshold": 0.4380952380952381
+    },
+    {
+      "source": "DeepDRiD",
+      "fold": 3,
+      "calibration_patients": 43,
+      "heldout_patients": 10,
+      "patient_disjoint": true,
+      "weights": [
+        0.2,
+        0.2,
+        0.6
+      ],
+      "inner_true_negatives": 39,
+      "inner_negatives": 42,
+      "inner_misses": 0,
+      "true_negatives": 6,
+      "negatives": 10,
+      "misses": 0,
+      "threshold": 0.42790697674418604
+    },
+    {
+      "source": "DeepDRiD",
+      "fold": 4,
+      "calibration_patients": 43,
+      "heldout_patients": 10,
+      "patient_disjoint": true,
+      "weights": [
+        0.2,
+        0.5,
+        0.3
+      ],
+      "inner_true_negatives": 39,
+      "inner_negatives": 41,
+      "inner_misses": 0,
+      "true_negatives": 10,
+      "negatives": 11,
+      "misses": 0,
+      "threshold": 0.45116279069767445
+    },
+    {
+      "source": "DeepDRiD",
+      "fold": 5,
+      "calibration_patients": 43,
+      "heldout_patients": 10,
+      "patient_disjoint": true,
+      "weights": [
+        0.5,
+        0.1,
+        0.4
+      ],
+      "inner_true_negatives": 15,
+      "inner_negatives": 42,
+      "inner_misses": 0,
+      "true_negatives": 3,
+      "negatives": 10,
+      "misses": 1,
+      "threshold": 0.3941860465116279
+    },
+    {
+      "source": "DRTiD",
+      "fold": 1,
+      "calibration_patients": 199,
+      "heldout_patients": 51,
+      "patient_disjoint": true,
+      "weights": [
+        0.9,
+        0.1,
+        0.0
+      ],
+      "inner_true_negatives": 64,
+      "inner_negatives": 101,
+      "inner_misses": 0,
+      "true_negatives": 19,
+      "negatives": 26,
+      "misses": 0,
+      "threshold": 0.33969849246231154
+    },
+    {
+      "source": "DRTiD",
+      "fold": 2,
+      "calibration_patients": 199,
+      "heldout_patients": 51,
+      "patient_disjoint": true,
+      "weights": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "inner_true_negatives": 62,
+      "inner_negatives": 101,
+      "inner_misses": 0,
+      "true_negatives": 17,
+      "negatives": 26,
+      "misses": 0,
+      "threshold": 0.32160804020100503
+    },
+    {
+      "source": "DRTiD",
+      "fold": 3,
+      "calibration_patients": 200,
+      "heldout_patients": 50,
+      "patient_disjoint": true,
+      "weights": [
+        0.0,
+        0.2,
+        0.8
+      ],
+      "inner_true_negatives": 62,
+      "inner_negatives": 102,
+      "inner_misses": 0,
+      "true_negatives": 13,
+      "negatives": 25,
+      "misses": 0,
+      "threshold": 0.318
+    },
+    {
+      "source": "DRTiD",
+      "fold": 4,
+      "calibration_patients": 201,
+      "heldout_patients": 49,
+      "patient_disjoint": true,
+      "weights": [
+        0.7,
+        0.1,
+        0.2
+      ],
+      "inner_true_negatives": 71,
+      "inner_negatives": 102,
+      "inner_misses": 1,
+      "true_negatives": 13,
+      "negatives": 25,
+      "misses": 0,
+      "threshold": 0.34875621890547265
+    },
+    {
+      "source": "DRTiD",
+      "fold": 5,
+      "calibration_patients": 201,
+      "heldout_patients": 49,
+      "patient_disjoint": true,
+      "weights": [
+        0.7,
+        0.0,
+        0.3
+      ],
+      "inner_true_negatives": 67,
+      "inner_negatives": 102,
+      "inner_misses": 0,
+      "true_negatives": 18,
+      "negatives": 25,
+      "misses": 2,
+      "threshold": 0.34527363184079596
+    }
+  ]
+}

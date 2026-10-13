@@ -1,0 +1,113 @@
+{
+  "best_epoch": 0,
+  "checkpoint": "models\\combined_mmrdr_qualitygate_balanced_allft_20261013.pt",
+  "dataset": "DDR+DeepDRiD+DRTiD; MMRDR-UWF initialization",
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": null,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 291,
+        "missed_ungradable": 0,
+        "n_gradable": 849,
+        "negative": 386,
+        "positive": 463,
+        "quality_threshold": -3.500598430633545,
+        "risk_threshold": -2.3823516368865967,
+        "sensitivity": 1.0,
+        "specificity": 0.24611398963730569,
+        "true_negative": 95,
+        "true_positive": 463,
+        "ungradable": 133
+      }
+    },
+    {
+      "epoch": 1,
+      "train_loss": 2.946182087218141,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 323,
+        "missed_ungradable": 0,
+        "n_gradable": 849,
+        "negative": 386,
+        "positive": 463,
+        "quality_threshold": -3.6046948432922363,
+        "risk_threshold": -2.287299633026123,
+        "sensitivity": 1.0,
+        "specificity": 0.16321243523316062,
+        "true_negative": 63,
+        "true_positive": 463,
+        "ungradable": 133
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.868587920072682,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 312,
+        "missed_ungradable": 0,
+        "n_gradable": 849,
+        "negative": 386,
+        "positive": 463,
+        "quality_threshold": -3.712757110595703,
+        "risk_threshold": -2.172743320465088,
+        "sensitivity": 1.0,
+        "specificity": 0.19170984455958548,
+        "true_negative": 74,
+        "true_positive": 463,
+        "ungradable": 133
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 2.8590671247011854,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 313,
+        "missed_ungradable": 0,
+        "n_gradable": 849,
+        "negative": 386,
+        "positive": 463,
+        "quality_threshold": -3.860186815261841,
+        "risk_threshold": -2.6538641452789307,
+        "sensitivity": 1.0,
+        "specificity": 0.18911917098445596,
+        "true_negative": 73,
+        "true_positive": 463,
+        "ungradable": 133
+      }
+    }
+  ],
+  "model_name": "resnet50.a1_in1k",
+  "quality_gated_ungradable": true,
+  "status": "DEVELOPMENT_CANDIDATE_TEST_NOT_READ",
+  "task": "gradable referable DR = grade 2-4; grade-5 images use a separate automatic quality/referral gate",
+  "test_evaluated": false,
+  "trainable_info": {
+    "mode": "all_parameters",
+    "trainable_parameters": 23520326
+  },
+  "validation_metrics_at_quality_gated_policy": {
+    "action_coverage": 1.0,
+    "false_negative_clearance": 0,
+    "false_positive_referral": 291,
+    "missed_ungradable": 0,
+    "n_gradable": 849,
+    "negative": 386,
+    "positive": 463,
+    "quality_threshold": -3.500598430633545,
+    "risk_threshold": -2.3823516368865967,
+    "sensitivity": 1.0,
+    "specificity": 0.24611398963730569,
+    "true_negative": 95,
+    "true_positive": 463,
+    "ungradable": 133
+  },
+  "validation_metrics_at_zero_miss_threshold": null
+}

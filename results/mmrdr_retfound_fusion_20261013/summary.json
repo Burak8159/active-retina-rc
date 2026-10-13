@@ -1,0 +1,96 @@
+{
+  "status": "SAME_VALIDATION_MODEL_SELECTION_DIAGNOSTIC_ONLY; OFFICIAL_TEST_NOT_READ",
+  "warning": "Fusion weights and operating thresholds are evaluated on the same internal image-level UWF validation split; scores are exploratory and optimistic, not certification.",
+  "reference": "0.75 rank(HGB on frozen ResNet+DINO features) + 0.25 rank(448px layer-4 fine-tuned ResNet score)",
+  "retfound_candidates": [
+    "logreg_scaled_c0.01",
+    "rbf_svc_l2_c10"
+  ],
+  "specificity_zero_miss_target": "grade>=2 referable; all 572 validation positives must remain referred",
+  "candidates_ranked": [
+    {
+      "candidate": "reference_plus_logreg_scaled_c0.01_0.25",
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "false_negative": 0,
+      "true_negative": 207,
+      "specificity_zero_miss": 0.345,
+      "sensitivity_zero_miss": 1.0,
+      "threshold": 0.19442668371696506,
+      "validation_auroc": 0.9399169580419581
+    },
+    {
+      "candidate": "reference_plus_logreg_scaled_c0.01_0.10",
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "false_negative": 0,
+      "true_negative": 202,
+      "specificity_zero_miss": 0.33666666666666667,
+      "sensitivity_zero_miss": 1.0,
+      "threshold": 0.18915174765558398,
+      "validation_auroc": 0.9362820512820513
+    },
+    {
+      "candidate": "reference_hgb075_ft025",
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "false_negative": 0,
+      "true_negative": 202,
+      "specificity_zero_miss": 0.33666666666666667,
+      "sensitivity_zero_miss": 1.0,
+      "threshold": 0.18563512361466328,
+      "validation_auroc": 0.9323776223776225
+    },
+    {
+      "candidate": "reference_plus_rbf_svc_l2_c10_0.10",
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "false_negative": 0,
+      "true_negative": 197,
+      "specificity_zero_miss": 0.3283333333333333,
+      "sensitivity_zero_miss": 1.0,
+      "threshold": 0.18429241261722082,
+      "validation_auroc": 0.9359251165501166
+    },
+    {
+      "candidate": "reference_plus_rbf_svc_l2_c10_0.25",
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "false_negative": 0,
+      "true_negative": 186,
+      "specificity_zero_miss": 0.31,
+      "sensitivity_zero_miss": 1.0,
+      "threshold": 0.18227834612105714,
+      "validation_auroc": 0.9390530303030303
+    },
+    {
+      "candidate": "reference_plus_rbf_svc_l2_c10_0.50",
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "false_negative": 0,
+      "true_negative": 141,
+      "specificity_zero_miss": 0.235,
+      "sensitivity_zero_miss": 1.0,
+      "threshold": 0.1467391304347826,
+      "validation_auroc": 0.938113344988345
+    },
+    {
+      "candidate": "reference_plus_logreg_scaled_c0.01_0.50",
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "false_negative": 0,
+      "true_negative": 138,
+      "specificity_zero_miss": 0.23,
+      "sensitivity_zero_miss": 1.0,
+      "threshold": 0.14801790281329924,
+      "validation_auroc": 0.9402972027972027
+    }
+  ]
+}

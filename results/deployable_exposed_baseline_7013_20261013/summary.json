@@ -1,0 +1,18 @@
+{
+  "artifact_status": "EXPOSED_REPLAY_ONLY_NOT_CLINICALLY_VALIDATED",
+  "replay_matches_reference": false,
+  "same_cohort_replay_metrics": {
+    "n_cases": 981,
+    "n_gradable_nonreferable": 385,
+    "n_referable": 596,
+    "n_ungradable": 133,
+    "true_negatives": 191,
+    "false_positive_referrals": 194,
+    "missed_referable": 0,
+    "missed_ungradable": 0,
+    "specificity": 0.4961038961038961,
+    "action_coverage": 1.0,
+    "threshold": 0.22224000000000002
+  },
+  "important": "Not an independent evaluation, calibrated clinical model, or evidence of future-case specificity."
+}

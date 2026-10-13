@@ -1,0 +1,40 @@
+{
+  "artifact_status": "EXPOSED_REPLAY_ONLY_NOT_CLINICALLY_VALIDATED",
+  "replay_matches_reference": true,
+  "same_cohort_replay_metrics": {
+    "n_cases": 981,
+    "n_gradable_nonreferable": 385,
+    "true_negatives": 270,
+    "missed_referable": 0,
+    "missed_ungradable": 0,
+    "action_coverage": 1.0,
+    "specificity": 0.7012987012987013,
+    "per_source": {
+      "DDR": {
+        "cases": 625,
+        "gradable_nonreferable": 206,
+        "true_negatives": 134,
+        "missed_referable": 0,
+        "missed_ungradable": 0,
+        "action_coverage": 1.0
+      },
+      "DeepDRiD": {
+        "cases": 106,
+        "gradable_nonreferable": 52,
+        "true_negatives": 51,
+        "missed_referable": 0,
+        "missed_ungradable": 0,
+        "action_coverage": 1.0
+      },
+      "DRTiD": {
+        "cases": 250,
+        "gradable_nonreferable": 127,
+        "true_negatives": 85,
+        "missed_referable": 0,
+        "missed_ungradable": 0,
+        "action_coverage": 1.0
+      }
+    }
+  },
+  "important": "Not an independent evaluation, calibrated clinical model, or evidence of future-case specificity."
+}

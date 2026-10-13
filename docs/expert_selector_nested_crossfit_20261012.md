@@ -29,6 +29,26 @@ observed misses in this report are not a guarantee.
 | Nested nonlinear selector (logistic, pairwise rank, shallow tree) | 196 / 385 | 50.91% | 1 | 100% |
 | Earlier full-cohort label-informed oracle union (not a model) | 293 / 385 | 76.10% | 0 | 100% |
 
+## Final Simple-Blend Diagnostic
+
+After the nested selectors failed to recover the oracle complementarity, I
+tested every stored per-source score as a single convex blend with the current
+source-specific recipe. The grid used 101 weights from 0 to 1, with the
+zero-miss cutoff re-derived from the same evaluated cohort for each candidate.
+
+| Source | Current TN | Best one-score blend TN | Score channel | Blend weight on channel |
+|---|---:|---:|---|---:|
+| DDR | 134 / 206 | 135 / 206 | `grade_boundary_margin_audit_20261011::ordinal_risk` | 0.12 |
+| DeepDRiD | 51 / 52 | 51 / 52 | Current recipe | 0.00 |
+| DRTiD | 85 / 127 | 86 / 127 | `rtx_drtid_rankheavy_viewaux_current_split/pooled_validation_hflip_predictions.csv::paired` | 0.10 |
+| **Pooled** | **270 / 385** | **272 / 385** | | |
+
+The apparent 0.52-point lift (two eyes) is post-hoc and uses labels both to
+choose the blend and to set its cutoff. It is not a newly trained model,
+patient-held-out gain, or deployable policy, and it is rejected as progress
+toward the 75% target. It does show that this one-channel convex-blend family
+does not unlock the available oracle margin. Do not repeat this grid.
+
 The rows are not equally calibrated: the 70.13% historical reference and 76.10%
 oracle use full-cohort labels to choose thresholds, whereas the new selector
 uses patient-grouped cross-fitting. Therefore, the cross-fit rows are not

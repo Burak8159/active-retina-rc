@@ -152,35 +152,96 @@ class DeepDRiDQualityDataset(Dataset):
 
 
 class PairedFusionModel(nn.Module):
-    def __init__(self, model_name: str, pretrained: bool, unfreeze_layer4: bool) -> None:
+    def __init__(
+        self,
+        model_name: str,
+        pretrained: bool,
+        unfreeze_layer4: bool,
+        architecture: str = "pooled",
+        anchored_fusion: bool = False,
+    ) -> None:
         super().__init__()
         import timm
 
         self.encoder = timm.create_model(model_name, pretrained=pretrained, num_classes=0, global_pool="avg")
         width = int(self.encoder.num_features)
+        self.architecture = architecture
+        self.anchored_fusion = anchored_fusion
+        if architecture not in {"pooled", "cross_attention"}:
+            raise ValueError(f"Unsupported architecture: {architecture}")
         if unfreeze_layer4:
             for name, parameter in self.encoder.named_parameters():
                 parameter.requires_grad = name.startswith("layer4.")
         self.view_heads = nn.ModuleList(nn.Linear(width, 5) for _ in FIELDS)
         self.quality_heads = nn.ModuleList(nn.Linear(width, 1) for _ in FIELDS)
-        self.fusion = nn.Sequential(
-            nn.Linear(width * 4, 1024),
-            nn.LayerNorm(1024),
-            nn.GELU(),
-            nn.Dropout(0.25),
-            nn.Linear(1024, 5),
-        )
+        if architecture == "pooled":
+            if anchored_fusion:
+                self.fusion = nn.Sequential(
+                    nn.Linear(width * 4, 512),
+                    nn.LayerNorm(512),
+                    nn.GELU(),
+                    nn.Dropout(0.2),
+                    nn.Linear(512, 5),
+                )
+                nn.init.zeros_(self.fusion[-1].weight)
+                nn.init.zeros_(self.fusion[-1].bias)
+            else:
+                self.fusion = nn.Sequential(
+                    nn.Linear(width * 4, 1024),
+                    nn.LayerNorm(1024),
+                    nn.GELU(),
+                    nn.Dropout(0.25),
+                    nn.Linear(1024, 5),
+                )
+        else:
+            self.token_projection = nn.Conv2d(width, 256, kernel_size=1)
+            self.view_embedding = nn.Parameter(torch.zeros(1, 2, 1, 256))
+            self.position_embedding = nn.Parameter(torch.zeros(1, 1, 49, 256))
+            layer = nn.TransformerEncoderLayer(
+                d_model=256,
+                nhead=8,
+                dim_feedforward=512,
+                dropout=0.1,
+                activation="gelu",
+                batch_first=True,
+                norm_first=True,
+            )
+            self.cross_field_encoder = nn.TransformerEncoder(layer, num_layers=3)
+            self.fusion = nn.Sequential(nn.LayerNorm(256), nn.Dropout(0.2), nn.Linear(256, 5))
+            nn.init.trunc_normal_(self.view_embedding, std=0.02)
+            nn.init.trunc_normal_(self.position_embedding, std=0.02)
 
     def forward(self, images: torch.Tensor):
         batch, views, channels, height, width = images.shape
-        embeddings = self.encoder(images.reshape(batch * views, channels, height, width))
-        embeddings = embeddings.reshape(batch, views, -1)
+        flat_images = images.reshape(batch * views, channels, height, width)
+        if self.architecture == "pooled":
+            embeddings = self.encoder(flat_images).reshape(batch, views, -1)
+            fused_features = torch.cat((
+                embeddings[:, 0], embeddings[:, 1],
+                torch.abs(embeddings[:, 0] - embeddings[:, 1]),
+                embeddings[:, 0] * embeddings[:, 1],
+            ), dim=1)
+        else:
+            raw_maps = self.encoder.forward_features(flat_images)
+            embeddings = raw_maps.mean(dim=(2, 3)).reshape(batch, views, -1)
+            feature_maps = self.token_projection(raw_maps)
+            _, token_width, map_h, map_w = feature_maps.shape
+            tokens = feature_maps.flatten(2).transpose(1, 2).reshape(batch, views, map_h * map_w, token_width)
+            position = self.position_embedding.reshape(1, 7, 7, token_width).permute(0, 3, 1, 2)
+            position = nn.functional.interpolate(position, size=(map_h, map_w), mode="bicubic", align_corners=False)
+            position = position.flatten(2).transpose(1, 2).unsqueeze(1)
+            tokens = tokens + self.view_embedding + position
+            tokens = tokens.reshape(batch, views * map_h * map_w, token_width)
+            fused_tokens = self.cross_field_encoder(tokens)
+            pooled = fused_tokens.max(dim=1).values
+            fused_logits = self.fusion(pooled)
         view_logits = torch.stack([head(embeddings[:, i]) for i, head in enumerate(self.view_heads)], dim=1)
+        if self.architecture == "pooled":
+            residual = self.fusion(fused_features)
+            fused_logits = view_logits.mean(dim=1) + residual if self.anchored_fusion else residual
         quality_logits = torch.stack(
             [head(embeddings[:, i]).squeeze(-1) for i, head in enumerate(self.quality_heads)], dim=1
         )
-        first, second = embeddings[:, 0], embeddings[:, 1]
-        fused_logits = self.fusion(torch.cat((first, second, torch.abs(first - second), first * second), dim=1))
         return fused_logits, view_logits, quality_logits
 
 
@@ -324,6 +385,7 @@ def main() -> None:
     parser.add_argument("--manifest", default="results/drtid_untouched_certification/certification_manifest.csv")
     parser.add_argument("--output-dir", default="results/drtid_paired_fusion_dev")
     parser.add_argument("--model-name", default="resnet50.a1_in1k")
+    parser.add_argument("--architecture", choices=("pooled", "cross_attention"), default="pooled")
     parser.add_argument("--image-size", type=int, default=224)
     parser.add_argument("--epochs", type=int, default=12)
     parser.add_argument("--batch-size", type=int, default=2, help="Number of eyes; encoder processes two images per eye.")
@@ -344,6 +406,10 @@ def main() -> None:
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--no-pretrained", action="store_true")
     parser.add_argument("--train-full-encoder", action="store_true")
+    parser.add_argument("--kaggle-dr-checkpoint", help="Five-grade Kaggle DR ResNet-50 checkpoint; initializes the encoder and view heads.")
+    parser.add_argument("--drtid-normalization", action="store_true", help="Use the official DRTiD RGB mean/std used by CrossFiT.")
+    parser.add_argument("--freeze-kaggle-anchor", action="store_true", help="Freeze the loaded Kaggle encoder and grade heads; optimize only the zero-start paired residual.")
+    parser.add_argument("--selection-metric", choices=("auroc", "specificity_at_zero_miss"), default="auroc")
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -357,11 +423,49 @@ def main() -> None:
     train_pairs, valid_pairs = patient_split(pairs, args.validation_fraction, args.seed)
     import timm
 
-    model = PairedFusionModel(args.model_name, not args.no_pretrained, not args.train_full_encoder)
+    model = PairedFusionModel(
+        args.model_name,
+        not args.no_pretrained and not args.kaggle_dr_checkpoint,
+        not args.train_full_encoder,
+        args.architecture,
+        anchored_fusion=bool(args.kaggle_dr_checkpoint),
+    )
     cfg = timm.data.resolve_model_data_config(model.encoder)
     cfg["input_size"] = (3, args.image_size, args.image_size)
+    if args.drtid_normalization:
+        cfg["mean"] = (0.372487, 0.217266, 0.119367)
+        cfg["std"] = (0.281526, 0.179457, 0.109162)
     train_transform = timm.data.create_transform(**cfg, is_training=True)
     eval_transform = timm.data.create_transform(**cfg, is_training=False)
+    kaggle_checkpoint_hash = None
+    if args.kaggle_dr_checkpoint:
+        checkpoint_path = Path(args.kaggle_dr_checkpoint)
+        kaggle_checkpoint_hash = hashlib.sha256(checkpoint_path.read_bytes()).hexdigest()
+        checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        source_state = checkpoint.get("net", checkpoint)
+        state = {key.removeprefix("module."): value for key, value in source_state.items()}
+        fc_weight = state.pop("fc.weight", None)
+        fc_bias = state.pop("fc.bias", None)
+        incompatible = model.encoder.load_state_dict(state, strict=False)
+        if fc_weight is None or tuple(fc_weight.shape) != tuple(model.view_heads[0].weight.shape):
+            raise ValueError("Kaggle checkpoint does not contain a compatible five-grade fc.weight.")
+        if fc_bias is None or tuple(fc_bias.shape) != tuple(model.view_heads[0].bias.shape):
+            raise ValueError("Kaggle checkpoint does not contain a compatible five-grade fc.bias.")
+        with torch.no_grad():
+            for head in model.view_heads:
+                head.weight.copy_(fc_weight)
+                head.bias.copy_(fc_bias)
+        if incompatible.unexpected_keys:
+            raise ValueError(f"Unexpected encoder checkpoint keys: {incompatible.unexpected_keys[:8]}")
+        if len(incompatible.missing_keys) > 4:
+            raise ValueError(f"Too many missing encoder checkpoint tensors: {incompatible.missing_keys[:8]}")
+    if args.freeze_kaggle_anchor:
+        if not args.kaggle_dr_checkpoint or not model.anchored_fusion:
+            raise ValueError("--freeze-kaggle-anchor requires --kaggle-dr-checkpoint.")
+        for parameter in model.encoder.parameters():
+            parameter.requires_grad = False
+        for parameter in model.view_heads.parameters():
+            parameter.requires_grad = False
     train_ds = PairedFundusDataset(train_pairs, train_transform)
     valid_ds = PairedFundusDataset(valid_pairs, eval_transform)
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True)
@@ -420,6 +524,9 @@ def main() -> None:
 
     for epoch in range(1, args.epochs + 1):
         model.train()
+        if args.freeze_kaggle_anchor:
+            model.encoder.eval()
+            model.view_heads.eval()
         total, count = 0.0, 0
         quality_iterator = iter(quality_train_loader) if quality_train_loader is not None else None
         for images, grade, _label, _index in train_loader:
@@ -464,7 +571,7 @@ def main() -> None:
         print(json.dumps(record, sort_keys=True), flush=True)
 
         # Select by ranking quality, not by a post-hoc threshold or target score.
-        rank_score = float(metrics.get("auroc", -1.0))
+        rank_score = float(metrics.get(args.selection_metric, -1.0))
         if rank_score > best:
             best = rank_score
             best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
@@ -499,6 +606,13 @@ def main() -> None:
         "train_patients": len({str(x["patient_id"]) for x in train_pairs}),
         "validation_patients": len({str(x["patient_id"]) for x in valid_pairs}),
         "model": args.model_name,
+        "architecture": args.architecture,
+        "kaggle_dr_checkpoint": args.kaggle_dr_checkpoint,
+        "kaggle_dr_checkpoint_sha256": kaggle_checkpoint_hash,
+        "anchored_fusion": model.anchored_fusion,
+        "frozen_kaggle_anchor": args.freeze_kaggle_anchor,
+        "checkpoint_selection_metric": args.selection_metric,
+        "normalization": "DRTiD official CrossFiT RGB mean/std" if args.drtid_normalization else "model default",
         "encoder_trainable": "layer4 and fusion/view heads" if not args.train_full_encoder else "all encoder layers and heads",
         "learning_rates": {
             "task_heads": args.lr,

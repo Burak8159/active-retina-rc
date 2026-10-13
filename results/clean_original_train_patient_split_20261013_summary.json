@@ -1,0 +1,46 @@
+{
+  "status": "PATIENT_DISJOINT_DEVELOPMENT_SPLIT_NOT_CERTIFICATION",
+  "original_train_partitions_only": [
+    "ddr_train",
+    "drtid_training",
+    "idrid_train",
+    "official_train"
+  ],
+  "reference_eye_count": 981,
+  "reference_patient_group_count": 928,
+  "excluded_reference_row_count": 1337,
+  "eligible_rows": 9036,
+  "eligible_eye_count": 7904,
+  "eligible_patient_count": 7690,
+  "train_rows": 7228,
+  "valid_rows": 1808,
+  "train_patients": 6154,
+  "valid_patients": 1536,
+  "train_valid_patient_overlap": 0,
+  "reference_patient_overlap": 0,
+  "source_rows": {
+    "ddr_hf_specificity300": 1149,
+    "drtid_paired": 1408,
+    "deepdrid_paired": 856,
+    "ddr_full_added": 5217,
+    "idrid_train_only": 406
+  },
+  "valid_source_rows": {
+    "ddr_hf_specificity300": 230,
+    "drtid_paired": 280,
+    "deepdrid_paired": 176,
+    "ddr_full_added": 1042,
+    "idrid_train_only": 80
+  },
+  "valid_grade_rows": {
+    "0": 851,
+    "1": 102,
+    "2": 541,
+    "3": 101,
+    "4": 118,
+    "5": 95
+  },
+  "seed": 20261013,
+  "fold": 0,
+  "n_splits": 5
+}

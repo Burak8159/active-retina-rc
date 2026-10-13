@@ -1,0 +1,57 @@
+{
+  "status": "POSTHOC_EXPOSED_COHORT_DIAGNOSTIC_NOT_VALIDATION",
+  "n_reference_cases": 981,
+  "n_negative": 385,
+  "thresholds_selected_on_reference_labels": {
+    "risk": -2.3823516368865967,
+    "quality": -3.500598430633545
+  },
+  "source_thresholds_selected_on_reference_labels": {
+    "DDR": {
+      "risk": -2.353127956390381,
+      "quality": -3.500598430633545
+    },
+    "DRTiD": {
+      "risk": -2.3823516368865967,
+      "quality": Infinity
+    },
+    "DeepDRiD": {
+      "risk": -0.6015012264251709,
+      "quality": Infinity
+    }
+  },
+  "frozen_reference": {
+    "true_negatives": 270,
+    "specificity": 0.7012987012987013
+  },
+  "candidate_standalone": {
+    "true_negatives": 95,
+    "specificity": 0.24675324675324675,
+    "missed_referable": 0,
+    "missed_ungradable": 0
+  },
+  "reference_plus_candidate_clearance": {
+    "true_negatives": 274,
+    "specificity": 0.7116883116883117,
+    "additional_true_negatives": 4,
+    "missed_referable": 0,
+    "missed_ungradable": 0,
+    "cases_needed_for_75_percent": 19,
+    "crosses_75_percent": false
+  },
+  "source_specific_threshold_candidate": {
+    "true_negatives": 119,
+    "specificity": 0.3090909090909091,
+    "missed_referable": 0,
+    "missed_ungradable": 0
+  },
+  "reference_plus_source_specific_clearance": {
+    "true_negatives": 274,
+    "specificity": 0.7116883116883117,
+    "additional_true_negatives": 4,
+    "missed_referable": 0,
+    "missed_ungradable": 0,
+    "crosses_75_percent": false
+  },
+  "warning": "Thresholds were selected using the same inspected reference labels. This result cannot validate future-case performance, a frozen model, clinical safety, or deployment. The original 70.13 reference is unchanged."
+}

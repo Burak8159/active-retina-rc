@@ -1,0 +1,29 @@
+{
+  "status": "EXPOSED_REFERENCE_TRANSFER_DIAGNOSTIC_NOT_CERTIFICATION",
+  "n_reference_cases": 981,
+  "n_negative": 385,
+  "frozen_thresholds_from_patient_disjoint_development_validation": {
+    "risk": -1.6569204330444336,
+    "quality": -6.287916660308838
+  },
+  "candidate_standalone": {
+    "true_negatives": 54,
+    "specificity": 0.14025974025974025,
+    "missed_referable": 2,
+    "missed_ungradable": 0,
+    "action_coverage": 1.0
+  },
+  "frozen_baseline_plus_candidate": {
+    "true_negatives": 273,
+    "specificity": 0.7090909090909091,
+    "additional_true_negatives": 3,
+    "misses_after_combination": 2,
+    "action_coverage": 1.0,
+    "true_negatives_required_for_75_percent": 289,
+    "gap_to_75_percent": 16
+  },
+  "warning": "Thresholds were fixed from a patient-disjoint development split and not selected on this cohort. However, this reference cohort has been repeatedly inspected during prior development and is not an untouched certification set.",
+  "checkpoint": "models\\clean_original_train_mmrdr_finetune_20261013.pt",
+  "best_epoch": 8,
+  "test_evaluated": false
+}

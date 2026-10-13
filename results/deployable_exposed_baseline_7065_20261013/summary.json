@@ -1,0 +1,70 @@
+{
+  "status": "POSTHOC_SAME_COHORT_DEVELOPMENT_ONLY_NOT_VALIDATED",
+  "n_cases": 981,
+  "baseline": {
+    "true_negatives": 270,
+    "gradable_negatives": 385,
+    "specificity": 0.7012987012987013,
+    "missed_referable": 0,
+    "missed_ungradable": 0
+  },
+  "candidate": {
+    "true_negatives": 272,
+    "gradable_negatives": 385,
+    "specificity": 0.7064935064935065,
+    "missed_referable": 0,
+    "missed_ungradable": 0,
+    "delta_true_negatives": 2
+  },
+  "per_source": {
+    "DDR": {
+      "gradable_negatives": 206,
+      "candidate_true_negatives": 135,
+      "candidate_specificity": 0.6553398058252428,
+      "gradable_referable": 286,
+      "candidate_missed_referable": 0,
+      "ungradable_cases": 133,
+      "candidate_missed_ungradable": 0,
+      "posthoc_threshold": 0.21911501597444089,
+      "weights": {
+        "risk_score": 0.36,
+        "aptos_margin": 0.268,
+        "ordinal_attention_margin": 0.1,
+        "margin_audit_margin": 0.271
+      }
+    },
+    "DeepDRiD": {
+      "gradable_negatives": 52,
+      "candidate_true_negatives": 51,
+      "candidate_specificity": 0.9807692307692307,
+      "gradable_referable": 54,
+      "candidate_missed_referable": 0,
+      "ungradable_cases": 0,
+      "candidate_missed_ungradable": 0,
+      "posthoc_threshold": 0.46497196261682233,
+      "weights": {
+        "risk_score": 0.693,
+        "ordinal_quality": 0.018,
+        "sourcebalanced_margin": 0.22,
+        "fundus_risk": 0.068
+      }
+    },
+    "DRTiD": {
+      "gradable_negatives": 127,
+      "candidate_true_negatives": 86,
+      "candidate_specificity": 0.6771653543307087,
+      "gradable_referable": 123,
+      "candidate_missed_referable": 0,
+      "ungradable_cases": 0,
+      "candidate_missed_ungradable": 0,
+      "posthoc_threshold": 0.34208764940239045,
+      "weights": {
+        "risk_score": 0.032,
+        "rankheavy_pair": 0.584,
+        "fundus_margin": 0.076,
+        "geometry_pair": 0.308
+      }
+    }
+  },
+  "provenance_warning": "Candidate weights and per-source zero-miss thresholds were selected after inspecting this same 981-case cohort. The apparent lift is an optimistic, exposed-cohort diagnostic, not independent validation, a deployable frozen model, or clinical/autonomous evidence. The 70.13 baseline remains unchanged."
+}

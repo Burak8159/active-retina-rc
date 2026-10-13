@@ -1,0 +1,29 @@
+{
+  "status": "DEVELOPMENT_VALIDATION_ONLY_OFFICIAL_TEST_NOT_READ",
+  "dataset": "MMRDR-UWF",
+  "binary_rule": "grade >= 2 is referable; grade 0-1 is nonreferable",
+  "split_caveat": "training partition uses image-level stratification because source patient identifiers are unavailable; official test partition was excluded",
+  "feature_sources": [
+    "results/mmrdr_uwf_features_20261013.npz",
+    "results/mmrdr_uwf_dino_features_20261013.npz"
+  ],
+  "n_train": 6635,
+  "n_valid": 1172,
+  "results_ranked_by_zero_miss_specificity": [
+    {
+      "model": "hist_gradient_boost",
+      "threshold_zero_miss": -3.504789336199326,
+      "n": 1172,
+      "positive": 572,
+      "negative": 600,
+      "true_positive": 572,
+      "false_negative": 0,
+      "true_negative": 151,
+      "false_positive": 449,
+      "specificity_zero_miss": 0.25166666666666665,
+      "sensitivity_zero_miss": 1.0,
+      "refer_rate": 0.871160409556314,
+      "validation_auroc": 0.9199592074592073
+    }
+  ]
+}

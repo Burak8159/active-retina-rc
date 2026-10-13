@@ -1,0 +1,213 @@
+{
+  "best_epoch": 8,
+  "checkpoint": "models\\clean_original_train_mmrdr_finetune_20261013.pt",
+  "dataset": "ddr_full_added + ddr_hf_specificity300 + deepdrid_paired + drtid_paired + idrid_train_only; MMRDR-UWF initialization",
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": null,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 820,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -6.097529411315918,
+        "risk_threshold": -0.5472435355186462,
+        "sensitivity": 1.0,
+        "specificity": 0.0,
+        "true_negative": 0,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 1,
+      "train_loss": 4.479327671786468,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 812,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -6.5199737548828125,
+        "risk_threshold": -0.9084615707397461,
+        "sensitivity": 1.0,
+        "specificity": 0.00975609756097561,
+        "true_negative": 8,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 4.117562059991322,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 814,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -7.228024959564209,
+        "risk_threshold": -1.375016212463379,
+        "sensitivity": 1.0,
+        "specificity": 0.007317073170731708,
+        "true_negative": 6,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 3.9262298717476347,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 794,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -7.159358024597168,
+        "risk_threshold": -1.3116998672485352,
+        "sensitivity": 1.0,
+        "specificity": 0.03170731707317073,
+        "true_negative": 26,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 4,
+      "train_loss": 3.8119192517506333,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 769,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -6.719196796417236,
+        "risk_threshold": -1.7318553924560547,
+        "sensitivity": 1.0,
+        "specificity": 0.06219512195121951,
+        "true_negative": 51,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 5,
+      "train_loss": 3.6900303146673554,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 755,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -6.882450103759766,
+        "risk_threshold": -1.5512206554412842,
+        "sensitivity": 1.0,
+        "specificity": 0.07926829268292683,
+        "true_negative": 65,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 6,
+      "train_loss": 3.638815198367844,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 731,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -6.477713584899902,
+        "risk_threshold": -1.7784388065338135,
+        "sensitivity": 1.0,
+        "specificity": 0.10853658536585366,
+        "true_negative": 89,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 7,
+      "train_loss": 3.5661779722836906,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 707,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -6.382566452026367,
+        "risk_threshold": -1.6720446348190308,
+        "sensitivity": 1.0,
+        "specificity": 0.1378048780487805,
+        "true_negative": 113,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    },
+    {
+      "epoch": 8,
+      "train_loss": 3.544543315238496,
+      "validation_zero_miss": {
+        "action_coverage": 1.0,
+        "false_negative_clearance": 0,
+        "false_positive_referral": 680,
+        "missed_ungradable": 0,
+        "n_gradable": 1485,
+        "negative": 820,
+        "positive": 665,
+        "quality_threshold": -6.287916660308838,
+        "risk_threshold": -1.6569204330444336,
+        "sensitivity": 1.0,
+        "specificity": 0.17073170731707318,
+        "true_negative": 140,
+        "true_positive": 665,
+        "ungradable": 95
+      }
+    }
+  ],
+  "model_name": "resnet50.a1_in1k",
+  "quality_gated_ungradable": true,
+  "status": "DEVELOPMENT_CANDIDATE_TEST_NOT_READ",
+  "task": "gradable referable DR = grade 2-4; grade-5 images use a separate automatic quality/referral gate",
+  "test_evaluated": false,
+  "trainable_info": {
+    "mode": "all_parameters",
+    "trainable_parameters": 23520326
+  },
+  "validation_metrics_at_quality_gated_policy": {
+    "action_coverage": 1.0,
+    "false_negative_clearance": 0,
+    "false_positive_referral": 680,
+    "missed_ungradable": 0,
+    "n_gradable": 1485,
+    "negative": 820,
+    "positive": 665,
+    "quality_threshold": -6.287916660308838,
+    "risk_threshold": -1.6569204330444336,
+    "sensitivity": 1.0,
+    "specificity": 0.17073170731707318,
+    "true_negative": 140,
+    "true_positive": 665,
+    "ungradable": 95
+  },
+  "validation_metrics_at_zero_miss_threshold": null
+}
