@@ -92,6 +92,19 @@ def assessment_summary(decision: dict[str, Any]) -> dict[str, str]:
     return {"result": "Clinician review needed", "next": "Do not make a screening decision from this result alone."}
 
 
+def public_scan_response(result: dict[str, Any], report_url: str) -> dict[str, Any]:
+    """Return only the concise user-facing scan result; audit data stays stored."""
+    assessment = assessment_summary(result["decision"])
+    return {
+        "case_id": result["case_id"],
+        "assessment": assessment["result"],
+        "next_step": assessment["next"],
+        "clinician_confirmation_required": True,
+        "autonomous_diagnosis": False,
+        "report_url": report_url,
+    }
+
+
 def get_field_text(form: cgi.FieldStorage, name: str, default: str = "") -> str:
     item = form[name] if name in form else None
     if item is None or isinstance(item, list):
@@ -256,16 +269,8 @@ class StationHandler(BaseHTTPRequestHandler):
                 bool(payload.get("quality_ok", True)),
             )
             case_dir = persist_case(case_id, result)
-            result = {
-                **result,
-                "artifacts": {
-                    "case_dir": str(case_dir),
-                    "result_json": str(case_dir / "result.json"),
-                    "report_html": str(case_dir / "report.html"),
-                    "report_url": f"/case?id={case_id}",
-                },
-            }
-            self.write(200, json.dumps(result, indent=2, sort_keys=True).encode("utf-8"), "application/json; charset=utf-8")
+            response = public_scan_response(result, f"/case?id={case_id}")
+            self.write(200, json.dumps(response, indent=2, sort_keys=True).encode("utf-8"), "application/json; charset=utf-8")
         except Exception as exc:
             body = {"error": type(exc).__name__, "message": str(exc)}
             self.write(400, json.dumps(body, indent=2, sort_keys=True).encode("utf-8"), "application/json; charset=utf-8")

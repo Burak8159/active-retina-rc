@@ -36,34 +36,28 @@ second image is supplied, the response asks for another retinal view.
 
 ## Response
 
-The API returns:
+The API returns a concise user-facing result:
 
-- case ID and operator ID,
-- model version and status,
-- SHA-256 hashes for input images,
-- referable-DR probability,
-- five-class grade prediction,
-- clinician-facing model impression,
-- recommended next step,
-- manual-review flag,
+- case ID,
+- plain-language assessment,
+- next step,
+- clinician-confirmation flag,
 - autonomous-diagnosis flag,
-- paths to generated JSON and HTML artifacts.
+- report URL.
+
+Full scores, model metadata, and image hashes remain in the locally saved case
+record and detailed report rather than the scan response.
 
 Example verified response:
 
 ```json
 {
   "case_id": "API-DEMO-001",
-  "decision": {
-    "action": "STOP_AFTER_FIRST_VIEW",
-    "model_impression_for_clinician_review": "low_referable_dr_probability",
-    "grade_impression_for_clinician_review": "nonreferable_or_mild_dr_predicted",
-    "referable_probability": 0.005327902734279633,
-    "predicted_dr_grade": 0,
-    "recommended_next_step": "clinician_review_required_before_final_decision"
-  },
-  "manual_review_required": true,
-  "autonomous_diagnosis": false
+  "assessment": "Lower likelihood of referable diabetic retinopathy",
+  "next_step": "A clinician must confirm this assessment.",
+  "clinician_confirmation_required": true,
+  "autonomous_diagnosis": false,
+  "report_url": "/case?id=API-DEMO-001"
 }
 ```
 

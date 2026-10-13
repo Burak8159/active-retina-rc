@@ -1,6 +1,6 @@
 import unittest
 
-from active_retina.clinical_station import assessment_summary, form_page
+from active_retina.clinical_station import assessment_summary, form_page, public_scan_response
 
 
 class ClinicalStationUiTests(unittest.TestCase):
@@ -27,6 +27,19 @@ class ClinicalStationUiTests(unittest.TestCase):
             assessment_summary({"recommendation": "manual_review_image_quality_failed"}),
             {"result": "Image quality is not sufficient", "next": "Capture a clearer retinal image."},
         )
+
+    def test_public_api_response_contains_only_scan_result_fields(self):
+        response = public_scan_response({
+            "case_id": "CASE-1",
+            "decision": {"recommendation": "manual_review_likely_referable", "referable_score": 0.92},
+        }, "/case?id=CASE-1")
+        self.assertEqual(set(response), {
+            "case_id", "assessment", "next_step", "clinician_confirmation_required",
+            "autonomous_diagnosis", "report_url",
+        })
+        self.assertEqual(response["assessment"], "Possible referable diabetic retinopathy")
+        self.assertTrue(response["clinician_confirmation_required"])
+        self.assertFalse(response["autonomous_diagnosis"])
 
 
 if __name__ == "__main__":
