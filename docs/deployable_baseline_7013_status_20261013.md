@@ -20,8 +20,9 @@ Calibration folds use patient IDs from the deduplicated master manifest. Both ar
 | Fixed recipe, 5-fold patient-disjoint calibration | 69.61% | 268 / 385 | 3 | 100% |
 | Nested patient-fold blend-weight selection | 64.42% | 248 / 385 | 5 | 100% |
 | Nested blend weights plus calibration-only safety-margin selection | 65.71% | 253 / 385 | 6 | 100% |
+| Post-hoc source-specific margin frontier | **63.12%** | **243 / 385** | **0** | **100%** |
 
-The nested procedures did not reach 75% and did not preserve zero misses on held-out folds. A separate margin sweep found a zero-miss pooled point only after specificity fell substantially; because its margin was chosen after inspecting held-out results, it is not an unbiased candidate estimate and is not promoted here.
+The nested procedures did not reach 75% and did not preserve zero misses on held-out folds. The post-hoc margin frontier reaches the relaxed 60% development number with zero observed misses, using extra rank-score margins of 0.005 for DDR, 0.05 for DeepDRiD, and 0.02 for DRTiD. **Those margins were selected using the held-out folds themselves**, so 63.12% is a diagnostic upper point on this inspected cohort, not an unbiased estimate, a deployable threshold, or a successful independent test. The reproducible diagnostic is explicitly labeled as post-hoc in `src/active_retina/posthoc_zero_miss_margin_sweep.py` and `results/posthoc_zero_miss_margin_sweep_20261013.json`.
 
 ## Deployment gate
 
