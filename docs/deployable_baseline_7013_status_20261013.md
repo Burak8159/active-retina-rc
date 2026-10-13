@@ -34,3 +34,27 @@ Machine-readable outputs:
 - `results/crossfit_expert_calibration_20261013_corrected/summary.json`
 - `results/nested_crossfit_expert_weights_20261013/summary.json`
 - `results/nested_crossfit_expert_weights_margin_20261013/summary.json`
+
+## Research profile registry
+
+Both results are registered as distinct research profiles. List them with:
+
+```bash
+PYTHONPATH=src python -m active_retina.baseline_profiles --list
+```
+
+`70.13-replay` can replay an individual case only from precomputed component
+scores and the explicit policy artifact. This is not image-to-diagnosis
+deployment: exact component checkpoints and their inference/preprocessing
+wrappers are not all present. Example:
+
+```bash
+PYTHONPATH=src python -m active_retina.baseline_profiles \
+  --profile 70.13-replay --source DDR \
+  --features-json case_component_scores.json \
+  --policy-json results/deployable_exposed_baseline_7013_20261013_with_components/policy.json
+```
+
+`63.12-posthoc` is exposed in the same registry for benchmark comparison, but
+is deliberately blocked for case inference because its margins were selected
+using held-out labels. The clinical station does not load either profile.
