@@ -43,6 +43,19 @@ The project no longer waits for request-only datasets. The flagship contribution
 - defer when the model cannot satisfy a target missed-referable-DR risk level,
 - report acquisition savings only at calibrated, patient-level operating points.
 
+## Research Baseline Profiles
+
+The inspected 70.13 score-policy replay and the 63.12 post-hoc cohort
+diagnostic are available as separate, explicitly nonclinical profiles. Start
+the local research API with:
+
+`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.baseline_profiles --serve --host 127.0.0.1 --port 8766`
+
+The 70.13 endpoint requires precomputed component scores; this is not raw-image
+inference. The 63.12 endpoint serves only its cohort diagnostic and rejects
+new-case scoring. See `docs/deployable_baseline_7013_status_20261013.md` for
+the distinction and request format.
+
 ## Clinical Workflow Software
 
 Train the locked software artifact:

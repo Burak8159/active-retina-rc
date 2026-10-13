@@ -58,3 +58,19 @@ PYTHONPATH=src python -m active_retina.baseline_profiles \
 `63.12-posthoc` is exposed in the same registry for benchmark comparison, but
 is deliberately blocked for case inference because its margins were selected
 using held-out labels. The clinical station does not load either profile.
+
+For a local research-only HTTP service, run:
+
+```bash
+PYTHONPATH=src python -m active_retina.baseline_profiles --serve --host 127.0.0.1 --port 8766
+```
+
+- `GET /profiles` lists both entries and their evidence status.
+- `POST /score` accepts `profile_id`, `source`, and precomputed `features`; only
+  `70.13-replay` is eligible, and its response is explicitly research-only.
+- `GET /diagnostics/63.12-posthoc` returns the aggregate inspected-cohort
+  diagnostic. It is not a patient-level prediction endpoint.
+
+The 70.13 policy JSON and the aggregate 63.12 report are bundled under
+`configs/research_baselines/` for reproducible local operation. The service
+does not accept image files and is not a clinical product or diagnosis API.

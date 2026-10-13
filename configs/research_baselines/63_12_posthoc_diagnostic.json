@@ -1,0 +1,33 @@
+{
+  "status": "POSTHOC_DIAGNOSTIC_ONLY_NOT_A_VALID_CROSS_VALIDATED_CANDIDATE",
+  "warning": "Source-specific additional margins are selected using held-out fold labels. This is a descriptive frontier, not an unbiased performance estimate, frozen threshold, deployment artifact, or clinical evidence.",
+  "cases": 981,
+  "action_coverage_percent": 100.0,
+  "margin_grid": [
+    0.0,
+    0.0025,
+    0.005,
+    0.01,
+    0.015,
+    0.02,
+    0.03,
+    0.04,
+    0.05,
+    0.075,
+    0.1,
+    0.15,
+    0.2
+  ],
+  "best_zero_miss_point_on_inspected_folds": {
+    "additional_margins": {
+      "DDR": 0.005,
+      "DeepDRiD": 0.05,
+      "DRTiD": 0.02
+    },
+    "true_negatives": 243,
+    "negative_denominator": 385,
+    "specificity_percent": 63.116883116883116,
+    "misses": 0
+  },
+  "candidate_count": 2197
+}
