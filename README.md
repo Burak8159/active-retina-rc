@@ -30,6 +30,22 @@ Prior policy results are exploratory and uncertified; the original test holdout
 has been exposed. See `docs/evidence_integrity_audit.md`. Corrected development
 runs use training patients only and exclude test evaluation by default.
 
+## Frozen 70.13% Development Reference
+
+The project's preserved high-water reference is **270/385 = 70.13% specificity**, with zero observed referable misses, zero ungradable clearances, and a binary action assigned to all 981 supplied score records. Its immutable ID is
+`active-retina-pooled-development-70.13-20261012`.
+
+Canonical freeze record: `results/frozen_development_reference_70_13_20261012.json`.
+Reproduced aggregate: `results/deployable_exposed_baseline_7013_20261013/summary.json`.
+Replay policy: `configs/research_baselines/70_13_exposed_policy.json`.
+Evidence boundary and grouped comparisons: `docs/deployable_baseline_7013_status_20261013.md`.
+
+This is a repeatedly inspected, same-cohort score-level development replay,
+not independent validation or a raw-image diagnostic model. The 100% figure is
+action assignment for supplied score rows, not end-to-end input coverage. Keep
+this reference unchanged; any modified data, policy, cutoff, or evaluation
+cohort must receive a distinct candidate ID and result record.
+
 This folder contains the reproducible scaffold for the upgraded ActiveRetina flagship paper:
 
 **Risk-Controlled Adaptive Retinal Imaging for Diabetic Retinopathy Screening**
