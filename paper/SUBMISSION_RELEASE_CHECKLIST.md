@@ -7,12 +7,13 @@ Status is based on the repository and primary dataset-source pages checked on 20
 - [x] Re-execute the frozen policy on all 981 locally available score rows and compare every action and risk score.
 - [x] Verify the replay source counts, 270/385 specificity numerator/denominator, zero replay clearances of referable or ungradable cases, and principal grouped/nested/transfer summary counts.
 - [x] Emit input SHA-256 digests and a machine-readable audit report.
-- [ ] Reproduction from a clean public clone: blocked because the score rows and policy are local/untracked pending the rights review below.
+- [x] Provide a clean-clone aggregate-integrity check over tracked summaries; this is explicitly not row-level replay.
+- [ ] Reproduction of the 981 row-level decisions from a clean public clone: blocked because the score rows and policy are local/untracked pending the rights review below.
 - [ ] Reproduce component scores from raw images: blocked; not all checkpoints, preprocessing, and inference paths are packaged.
 - [ ] Re-run every figure/table from raw predictions: incomplete; current auditor verifies headline values and exact replay, not every manuscript cell or plot.
-- [ ] Create an immutable release commit and archive source, generated PDF, audit report, and environment record together.
+- [ ] Create an immutable submission release and archive source, generated PDF, audit report, and environment record together. A source-control commit alone is not that archive.
 - [ ] Confirm that the compiled PDF corresponds to the exact submitted source revision. The desktop compiler reports successful compilation but does not export a PDF artifact, so there is currently no PDF file to hash or archive against a commit.
-- [ ] Decide whether the project code is to remain under the repository's current `All rights reserved` terms or be distributed under an explicit license. Do not describe the repository as open source while the current license is in force.
+- [ ] Author must choose whether the project code remains `All rights reserved` or receives an explicit license. Do not describe the repository as open source while the current license is in force.
 
 ## Dataset rights and data availability
 
@@ -39,6 +40,6 @@ These entries record source statements, not a legal determination that sharing m
 
 ## Current decision
 
-**arXiv:** coherent source and score-level replay auditor exist, but a clean-clone reproduction bundle and the author/data-rights declarations are not complete. Do not call the release package complete yet.
+**arXiv:** coherent source and a clean-clone aggregate-integrity check exist. Full row-level replay inputs, a generated and revision-matched PDF, author/data-rights declarations, and an explicit repository licensing decision remain incomplete. Do not call the submission release complete yet.
 
 **IEEE journal:** not submission-ready. The manuscript is a retrospective evidence audit, not a clinically validated image-to-diagnosis model. It reports exposed replay and internal development estimates, no independent external validation, and needs author-level novelty/scope review plus the reproducibility and declaration items above.

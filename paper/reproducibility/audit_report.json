@@ -1,10 +1,5 @@
 {
-  "action_assignment_fraction_on_supplied_rows": 1.0,
   "headline_checks": {
-    "action_assignment_fraction": {
-      "expected": 1.0,
-      "observed": 1.0
-    },
     "crossfit_TN": {
       "expected": 268,
       "observed": 268
@@ -58,49 +53,18 @@
       "observed": 2
     }
   },
-  "per_source_recomputed": {
-    "DDR": {
-      "assigned_actions": 625,
-      "cases": 625,
-      "missed_referable": 0,
-      "missed_ungradable": 0,
-      "negatives": 206,
-      "true_negatives": 134
-    },
-    "DRTiD": {
-      "assigned_actions": 250,
-      "cases": 250,
-      "missed_referable": 0,
-      "missed_ungradable": 0,
-      "negatives": 127,
-      "true_negatives": 85
-    },
-    "DeepDRiD": {
-      "assigned_actions": 106,
-      "cases": 106,
-      "missed_referable": 0,
-      "missed_ungradable": 0,
-      "negatives": 52,
-      "true_negatives": 51
-    }
-  },
-  "replay_missed_referable": 0,
-  "replay_missed_ungradable": 0,
-  "scope": "deterministic replay of supplied component scores; not image inference, model training, or external validation",
-  "score_rows_recomputed": 981,
+  "scope": "checks arithmetic consistency of tracked summary files only; does not execute the policy or validate underlying row-level data",
   "sha256": {
     "candidate_transfer": "bdd7e59ad0084b55d818560c5b80c5f3ea7ef442d96f95c6c3ea4907027bd047",
     "crossfit": "fbbfc36e842d0199cb6a4b9949d7e25fafa25c481eeaf86f88fb5daa192cfc23",
     "nested": "7713efe53f40df672cf103d4e1ff70c6d8ca12f26b74718790e9ed2a20557d3a",
     "nested_margin": "f6ae59cbf4391beaec30a677896790c6b3338b2d3e7b8e4a7ab9f314cf5a6e31",
-    "policy": "2980773cf176002f7d18b197db714989a2592c861ed0b8ac70d37207d5dd4649",
-    "replay": "37cc82c93a8d647c8bf803f124924a5155f283ff42fe1edfe37995e675f52b01",
-    "score_rows": "611013243449a99abf47940270ca30727e104262f480c1d99b396c1efdc02e02"
+    "replay": "37cc82c93a8d647c8bf803f124924a5155f283ff42fe1edfe37995e675f52b01"
   },
   "specificity": {
     "gradable_nonreferable": 385,
     "percent": 70.12987012987013,
     "true_negatives": 270
   },
-  "status": "PASS_SCORE_LEVEL_REPLAY_AND_HEADLINE_COUNTS"
+  "status": "PASS_TRACKED_AGGREGATE_INTEGRITY_ONLY_NOT_REPLAY"
 }

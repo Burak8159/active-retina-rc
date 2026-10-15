@@ -39,7 +39,67 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def audit(root: Path) -> dict[str, Any]:
+def audit_summary(root: Path) -> dict[str, Any]:
+    """Check tracked aggregate records without claiming score-level replay."""
+    root = root.resolve()
+    required = {name: root / path for name, path in SUMMARY_RELATIVES.items()}
+    missing = [str(path) for path in required.values() if not path.is_file()]
+    if missing:
+        raise FileNotFoundError("Required tracked summary is missing:\n  " + "\n  ".join(missing))
+
+    summaries = {name: read_json(path) for name, path in required.items()}
+    replay = summaries["replay"]["same_cohort_replay_metrics"]
+    observed = {
+        "replay_cases": replay["n_cases"],
+        "replay_gradable_negatives": replay["n_gradable_nonreferable"],
+        "replay_true_negatives": replay["true_negatives"],
+        "replay_referable_misses": replay["missed_referable"],
+        "replay_ungradable_misses": replay["missed_ungradable"],
+        "crossfit_TN": summaries["crossfit"]["crossfit"]["true_negatives"],
+        "crossfit_misses": summaries["crossfit"]["crossfit"]["misses_referable_or_ungradable"],
+        "nested_TN": summaries["nested"]["true_negatives"],
+        "nested_misses": summaries["nested"]["misses_referable_or_ungradable"],
+        "nested_margin_TN": summaries["nested_margin"]["true_negatives"],
+        "nested_margin_misses": summaries["nested_margin"]["misses_referable_or_ungradable"],
+        "transfer_union_TN": summaries["candidate_transfer"]["frozen_baseline_plus_candidate"]["true_negatives"],
+        "transfer_union_misses": summaries["candidate_transfer"]["frozen_baseline_plus_candidate"]["misses_after_combination"],
+    }
+    expected = {
+        "replay_cases": 981,
+        "replay_gradable_negatives": 385,
+        "replay_true_negatives": 270,
+        "replay_referable_misses": 0,
+        "replay_ungradable_misses": 0,
+        "crossfit_TN": 268,
+        "crossfit_misses": 3,
+        "nested_TN": 248,
+        "nested_misses": 5,
+        "nested_margin_TN": 253,
+        "nested_margin_misses": 6,
+        "transfer_union_TN": 273,
+        "transfer_union_misses": 2,
+    }
+    mismatches = {
+        name: {"observed": observed[name], "expected": value}
+        for name, value in expected.items()
+        if observed[name] != value
+    }
+    if mismatches:
+        raise AssertionError(json.dumps(mismatches, indent=2, sort_keys=True))
+
+    return {
+        "status": "PASS_TRACKED_AGGREGATE_INTEGRITY_ONLY_NOT_REPLAY",
+        "scope": "checks arithmetic consistency of tracked summary files only; does not execute the policy or validate underlying row-level data",
+        "specificity": {"true_negatives": 270, "gradable_nonreferable": 385, "percent": 100 * 270 / 385},
+        "headline_checks": {
+            name: {"observed": observed[name], "expected": value}
+            for name, value in expected.items()
+        },
+        "sha256": {name: sha256(path) for name, path in required.items()},
+    }
+
+
+def audit_full_replay(root: Path) -> dict[str, Any]:
     root = root.resolve()
     replay_dir = root / REPLAY_RELATIVE
     policy_path = replay_dir / "policy.json"
@@ -162,8 +222,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT, help="ActiveRetina repository root")
     parser.add_argument("--output", type=Path, help="Optional path for the machine-readable JSON report")
+    parser.add_argument(
+        "--mode",
+        choices=("summary", "full-replay"),
+        default="summary",
+        help="summary checks tracked aggregate records only; full-replay requires the local score rows and policy",
+    )
     args = parser.parse_args()
-    report = audit(args.root)
+    report = audit_summary(args.root) if args.mode == "summary" else audit_full_replay(args.root)
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
