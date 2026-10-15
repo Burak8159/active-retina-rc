@@ -9,7 +9,7 @@
 \maketitle
 
 \begin{abstract}
-Operating-point performance in medical screening depends on how model scores, thresholds, and evaluation patients are separated. We report an evidence audit of a fixed multi-source diabetic-retinopathy (DR) score policy assembled from DDR, DeepDRiD, and DRTiD outputs. On a repeatedly inspected 981-eye development pool, deterministic replay clears 270 of 385 gradable nonreferable eyes (70.13\% specificity), assigns every supplied score record a binary action, and has zero observed referable or ungradable clearances. These are exact same-cohort replay counts: source-specific rank-reference arrays and cut points were derived using this pool. Patient-grouped cross-fitting of the fixed recipe yields 268/385 true negatives (69.61\%) with three misses; nested weight/threshold selection yields 248/385 (64.42\%) with five misses; and a nested safety-margin variant yields 253/385 (65.71\%) with six misses. A post-hoc margin frontier reaches zero observed misses at 63.12\% only after searching held-out labels. Separate MMRDR-UWF transfer experiments are likewise development diagnostics, not external validation. The 70.13\% value is reproducible as a deterministic score-level replay, but is not an independently validated estimate, a complete image-to-diagnosis model, or clinical certification. The study's contribution is a reproducibility and selection-bias audit that distinguishes replay fidelity, internal development estimation, and independent external validation, and specifies the evidence needed for the latter.
+Operating-point performance in medical screening depends on how model scores, thresholds, and evaluation patients are separated. Repeated threshold or policy selection on a shared cohort can make a deterministic replay appear to be transportable performance; measuring the gap to patient-grouped internal development estimation is therefore relevant to multi-source medical pipelines beyond diabetic retinopathy. We report an evidence audit of a fixed multi-source diabetic-retinopathy (DR) score policy assembled from DDR, DeepDRiD, and DRTiD outputs. On a repeatedly inspected 981-eye development pool, deterministic replay clears 270 of 385 gradable nonreferable eyes (70.13\% specificity), assigns every supplied score record a binary action, and has zero observed referable or ungradable clearances. These are exact same-cohort replay counts: source-specific rank-reference arrays and cut points were derived using this pool. Patient-grouped cross-fitting of the fixed recipe yields 268/385 true negatives (69.61\%) with three misses; nested weight/threshold selection yields 248/385 (64.42\%) with five misses; and a nested safety-margin variant yields 253/385 (65.71\%) with six misses. A post-hoc margin frontier reaches zero observed misses at 63.12\% only after searching held-out labels. Separate MMRDR-UWF transfer experiments also contribute only to internal development estimation, not independent external validation. The 70.13\% value is reproducible as a deterministic replay of precomputed scores, but is not an independently validated estimate, a complete image-to-diagnosis model, or clinical certification. The study's contribution is an evidence-integrity audit that distinguishes deterministic replay, internal development estimation, and independent external validation, and specifies the evidence needed for the latter.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -17,15 +17,15 @@ Diabetic retinopathy, fundus imaging, patient-level validation, specificity, sco
 \end{IEEEkeywords}
 
 \section{Introduction}
-\IEEEPARstart{D}{eep} learning has achieved high discrimination for diabetic retinopathy (DR) in retinal photographs, including large-scale and multiethnic evaluations \cite{gulshan2016,ting2017,abramoff2018,bellemo2019}. For screening, however, discrimination is only part of the problem. A system must make a thresholded decision, and the apparent operating point can depend strongly on how score normalization and thresholds were selected relative to the evaluation cases.
+\IEEEPARstart{D}{eep} learning has achieved high discrimination for diabetic retinopathy (DR) in retinal photographs, including large-scale and multiethnic evaluations \cite{gulshan2016,ting2017,abramoff2018,bellemo2019}. For screening, however, discrimination is only part of the problem. A system must make a thresholded decision, and the apparent operating point can depend strongly on how score normalization and thresholds were selected relative to the evaluation cases. In multi-source medical pipelines, quantifying the gap between deterministic replay and patient-grouped internal development estimation matters because repeatedly tuning score channels, calibration, and thresholds on the evaluation cohort can inflate the apparent operating point even when the final rule is replayed perfectly.
 
 This paper examines a concrete ActiveRetina-RC score policy: a source-conditional rank-fusion rule with a 70.13\% same-cohort replay specificity, zero observed missed referable cases, and 100\% binary action assignment for the 981 supplied score records. The central question is not whether the arithmetic can be reproduced; it can. The question is how that replay differs from estimates produced when patients are held out of calibration and blend selection. The reported action-assignment rate is a property of the evaluator on supplied score rows, not end-to-end image coverage.
 
-The audit finds a measurable gap. Five-fold patient-grouped calibration of the fixed recipe yields 69.61\% specificity and three misses. Nested patient-grouped selection yields 64.42\% with five misses. A nested safety-margin variant reaches 65.71\% but records six misses. A zero-miss post-hoc frontier reaches only 63.12\% and was selected using held-out labels. All analyses use a cohort that had already been inspected during development, so even patient-grouped results are development evidence rather than independent confirmation.
+The audit finds a measurable gap. Five-fold patient-grouped calibration of the fixed recipe yields 69.61\% specificity and three misses. Nested patient-grouped selection yields 64.42\% with five misses. A nested safety-margin variant reaches 65.71\% but records six misses. A zero-miss post-hoc frontier reaches only 63.12\% and was selected using held-out labels. All analyses use a cohort that had already been inspected during development, so even patient-grouped results contribute only to internal development estimation, not independent external validation.
 
 The contribution is deliberately bounded. We provide an executable specification of the frozen score policy, exact deterministic replay counts, patient-grouped development estimates, a failure analysis of threshold/weight selection, and a claim-to-evidence boundary. The contribution is methodological measurement and evidence auditing, not a new diagnostic architecture, a risk-control guarantee, or independently validated clinical performance. The paper is authored by one investigator; no external clinical collaborator or institutional cohort is represented as participating in this analysis. The work does not substitute for clinical adjudication or an independent evaluation site.
 
-The question is relevant beyond this project. A screening workflow often chooses a high-sensitivity operating point on development data, then reports specificity at the chosen threshold. If model variants, score channels, calibration rules, and safety margins are repeatedly inspected on the same patients, the nominally conservative zero-miss constraint itself becomes a selection target. Patient-level cross-validation can estimate the behavior of a specified selection procedure, but cannot erase cohort-wide exposure that happened before the folds were created. We therefore distinguish three notions throughout: reproducibility of a deterministic replay, internal generalization under patient-grouped resampling, and independent confirmation on a cohort not used in any model or analysis decision.
+The general concern is selection, not this project alone. A screening workflow often chooses a high-sensitivity operating point on development data, then reports specificity at the chosen threshold. If model variants, score channels, calibration rules, and safety margins are repeatedly inspected on the same patients, the nominally conservative zero-miss constraint itself becomes a selection target. Patient-level cross-validation can estimate the behavior of a specified selection procedure, but cannot erase cohort-wide exposure that happened before the folds were created. Throughout, we distinguish three evidence classes: deterministic replay, internal development estimation under patient-grouped procedures, and independent external validation on a cohort not used for any model or analysis decision.
 
 The current manuscript treats 70.13\% as a historical operating-point reference, not as a goal to be maximized at any cost. Two practical consequences follow. First, reporting a scalar specificity without its denominator, missed-positive count, ungradable handling, and selection history is inadequate. Second, a paper may have a publishable question even when its original performance claim does not survive a more demanding evaluation: the scientific result can be the measured difference between replay and patient-grouped estimates, provided that the methods and exposure are disclosed and the contribution is positioned modestly.
 
@@ -33,7 +33,7 @@ The current manuscript treats 70.13\% as a historical operating-point reference,
 \begin{enumerate}
 \item A deterministic specification of the frozen source-conditional score fusion and threshold policy.
 \item An exact deterministic replay audit of 981 previously inspected records from three datasets, reporting per-source and pooled denominators, ungradable cases, true negatives, missed cases, and score-row action assignment.
-\item A comparison of same-cohort replay with fixed-recipe cross-fitting, nested patient-fold selection, and an explicitly post-hoc zero-miss frontier.
+\item A comparison of deterministic replay with fixed-recipe internal development estimation, nested patient-fold selection, and an explicitly post-hoc zero-miss frontier.
 \item A transfer diagnostic that quantifies the small specificity lift and safety regression of an additional model candidate.
 \end{enumerate}
 
@@ -121,31 +121,30 @@ The three-source replay audits a policy whose component outputs exist for DDR, D
 An initial numeric filename join between MMRDR CFP and UWF was discarded after an audit showed that equal suffixes did not establish eye-level correspondence. The final manifest treats CFP as auxiliary training data and UWF as the target development source. This correction prevents a false paired-image signal from entering either model training or evaluation. The rejected join is documented as a data-integrity failure, not as a result.
 
 \subsection{Frozen Source-Conditional Policy}
-For a component score $z_m$ and a stored, sorted reference vector of length $n_d$ for source $d$, define the percentile midrank
+For component $m$, source $d$, score $z$, and stored sorted reference vector $\mathcal{R}_{m,d}$ of length $n_{m,d}$, define the percentile midrank
 \begin{equation}
-r_m(z_m)=\frac{L_m(z_m)+R_m(z_m)+1}{2n_d},
+ r_{m,d}(z)=\frac{L_{m,d}(z)+R_{m,d}(z)+1}{2n_{m,d}},
+\label{eq:midrank}
 \end{equation}
-where $L_m$ and $R_m$ count reference values strictly less than and less than-or-equal to $z_m$. Source-specific scores are
+where $L_{m,d}(z)=\#\{x\in\mathcal{R}_{m,d}:x<z\}$ and $R_{m,d}(z)=\#\{x\in\mathcal{R}_{m,d}:x\le z\}$. The added one-count offset gives the average one-based rank for ties; this exact convention is part of deterministic replay. Source-specific scores are
 \begin{align}
 s_{\mathrm{DDR}}&=0.50r_{\mathrm{aptos}}+0.10r_{\mathrm{ordinal}}+0.40r_{\mathrm{audit}},\\
 s_{\mathrm{DeepDRiD}}&=0.20r_{\mathrm{ordinal-quality}}+0.40r_{\mathrm{source-balanced}}+0.40r_{\mathrm{fundus}},\\
 s_{\mathrm{DRTiD}}&=0.72r_{\mathrm{rank-pair}}+0.08r_{\mathrm{fundus-margin}}+0.20r_{\mathrm{geometry}}.
+\label{eq:source-scores}
 \end{align}
-The policy returns REFER when $s_d$ is at or above the source-specific threshold: 0.22224 (DDR), 0.435849 (DeepDRiD), and 0.34496 (DRTiD). The DDR rule additionally refers when its quality score is at least 0.0018599. Otherwise, the action is CLEAR. Both the empirical score-reference vectors and these thresholds were derived from the inspected cohort. They are disclosed for replay fidelity, not proposed as portable clinical cutoffs.
+The channel symbols in \eqref{eq:source-scores} denote the component ranks from \eqref{eq:midrank}; their names abbreviate the source-specific channels listed in Section III-B. The policy returns REFER when $s_d$ is at or above the source-specific threshold: 0.22224 (DDR), 0.435849 (DeepDRiD), and 0.34496 (DRTiD). The DDR rule additionally refers when its quality score is at least 0.0018599. Otherwise, the action is CLEAR. Both the empirical score-reference vectors and these thresholds were derived from the inspected cohort. They are disclosed for deterministic replay, not proposed as portable clinical cutoffs.
 
 The evaluator consumes precomputed model outputs. It is not a single raw-image model, and the exact component checkpoints plus preprocessing contracts are not all bundled in the present repository. Thus, ``100\% action assignment'' denotes a deterministic binary action for each supplied feature record; it does not establish raw-image product readiness.
 
 \subsection{Rank Fusion and Threshold Semantics}
-For reference vector $\mathcal{R}_{m,d}$ sorted in ascending order, define $L_m(z;d)=\#\{x\in\mathcal{R}_{m,d}:x<z\}$ and $R_m(z;d)=\#\{x\in\mathcal{R}_{m,d}:x\le z\}$. The implemented midrank is
-\begin{equation}
- r_{m,d}(z)=\frac{L_m(z;d)+R_m(z;d)+1}{2n_{m,d}}.
-\end{equation}
-The one-count offset and tie behavior are part of the replay contract; substituting a library percentile function without matching its boundary and tie conventions can alter decisions. Each source has its own reference support, so identical raw component scores can map to different ranks across sources.
+The midrank in \eqref{eq:midrank} is implemented with left- and right-sided insertion positions in the sorted reference vector. Substituting a library percentile function without matching this boundary and tie convention can alter decisions. Each source has its own reference support, so identical raw component scores can map to different ranks across sources.
 
-Let $\boldsymbol{w}_d$ be the nonnegative three-channel fusion weight vector for source $d$, with entries summing to one. The fused score is $s_d=\boldsymbol{w}_d^\top\boldsymbol{r}_d$. For DDR, an additional quality override applies. The decision rule is
+Let $\boldsymbol{w}_d$ be the nonnegative three-channel fusion weight vector for source $d$, with entries summing to one. The fused score is $s_d=\boldsymbol{w}_d^\top\boldsymbol{r}_d$, consistent with the source-specific expansions in \eqref{eq:source-scores}. For DDR, an additional quality override applies. The decision rule is
 \begin{equation}
  a_i=\begin{cases}\mathrm{REFER},&s_{d(i)}\ge t_{d(i)}\;\text{or}\;q_i\ge q_0\text{ for DDR},\\
  \mathrm{CLEAR},&\text{otherwise},\end{cases}
+\label{eq:decision}
 \end{equation}
 where $q_i$ is the stored quality signal and $q_0$ is the override threshold. The complete policy is thus a composition of pretrained or independently trained component systems, empirical normalization, weighted fusion, and threshold logic; it is not one end-to-end model trained under a unified loss.
 
@@ -155,6 +154,7 @@ The rank reference vectors were constructed from the same inspected records used
 Specificity is
 \begin{equation}
 \mathrm{Sp}=\frac{\mathrm{TN}}{N_{\mathrm{nonref,gradable}}},
+\label{eq:specificity}
 \end{equation}
 where a true negative is a gradable nonreferable eye assigned CLEAR. A false-negative clearance is a gradable referable eye assigned CLEAR. We separately count ungradable clearances. Binary action assignment is the fraction of all records assigned either CLEAR or REFER. It is not equivalent to an independently validated diagnostic coverage rate.
 
@@ -167,7 +167,7 @@ Exploratory policy selection used a lexicographic objective: minimize observed p
 \subsection{Evaluation Procedures}
 \textit{Replay:} the frozen rule was applied to its reference predictions; exact match of all recorded counts was required.
 
-\textit{Fixed-recipe patient-grouped calibration:} five patient-grouped folds were used to estimate source-specific calibration without each held-out fold. The component family and cohort were already globally inspected, so this is not independent confirmation.
+\textit{Fixed-recipe patient-grouped calibration:} five patient-grouped folds were used to estimate source-specific calibration without each held-out fold. The component family and cohort were already globally inspected, so this is internal development estimation, not independent external validation.
 
 \textit{Nested selection:} five outer patient-grouped folds and four inner folds were used to select blend weights and thresholds. Weights were searched on a simplex grid with 0.1 increments; the risk threshold was the minimum required-positive score in the training partition. The inner search prioritized zero misses before specificity over margins in $\{0,0.005,0.01,0.02,0.03,0.05,0.075,0.1,0.15,0.2\}$. A second variant selected a safety margin within the inner data. Although each outer fold is excluded from its own fit, the full cohort and component-model family remain exposed to project-level development.
 
@@ -336,14 +336,14 @@ On the exposed reference cohort, the candidate alone has 54/385 true negatives (
 The candidate was a high-resolution fine-tuned ResNet-50 transfer artifact rather than a mere threshold change. Its CLEAR decisions nevertheless overlapped strongly with the incumbent: the union gained only three TN, while introducing two positive misses. A small specificity increase is not a valid safety-constrained improvement when the positive constraint is violated. This is a negative result for this particular model, training path, and combination rule, not a conclusion about ResNet-50 or high-resolution retinal models generally.
 
 \subsection{MMRDR-UWF Domain-Transfer Stress Test}
-The best zero-miss point among the tested RETFound feature heads was 63/600 TN (10.50\%) for a logistic head; an RBF-SVM reached 60/600 (10.00\%). The internal ResNet+DINO / 448-pixel ResNet reference reached 202/600 (33.67\%) and AUROC 0.932. Adding 25\% of the RETFound-logistic rank produced 207/600 (34.50\%), five additional negatives, and AUROC 0.940. This comparison used the same validation labels for thresholding and candidate comparison; it is not independent confirmation and does not revise the frozen 70.13\% reference.
+The best zero-miss point among the tested RETFound feature heads was 63/600 TN (10.50\%) for a logistic head; an RBF-SVM reached 60/600 (10.00\%). The internal ResNet+DINO / 448-pixel ResNet reference reached 202/600 (33.67\%) and AUROC 0.932. Adding 25\% of the RETFound-logistic rank produced 207/600 (34.50\%), five additional negatives, and AUROC 0.940. This comparison used the same validation labels for thresholding and candidate comparison; it is internal development estimation, not independent external validation, and does not revise the frozen 70.13\% reference.
 
 Ranking metrics and high-sensitivity operating points need not move together. RETFound logistic features had AUROC 0.919 yet only 10.50\% specificity at the within-validation zero-miss cutoff. The internal reference had AUROC 0.932 and 33.67\% specificity; the fusion had AUROC 0.940 and 34.50\%. This descriptive pattern shows that high-tail ordering and threshold calibration matter in addition to global rank discrimination. Because labels were reused, it is not a validated clinical utility result.
 
 \subsection{MMRDR-Initialized Multi-Source Fine-Tuning}
 On the 982-eye validation manifest, the MMRDR-initialized warm start reached 95/386 gradable negatives at zero observed misses (24.61\%). Fine-tuning at epochs 1, 2, and 3 yielded 63/386 (16.32\%), 74/386 (19.17\%), and 73/386 (18.91\%), respectively. A four-source balanced-sampling continuation selected the warm start; subsequent trained epochs remained below it. These results use a denominator of 386, not 385, because the audited validation manifest contains 982 eyes. Every historical reference eye was present among the validation rows, so model and threshold selection were exposed relative to the reference.
 
-The original run summary incorrectly implied that the 981 reference eyes had been kept separate. A manifest audit corrected the record before this manuscript: 1,337 image rows across 982 eyes contained all 981 historical reference eyes in \texttt{source\_split=valid}. This disclosure prevents a false independence claim and makes the split audit itself part of the reproducibility record. The experiment did not produce an independent improvement over the 70.13 reference.
+The original run summary incorrectly implied that the 981 reference eyes had been kept separate. A manifest audit corrected the record before this manuscript: 1,337 image rows across 982 eyes contained all 981 historical reference eyes in \texttt{source\_split=valid}. The corrected manifest therefore overlaps the full 981-eye reference; it is not an independent validation split. This correction supersedes the earlier separation statement and is retained in the audit trail as a provenance correction, not as new evidence of independence. The experiment did not produce an independent improvement over the 70.13 reference.
 
 \subsection{Cross-Experiment Summary}
 No current candidate demonstrates the conjunction of specificity above 70.13\%, zero observed misses, and independent patient-level evaluation. Some operating points have zero observed misses but use same-cohort cutoffs; other estimates are patient-grouped but record misses; MMRDR candidates are measured on an inspected development validation split. There is no single successful row hidden by averaging the analyses, and none is elevated to a clinical or autonomous result.
@@ -407,20 +407,22 @@ The companion transfer experiments reinforce rather than remove this boundary. R
 This manuscript has one listed author, Burak Aksu. The author performed the computational analysis and prepared the manuscript. No clinical site, medical school, coauthor, or external evaluator is claimed to have participated. The analysis is based on existing public dataset releases and derived project artifacts; all use remains subject to the original dataset terms. Any acknowledgments or funding statement should be added only if a factual basis exists.
 
 \section{Claim-to-Evidence Ledger}
-Table~\ref{tab:claims} makes the scope of each headline explicit. The labels \emph{deterministic replay}, \emph{internal development estimate}, and \emph{independent external validation} refer to distinct evidence classes and are not interchangeable. This ledger is intended to prevent descriptive replay or resampling results from being rewritten as clinical claims.
+Table~\ref{tab:claims} makes the scope of each headline explicit. The labels \emph{deterministic replay}, \emph{internal development estimation}, and \emph{independent external validation} refer to distinct evidence classes and are not interchangeable. This ledger is intended to prevent descriptive replay or resampling results from being rewritten as clinical claims.
 
 \begin{table*}[t]
 \centering
-\caption{Claim-to-evidence ledger. Replay denotes exact rerunning on the exposed reference records; internal development estimates denote patient-grouped procedures on the previously inspected project cohort; independent external validation would require a frozen procedure evaluated on a new cohort not used for any project decision.}
+\caption{Claim-to-evidence ledger. Deterministic replay denotes exact rerunning on the exposed reference records; internal development estimation denotes patient-grouped procedures on the previously inspected project cohort; independent external validation would require a frozen procedure evaluated on a new cohort not used for any project decision.}
 \label{tab:claims}
-\begin{tabularx}{\textwidth}{p{0.26\textwidth}p{0.30\textwidth}X}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}X}
 \toprule
-Claim & Evidence in this study & Status and permitted interpretation \\
+Claim & Evidence in this study & \shortstack[l]{Status and permitted\\interpretation} \\
 \midrule
 The fixed score policy deterministically replays at 70.13\% specificity & 270/385 TN on 981 exposed reference records; replay artifact matches counts & Verified implementation replay only; not a population estimate or validation result \\
 The replay has zero observed referable/ungradable clearances & Zero in the same-cohort replay; these records informed policy selection & Descriptive replay count only; not a bound or guarantee on population risk \\
 The evaluator assigns 100\% binary actions & Two-action rule emits CLEAR or REFER for supplied score rows & Score-row assignment only; not raw-image, workflow, or product coverage \\
-Patient-grouped procedures estimate the same performance & Fixed recipe: 268/385 TN and three misses; nested procedures also record misses & Internal development estimates; prior global exposure remains \\
+Patient-grouped procedures estimate the same performance & Fixed recipe: 268/385 TN and three misses; nested procedures also record misses & Internal development estimation; prior global exposure remains \\
 Nested selection establishes a 75/0/100 operating point & Nested weights: 248/385 TN with five misses; nested margin: 253/385 with six & Not supported; neither procedure achieves the stated conjunction \\
 MMRDR transfer establishes external validity & Candidate comparison reuses a development validation subset; official test is unreported & Not supported; development stress test only \\
 The system is ready for autonomous diagnosis & Score-level artifact, incomplete raw-image provenance, and no untouched cohort & Not supported \\
@@ -437,9 +439,9 @@ For each data row, the evaluator must retain the source, eye identifier, patient
 \section{Selection Protocol and Leakage Audit}
 The development chronology is relevant to the meaning of the reported estimates. First, component models and score outputs were generated for the public-source cohort. The pooled scores and labels were inspected during candidate development. Source-specific rank references and thresholds were then selected to maximize specificity subject to zero observed misses on this pool. The same data subsequently served as the named 70.13 reference. Later patient-grouped experiments re-fit calibration and, in nested variants, weights and thresholds within folds. However, the global component family, channels, cohort, and research question had already been informed by the full pool.
 
-The resulting hierarchy is therefore: replay is an implementation check; grouped and nested results are internal development estimates under more careful local separation; post-hoc margins and oracle rows are descriptive diagnostics; no row is an untouched certification estimate. This hierarchy should travel with all reused tables and plots. If a later independent cohort is acquired, the artifact and analysis plan should be frozen before outcomes are inspected and the new cohort should not be used for further repair after the certification result.
+The resulting hierarchy is therefore: deterministic replay is an implementation check; grouped and nested results contribute to internal development estimation under more careful local separation; post-hoc margins and oracle rows are descriptive diagnostics; no row is an independent external validation estimate. This hierarchy should travel with all reused tables and plots. If a later independent cohort is acquired, the artifact and analysis plan should be frozen before outcomes are inspected and the new cohort should not be used for further repair after the certification result.
 
-The MMRDR transfer audit has a separate leakage boundary. The local UWF validation split has no exported patient IDs and is image-level. It was used for thresholding and candidate comparison. The later multi-source fine-tune's validation manifest included the historical reference eyes, as established by direct ID intersection; its summary cannot be represented as an independent holdout. The official MMRDR test partition was not evaluated. These conditions preclude combining MMRDR rows with the 981-eye replay as if they were independent validation cohorts.
+The MMRDR transfer audit has a separate leakage boundary. The local UWF validation split has no exported patient IDs and is image-level. It was used for thresholding and candidate comparison. The later multi-source fine-tune's validation manifest included all 981 historical reference eyes, as established by direct ID intersection; its summary cannot be represented as an independent holdout. The audit correction supersedes the original claim that these eyes were separated. The official MMRDR test partition was not evaluated. These conditions preclude combining MMRDR rows with the 981-eye replay as if they were independent validation cohorts.
 
 \section{Proposed Independent Evaluation Protocol}
 A confirmatory study should specify the clinical use and target population first, then create a patient-level cohort whose members do not appear in training, model selection, score-reference construction, threshold selection, or prior exploratory analysis. The frozen package should include: (1) architecture and checkpoint hashes; (2) input file and color-space contract; (3) resizing and normalization; (4) quality/gradability policy; (5) every component output definition; (6) source or site mapping rules; (7) score reference vectors and fusion constants; (8) threshold and equality semantics; (9) software environment and deterministic inference settings; and (10) the statistical analysis plan.
@@ -465,24 +467,26 @@ The principal repository artifacts associated with this manuscript are listed in
 \centering
 \caption{Artifact map and role in the analysis.}
 \label{tab:artifacts}
-\begin{tabularx}{\textwidth}{p{0.44\textwidth}X}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.43\textwidth}>{\raggedright\arraybackslash}X}
 \toprule
 Artifact & Role and evidence boundary \\
 \midrule
-\texttt{src/active\_retina/exposed\_expert\_policy.py} & Deterministic score-policy evaluator; consumes component scores, not raw images \\
-\texttt{results/deployable\_exposed\_baseline\_7013\_20261013\_with\_components/summary.json} & Frozen replay counts and explicit exposed-artifact status \\
-\texttt{results/crossfit\_expert\_calibration\_20261013\_corrected/summary.json} & Fixed-recipe patient-grouped calibration results \\
-\texttt{results/nested\_crossfit\_expert\_weights\_20261013/summary.json} & Five outer/four inner fold selection summary \\
-\texttt{results/nested\_crossfit\_expert\_weights\_margin\_20261013/summary.json} & Nested safety-margin diagnostic \\
-\texttt{results/posthoc\_zero\_miss\_margin\_sweep\_20261013.json} & Held-out-label post-hoc frontier; not a selected model \\
-\texttt{docs/mmrdr\_transfer\_and\_retfound\_development\_20261013.md} & MMRDR provenance, domain-transfer results, and official-test boundary \\
-\texttt{docs/70\_13\_to\_75\_candidate\_20261013.md} & Fine-tune split correction and balanced-sampling results \\
-\texttt{docs/expert\_selector\_nested\_crossfit\_20261012.md} & Expert selector experiments, oracle caveat, and source patient accounting \\
+\path{src/active_retina/exposed_expert_policy.py} & Deterministic score-policy evaluator; consumes component scores, not raw images \\
+\path{results/deployable_exposed_baseline_7013_20261013_with_components/summary.json} & Frozen replay counts and explicit exposed-artifact status \\
+\path{results/crossfit_expert_calibration_20261013_corrected/summary.json} & Fixed-recipe patient-grouped calibration results \\
+\path{results/nested_crossfit_expert_weights_20261013/summary.json} & Five outer/four inner fold selection summary \\
+\path{results/nested_crossfit_expert_weights_margin_20261013/summary.json} & Nested safety-margin diagnostic \\
+\path{results/posthoc_zero_miss_margin_sweep_20261013.json} & Held-out-label post-hoc frontier; not a selected model \\
+\path{docs/mmrdr_transfer_and_retfound_development_20261013.md} & MMRDR provenance, domain-transfer results, and official-test boundary \\
+\path{docs/70_13_to_75_candidate_20261013.md} & Fine-tune split correction and balanced-sampling results \\
+\path{docs/expert_selector_nested_crossfit_20261012.md} & Expert selector experiments, oracle caveat, and source patient accounting \\
 \bottomrule
 \end{tabularx}
 \end{table*}
 
-Before submission, record the exact Git commit, Python and library versions, GPU/driver configuration for trained candidates, hashes of model checkpoints and manifests, and the code command that regenerates each table. A clean archival bundle should include prediction-generation code and non-sensitive derived outputs, while leaving restricted or license-controlled images in their original distribution channels. The current paper lists repository paths for traceability but does not assert that the repository already contains a complete one-command end-to-end reproduction environment.
+The accompanying \texttt{paper/reproducibility/README.md} documents the executable score-level replay and its limits. Before submission, record the immutable Git revision, exact dependency environment, dataset release identifiers, hashes of all permitted manifests and artifacts, and commands that regenerate every table and figure. The current public checkout does not contain the per-eye score/label rows or frozen replay policy because permission to redistribute these derived records has not been confirmed; it therefore cannot yet reproduce the replay from a clean clone. The source-linked rights and author-declaration gates are listed in \texttt{paper/SUBMISSION\_RELEASE\_CHECKLIST.md}. Raw images remain at their original distribution channels. This audit script does not regenerate component predictions or model training.
 
 \section{Outer-Fold Selection Record}
 The nested analysis is easier to audit when the outer predictions are presented source by source. Table~\ref{tab:nestedfold} transcribes the fold-level values from the saved run summary. The selected weights vary materially between folds, particularly in DeepDRiD and DRTiD. This variation is not by itself proof of instability because folds are finite and channel scales are empirical; together with the misses and modest denominators, it does show that the nested procedure does not settle on one evidently invariant source-specific recipe.
@@ -491,9 +495,11 @@ The nested analysis is easier to audit when the outer predictions are presented 
 \centering
 \caption{Nested five-outer/four-inner-fold selection record. Weight columns correspond to the three ordered score channels for each dataset as defined in the frozen policy section. Thresholds and fold outcomes are development diagnostics; every patient fold was previously exposed to project-level research.}
 \label{tab:nestedfold}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{llrrrrrl}
 \toprule
-Source & Fold & Held-out patients & Negatives & TN & Misses & Selected weights & Threshold \\
+Source & Fold & \shortstack{Held-out\\patients} & Negatives & TN & Misses & \shortstack{Selected\\weights} & Threshold \\
 \midrule
 DDR & 1 & 126 & 42 & 26 & 0 & (0.5, 0.0, 0.5) & 0.22445 \\
 DDR & 2 & 125 & 41 & 32 & 1 & (0.6, 0.3, 0.1) & 0.21220 \\
@@ -519,7 +525,7 @@ The outer-fold table has an important reading rule. A threshold in one fold is d
 The nested-margin version reuses the same outer partition but selects a nonnegative safety margin in the inner folds. Across its 15 source-fold units, the margins range from zero to 0.03 for DDR and DeepDRiD, and 0.005 to 0.02 for DRTiD. It returns six misses overall. These selected margins do not constitute a portable safety factor: they are score-space adjustments on fold-specific empirical ranks and do not translate into a fixed clinical risk reduction.
 
 \section*{Reproducibility and Data Availability}
-Replay and policy artifacts are in \texttt{results/deployable\_exposed\_baseline\_7013\_20261013\_with\_components/}; the evaluator is \texttt{src/active\_retina/exposed\_expert\_policy.py}. Grouped and nested summaries are in the corresponding \texttt{results/crossfit\_expert\_calibration\_20261013\_corrected/}, \texttt{results/nested\_crossfit\_expert\_weights\_20261013/}, and \texttt{results/nested\_crossfit\_expert\_weights\_margin\_20261013/} directories. The candidate transfer diagnostic is in \texttt{results/clean\_candidate\_on\_exposed981\_20261013/}. Raw public-dataset images are not redistributed; each dataset must be obtained under its own license and terms. These paths support artifact traceability but do not by themselves establish a clean, one-command end-to-end reproduction package. Before submission, archive an immutable source revision, environment lockfile, dataset release/version records, hashes for manifests and derived artifacts, and complete model/preprocessing availability statements. Any external-validation statement must identify a cohort that was not used for training, calibration, candidate selection, threshold selection, or prior project decisions; this study currently reports no such cohort.
+Replay and policy artifacts are in \texttt{results/deployable\_exposed\_baseline\_7013\_20261013\_with\_components/}; the evaluator is \texttt{src/active\_retina/exposed\_expert\_policy.py}. Grouped and nested summaries are in the corresponding \texttt{results/crossfit\_expert\_calibration\_20261013\_corrected/}, \texttt{results/nested\_crossfit\_expert\_weights\_20261013/}, and \texttt{results/nested\_crossfit\_expert\_weights\_margin\_20261013/} directories. The candidate transfer diagnostic is in \texttt{results/clean\_candidate\_on\_exposed981\_20261013/}. Run \texttt{python paper/audit\_submission\_evidence.py --root .} in Python 3.12 with the dependency listed in \texttt{paper/reproducibility/requirements.txt}. The script recomputes all 981 actions and risk scores from supplied component-score rows, reconstructs source counts, checks principal grouped/nested/transfer values against saved summaries, and emits SHA-256 hashes as JSON. It does not regenerate image features, retrain models, or establish external validation. The clean public checkout omits the local policy and per-eye replay rows pending author confirmation that redistribution of derived records is permitted; therefore this is not yet a clean-clone reproduction bundle. The source-linked dataset-rights and author-declaration gates are itemized in \texttt{paper/SUBMISSION\_RELEASE\_CHECKLIST.md}. No raw images are redistributed. No independent external validation cohort is reported.
 
 \begin{thebibliography}{23}
 \bibitem{gulshan2016} V. Gulshan et al., ``Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs,'' \emph{JAMA}, vol. 316, no. 22, pp. 2402--2410, 2016.
@@ -532,7 +538,7 @@ Replay and policy artifacts are in \texttt{results/deployable\_exposed\_baseline
 \bibitem{selectivenet} Y. Geifman and R. El-Yaniv, ``SelectiveNet: A deep neural network with an integrated reject option,'' in \emph{Proceedings of the 36th International Conference on Machine Learning}, 2019, pp. 2151--2159.
 \bibitem{vovk2005} V. Vovk, A. Gammerman, and G. Shafer, \emph{Algorithmic Learning in a Random World}. Springer, 2005.
 \bibitem{angelopoulos2021} A. N. Angelopoulos and S. Bates, ``A gentle introduction to conformal prediction and distribution-free uncertainty quantification,'' arXiv:2107.07511, 2021.
-\bibitem{angelopoulos2024} A. N. Angelopoulos et al., ``Learn then test: Calibrating predictive algorithms to achieve risk control,'' \emph{The Annals of Statistics}, 2024.
+\bibitem{angelopoulos2024} A. N. Angelopoulos, S. Bates, E. J. Cand\`es, M. I. Jordan, and L. Lei, ``Learn then test: Calibrating predictive algorithms to achieve risk control,'' \emph{The Annals of Applied Statistics}, vol. 19, no. 2, pp. 1641--1662, 2025, doi: 10.1214/24-AOAS1998.
 \bibitem{tripodai} G. S. Collins et al., ``TRIPOD+AI statement: updated guidance for reporting clinical prediction models that use regression or machine learning methods,'' \emph{BMJ}, vol. 385, q902, 2024.
 \bibitem{claim} B. J. Mongan, L. Moy, and C. E. Kahn, ``Checklist for Artificial Intelligence in Medical Imaging (CLAIM): a guide for authors and reviewers,'' \emph{Radiology: Artificial Intelligence}, vol. 2, no. 2, e200029, 2020.
 \bibitem{clopperpearson} C. J. Clopper and E. S. Pearson, ``The use of confidence or fiducial limits illustrated in the case of the binomial,'' \emph{Biometrika}, vol. 26, no. 4, pp. 404--413, 1934.
