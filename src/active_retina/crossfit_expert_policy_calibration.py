@@ -89,12 +89,20 @@ def grouped_folds(frame: pd.DataFrame, folds: int, seed: int) -> list[np.ndarray
     ]
 
 
-def run(csv_path: Path, folds: int = 5) -> dict[str, Any]:
+def run(
+    csv_path: Path,
+    folds: int = 5,
+    *,
+    include_case_results: bool = False,
+    manifest_path: Path | None = None,
+) -> dict[str, Any]:
     frame = pd.read_csv(csv_path)
-    manifest = pd.read_csv(
-        Path(__file__).resolve().parents[2]
-        / "results/autonomy_route_three_dataset_manifest_20261011_exactdedup.csv"
-    )
+    if manifest_path is None:
+        manifest_path = (
+            Path(__file__).resolve().parents[2]
+            / "results/autonomy_route_three_dataset_manifest_20261011_exactdedup.csv"
+        )
+    manifest = pd.read_csv(manifest_path)
     source_names = {
         "DDR": "ddr_hf_specificity300",
         "DeepDRiD": "deepdrid_paired",
@@ -118,6 +126,7 @@ def run(csv_path: Path, folds: int = 5) -> dict[str, Any]:
     if not np.array_equal(manifest_labels.to_numpy(), frame["referable"].astype(int).to_numpy()):
         raise ValueError("Replay labels do not match the master manifest")
     actions: dict[tuple[str, str], str] = {}
+    case_results: list[dict[str, Any]] = []
     fold_records: list[dict[str, Any]] = []
     for source in ("DDR", "DeepDRiD", "DRTiD"):
         group = frame[frame["source"] == source].reset_index(drop=True)
@@ -153,12 +162,24 @@ def run(csv_path: Path, folds: int = 5) -> dict[str, Any]:
             "quality_threshold": None if np.isnan(q_threshold) else q_threshold,
             })
             for row_index, decision in zip(test.index, referred):
-                actions[(source, str(group.loc[row_index, "eye_id"]))] = "REFER" if decision else "CLEAR"
+                eye_id = str(group.loc[row_index, "eye_id"])
+                action = "REFER" if decision else "CLEAR"
+                actions[(source, eye_id)] = action
+                if include_case_results:
+                    row = group.loc[row_index]
+                    case_results.append({
+                        "source": source,
+                        "eye_id": eye_id,
+                        "patient_id": str(row["patient_id"]),
+                        "referable": int(row["referable"]),
+                        "ungradable": int(row["ungradable"]),
+                        "action": action,
+                    })
 
     total_negatives = sum(row["heldout_negatives"] for row in fold_records)
     total_tn = sum(row["true_negatives"] for row in fold_records)
     total_misses = sum(row["misses_referable_or_ungradable"] for row in fold_records)
-    return {
+    result = {
         "status": "CROSSFIT_POLICY_CALIBRATION_DEVELOPMENT_ONLY",
         "base_model_selection_caveat": "The component model family and validation cohort were previously inspected; patient-grouped folds only isolate calibration fitting within this cohort.",
         "reference_replay_specificity": 70.12987012987013,
@@ -175,6 +196,9 @@ def run(csv_path: Path, folds: int = 5) -> dict[str, Any]:
         "fold_results": fold_records,
         "frozen_policy_thresholds_are_not_reused_across_folds": True,
     }
+    if include_case_results:
+        result["case_results"] = case_results
+    return result
 
 
 def main() -> None:

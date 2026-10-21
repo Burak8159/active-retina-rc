@@ -27,8 +27,23 @@ def sha256_file(path: Path) -> str:
 
 def build_encoder():
     import timm
+    from safetensors.torch import load_file
+    from huggingface_hub import hf_hub_download
 
-    model = timm.create_model("resnet50.a1_in1k", pretrained=True, num_classes=0)
+    model = timm.create_model("resnet50.a1_in1k", pretrained=False, num_classes=0)
+    cache = Path(__file__).resolve().parents[2] / "external/model_cache/hub/models--timm--resnet50.a1_in1k/snapshots"
+    local_weights = next(cache.glob("*/model.safetensors"), None) if cache.is_dir() else None
+    weights_path = local_weights or Path(
+        hf_hub_download("timm/resnet50.a1_in1k", "model.safetensors")
+    )
+    state = load_file(str(weights_path), device="cpu")
+    incompat = model.load_state_dict(state, strict=False)
+    unexpected = set(incompat.unexpected_keys) - {"fc.weight", "fc.bias"}
+    if incompat.missing_keys or unexpected:
+        raise RuntimeError(
+            f"ResNet-50 encoder checkpoint mismatch: missing={incompat.missing_keys}, "
+            f"unexpected={sorted(unexpected)}"
+        )
     cfg = timm.data.resolve_model_data_config(model)
     transform = timm.data.create_transform(**cfg, is_training=False)
     model.eval()
@@ -113,6 +128,52 @@ def classify(artifact: dict[str, Any], first: np.ndarray, second: np.ndarray | N
     }
 
 
+def classify_forced_binary(
+    artifact: dict[str, Any],
+    first: np.ndarray,
+    second: np.ndarray | None,
+    quality_ok: bool,
+    threshold: float = 0.5,
+) -> dict[str, Any]:
+    """Produce one binary research output per scan; this is not risk-certified."""
+    if not 0.0 < threshold < 1.0:
+        raise ValueError("Binary threshold must be strictly between zero and one")
+    if not quality_ok:
+        return {
+            "action": "REFER",
+            "recommendation": "forced_refer_for_quality_failure",
+            "images_used": 1 + int(second is not None),
+            "referable_score": None,
+            "grade_prediction": None,
+            "needs_second_view": False,
+            "binary_threshold": threshold,
+            "binary_mode": "forced_binary_research_unvalidated",
+        }
+
+    if second is None:
+        x = pooled([first]).reshape(1, -1)
+        score = float(artifact["models"]["first_binary"].predict_proba(x)[0, 1])
+        grade = int(artifact["models"]["first_grade"].predict(x)[0])
+        images_used = 1
+    else:
+        x = pooled([first, second]).reshape(1, -1)
+        score = float(artifact["models"]["paired_binary"].predict_proba(x)[0, 1])
+        grade = int(artifact["models"]["paired_grade"].predict(x)[0])
+        images_used = 2
+
+    action = "REFER" if score >= threshold else "CLEAR"
+    return {
+        "action": action,
+        "recommendation": f"forced_binary_{action.lower()}_research_output",
+        "images_used": images_used,
+        "referable_score": score,
+        "grade_prediction": grade,
+        "needs_second_view": False,
+        "binary_threshold": threshold,
+        "binary_mode": "forced_binary_research_unvalidated",
+    }
+
+
 def enrich_decision(decision: dict[str, Any]) -> dict[str, Any]:
     score = float(decision["referable_score"])
     grade = int(decision["grade_prediction"])
@@ -147,6 +208,11 @@ def enrich_decision(decision: dict[str, Any]) -> dict[str, Any]:
 
 
 def html_report(result: dict[str, Any]) -> str:
+    decision = result["decision"]
+    score = decision.get("referable_score")
+    score_text = "not computed (quality failure routed to REFER)" if score is None else f"{float(score):.4f}"
+    grade = decision.get("grade_prediction")
+    grade_text = "not computed" if grade is None else str(grade)
     return f"""<!doctype html>
 <html><head><meta charset="utf-8"><title>ActiveRetina-RC Case Report</title>
 <style>body{{font-family:Arial,sans-serif;margin:32px;max-width:900px}}.warn{{color:#9b2226;font-weight:bold}}dt{{font-weight:bold;margin-top:12px}}</style>
@@ -158,8 +224,8 @@ def html_report(result: dict[str, Any]) -> str:
 <dt>Action</dt><dd>{result['decision']['action']}</dd>
 <dt>Recommendation</dt><dd>{result['decision']['recommendation']}</dd>
 <dt>Model impression</dt><dd>{result['decision'].get('model_impression_for_clinician_review', 'not available')}</dd>
-<dt>Referable DR score</dt><dd>{result['decision']['referable_score']:.4f}</dd>
-<dt>Five-class grade prediction</dt><dd>{result['decision']['grade_prediction']}</dd>
+<dt>Referable DR score</dt><dd>{score_text}</dd>
+<dt>Five-class grade prediction</dt><dd>{grade_text}</dd>
 <dt>Next step</dt><dd>{result['decision'].get('recommended_next_step', 'manual review required')}</dd>
 <dt>Images used</dt><dd>{result['decision']['images_used']}</dd>
 <dt>Model version</dt><dd>{result['model_version']}</dd>

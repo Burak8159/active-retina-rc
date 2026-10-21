@@ -13,7 +13,15 @@ from urllib.parse import parse_qs, urlparse
 
 import joblib
 
-from .clinical_case_runner import build_encoder, classify, embed, enrich_decision, html_report, sha256_file
+from .clinical_case_runner import (
+    build_encoder,
+    classify,
+    classify_forced_binary,
+    embed,
+    enrich_decision,
+    html_report,
+    sha256_file,
+)
 from .train_clinical_artifact import ARTIFACT_VERSION
 
 
@@ -71,7 +79,9 @@ def form_page() -> bytes:
       <option value="yes">Image is clear and the retina is visible</option>
       <option value="no">Image is blurry, dark, or incomplete</option>
     </select>
+    <label><input type="checkbox" name="forced_binary" value="yes" style="width:auto"> Always return CLEAR or REFER (unvalidated research mode)</label>
     <button type="submit">Analyze scan</button>
+    <p class="notice alert">Research software only. The binary mode is not clinically validated and must not guide patient care.</p>
   </form>
 </section>
 """
@@ -94,8 +104,15 @@ def assessment_summary(decision: dict[str, Any]) -> dict[str, str]:
 
 def public_scan_response(result: dict[str, Any], report_url: str) -> dict[str, Any]:
     """Return only the concise user-facing scan result; audit data stays stored."""
-    assessment = assessment_summary(result["decision"])
-    return {
+    decision = result["decision"]
+    if decision.get("binary_mode"):
+        assessment = {
+            "result": f"Research-model output: {decision['action']}",
+            "next": "This output is unvalidated; do not use it for patient-care decisions.",
+        }
+    else:
+        assessment = assessment_summary(decision)
+    response = {
         "case_id": result["case_id"],
         "assessment": assessment["result"],
         "next_step": assessment["next"],
@@ -103,6 +120,12 @@ def public_scan_response(result: dict[str, Any], report_url: str) -> dict[str, A
         "autonomous_diagnosis": False,
         "report_url": report_url,
     }
+    if decision.get("binary_mode"):
+        response["binary_output"] = decision["action"]
+        response["binary_model_status"] = decision["binary_mode"]
+        response["binary_threshold"] = decision["binary_threshold"]
+        response["is_7013_policy"] = False
+    return response
 
 
 def get_field_text(form: cgi.FieldStorage, name: str, default: str = "") -> str:
@@ -137,11 +160,15 @@ def analyze_case(
     first_path: Path,
     second_path: Path | None,
     quality_ok: bool,
+    forced_binary: bool = False,
 ) -> dict[str, Any]:
     first = embed(first_path, model, transform)
     second = embed(second_path, model, transform) if second_path else None
-    decision = enrich_decision(classify(artifact, first, second))
-    if not quality_ok:
+    if forced_binary:
+        decision = classify_forced_binary(artifact, first, second, quality_ok)
+    else:
+        decision = enrich_decision(classify(artifact, first, second))
+    if not quality_ok and not forced_binary:
         decision = {
             **decision,
             "action": "DEFER_TO_CLINICIAN",
@@ -166,6 +193,8 @@ def analyze_case(
         "decision": decision,
         "manual_review_required": True,
         "autonomous_diagnosis": False,
+        "binary_output_mode": forced_binary,
+        "binary_output_validated": False if forced_binary else None,
     }
 
 
@@ -221,6 +250,7 @@ class StationHandler(BaseHTTPRequestHandler):
         case_id = sanitize_case_id(raw_case_id)
         operator_id = get_field_text(form, "operator_id", "local_station")
         quality_ok = get_field_text(form, "quality_ok", "yes") == "yes"
+        forced_binary = get_field_text(form, "forced_binary", "no") == "yes"
         case_dir = CASE_DIR / case_id
         case_dir.mkdir(parents=True, exist_ok=True)
         first_path = save_upload(form, "first_image", case_dir)
@@ -229,9 +259,18 @@ class StationHandler(BaseHTTPRequestHandler):
             self.write(400, page("<section><p>First image is required.</p></section>"))
             return
 
-        result = analyze_case(self.artifact, self.model, self.transform, case_id, operator_id, first_path, second_path, quality_ok)
+        result = analyze_case(
+            self.artifact, self.model, self.transform, case_id, operator_id,
+            first_path, second_path, quality_ok, forced_binary,
+        )
         persist_case(case_id, result)
-        assessment = assessment_summary(result["decision"])
+        if forced_binary:
+            assessment = {
+                "result": f"Research-model output: {result['decision']['action']}",
+                "next": "This output is unvalidated; do not use it for patient-care decisions.",
+            }
+        else:
+            assessment = assessment_summary(result["decision"])
         self.write(
             200,
             page(
@@ -240,7 +279,7 @@ class StationHandler(BaseHTTPRequestHandler):
   <h2>Scan result</h2>
   <p class="result">{html.escape(assessment['result'])}</p>
   <p class="next">{html.escape(assessment['next'])}</p>
-  <p class="notice alert">This is a model assessment, not a diagnosis. Clinician confirmation is required.</p>
+  <p class="notice alert">{ 'Forced binary research output; not clinically validated and not for patient-care decisions.' if forced_binary else 'This is a model assessment, not a diagnosis. Clinician confirmation is required.' }</p>
   <p><a href="/case?id={html.escape(case_id)}">View detailed report</a></p>
   <p><a href="/">Scan another image</a></p>
 </section>
@@ -267,6 +306,7 @@ class StationHandler(BaseHTTPRequestHandler):
                 first_path,
                 second_path,
                 bool(payload.get("quality_ok", True)),
+                str(payload.get("mode", "")) == "forced_binary_research",
             )
             case_dir = persist_case(case_id, result)
             response = public_scan_response(result, f"/case?id={case_id}")
@@ -289,6 +329,7 @@ def smoke() -> None:
     assert artifact.get("version")
     form = form_page().decode("utf-8")
     assert "Analyze scan" in form
+    assert 'name="forced_binary"' in form
     assert "70.13" not in form and "63.12" not in form
     assert assessment_summary({"recommendation": "manual_review_likely_referable"})["result"] == "Possible referable diabetic retinopathy"
     print("clinical station smoke passed")

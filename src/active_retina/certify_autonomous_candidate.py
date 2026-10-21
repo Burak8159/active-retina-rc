@@ -21,6 +21,8 @@ from .formal_risk_control import binomial_upper
 from .train_clinical_artifact import group_by_eye, matrix
 from .train_deepdrid_pretrained_encoder import extract_features
 
+MINIMUM_SPECIFICITY = 0.80
+
 
 def read_manifest(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
@@ -62,20 +64,28 @@ def patient_certificate(rows: list[dict[str, Any]]) -> dict[str, Any]:
     missed_positive_patients = 0
     false_positive_patients = 0
     decided_patients = 0
+    positive_eye_rows = 0
+    missed_positive_eye_rows = 0
+    predicted_eye_rows = 0
     for patient_rows in by_patient.values():
         is_positive = any(int(r["referable_dr"]) == 1 for r in patient_rows)
         positive_patients += int(is_positive)
         negative_patients += int(not is_positive)
-        decided_rows = [r for r in patient_rows if r["prediction"] != ""]
-        decided_patients += int(bool(decided_rows))
+        decided_rows = [r for r in patient_rows if str(r["prediction"]) in {"0", "1"}]
+        predicted_eye_rows += len(decided_rows)
+        patient_fully_decided = len(decided_rows) == len(patient_rows)
+        decided_patients += int(patient_fully_decided)
+        positive_eye_rows += sum(int(r["referable_dr"]) == 1 for r in patient_rows)
+        missed_positive_eye_rows += sum(
+            int(r["referable_dr"]) == 1 and str(r["prediction"]) == "0" for r in patient_rows
+        )
         if is_positive:
-            decided_ref = [r for r in patient_rows if int(r["referable_dr"]) == 1 and r["prediction"] != ""]
-            if decided_ref:
+            if patient_fully_decided:
                 decided_positive_patients += 1
-                missed_positive_patients += int(any(int(r["prediction"]) == 0 for r in decided_ref))
-        elif decided_rows:
+                missed_positive_patients += int(not any(str(r["prediction"]) == "1" for r in patient_rows))
+        elif patient_fully_decided:
             decided_negative_patients += 1
-            false_positive_patients += int(any(int(r["prediction"]) == 1 for r in decided_rows))
+            false_positive_patients += int(any(str(r["prediction"]) == "1" for r in patient_rows))
     ucb = (
         binomial_upper(missed_positive_patients, decided_positive_patients, 0.05)
         if decided_positive_patients
@@ -86,12 +96,22 @@ def patient_certificate(rows: list[dict[str, Any]]) -> dict[str, Any]:
         if decided_negative_patients
         else float("nan")
     )
+    row_coverage = predicted_eye_rows / len(rows) if rows else float("nan")
+    full_binary_coverage = bool(rows) and predicted_eye_rows == len(rows)
+    zero_misses = missed_positive_patients == 0 and missed_positive_eye_rows == 0
+    risk_certified = math.isfinite(ucb) and ucb <= 0.05
+    specificity_target_met = math.isfinite(specificity) and specificity >= MINIMUM_SPECIFICITY
+    full_binary_target_met = full_binary_coverage and zero_misses and risk_certified and specificity_target_met
     return {
         "n_patients": len(by_patient),
         "positive_patients": positive_patients,
         "negative_patients": negative_patients,
         "decided_patients": decided_patients,
         "coverage_patients": decided_patients / len(by_patient) if by_patient else float("nan"),
+        "binary_eye_row_coverage": row_coverage,
+        "full_binary_eye_row_coverage": full_binary_coverage,
+        "positive_eye_rows": positive_eye_rows,
+        "missed_positive_eye_rows": missed_positive_eye_rows,
         "decided_positive_patients": decided_positive_patients,
         "decided_negative_patients": decided_negative_patients,
         "missed_positive_patients": missed_positive_patients,
@@ -101,8 +121,12 @@ def patient_certificate(rows: list[dict[str, Any]]) -> dict[str, Any]:
             missed_positive_patients / decided_positive_patients if decided_positive_patients else float("nan")
         ),
         "patient_missed_risk_ucb_95": ucb,
-        "zero_miss_59_case_condition_met": missed_positive_patients == 0 and decided_positive_patients >= 59,
-        "certifies_5_percent_95_confidence": math.isfinite(ucb) and ucb <= 0.05,
+        "minimum_specificity_target": MINIMUM_SPECIFICITY,
+        "zero_miss_59_case_condition_met": (
+            full_binary_coverage and zero_misses and decided_positive_patients >= 59
+        ),
+        "certifies_5_percent_95_confidence": risk_certified,
+        "meets_full_binary_80_0_100_research_target": full_binary_target_met,
     }
 
 
@@ -153,13 +177,12 @@ def main() -> None:
             }
         )
     write_csv(Path(args.output_predictions), pred_rows)
-    cert = patient_certificate(pred_rows)
-    raw_go = cert["certifies_5_percent_95_confidence"]
+    cert = patient_certificate(pred_rows, args.minimum_specificity)
     decision = (
-        "GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED"
-        if raw_go and args.certification_context == "untouched"
-        else "DEVELOPMENT_GO_NOT_A_CERTIFICATE"
-        if raw_go
+        "GO_BINARY_80_0_100_RESEARCH_TARGET_MET"
+        if cert["meets_full_binary_80_0_100_research_target"] and args.certification_context == "untouched"
+        else "DEVELOPMENT_TARGET_MET_NOT_A_CERTIFICATE"
+        if cert["meets_full_binary_80_0_100_research_target"]
         else "NO_GO_AUTONOMOUS_CERTIFICATION"
     )
     summary = {
@@ -174,9 +197,11 @@ def main() -> None:
         "policy": policy,
         "patient_certificate": cert,
         "decision": decision,
+        "clinical_validation_status": "NOT_ESTABLISHED_BY_THIS_COMPUTATIONAL_CERTIFICATE",
         "warning": (
-            "This is a final autonomous certificate only when certification_context is untouched "
-            "and the cohort was untouched before this run."
+            "A research risk certificate is not clinical validation. Full binary target additionally requires "
+            "every eye row to receive a binary output, zero positive-eye and patient misses, the prespecified "
+            "patient risk bound, and minimum specificity. Clinical validation requires a separate clinical study."
         ),
     }
     Path(args.output_summary).write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")

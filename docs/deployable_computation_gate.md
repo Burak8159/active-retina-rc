@@ -1,6 +1,6 @@
 # Deployable Computation Gate
 
-Status: `DEPLOYABLE_COMPUTATION_READY_CERTIFICATION_PENDING`
+Status: `CLINICIAN_REVIEWED_SOFTWARE_EXISTS; FULL_BINARY_TARGET_NOT_MET`
 
 ActiveRetina-RC now separates three things that must never be mixed:
 
@@ -33,11 +33,11 @@ ActiveRetina-RC now separates three things that must never be mixed:
 
 ## Deployment Rule
 
-The software may run real images and produce structured analysis reports, but
-the autonomous diagnosis switch remains off unless the certification summary
-returns:
+The software may run images and produce structured reports, but it is not a
+clinically validated diagnostic device. The stricter retrospective research
+gate can pass only when the certification summary returns:
 
-`GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED`
+`GO_BINARY_80_0_100_RESEARCH_TARGET_MET`
 
 The accepted certification run must satisfy all of the following:
 
@@ -48,21 +48,30 @@ The accepted certification run must satisfy all of the following:
 - Every eligible eye has same-eye macula and optic-disc views.
 - At least 59 referable-DR positive patients are automatically decided with
   zero misses.
+- 100% binary outputs across all eligible eye rows, zero false-negative
+  referable eye rows, at least 80% patient-level specificity, and the one-sided
+  95% patient missed-risk bound at or below 5%.
 - The frozen artifact and thresholds are applied once, with no threshold repair.
 - The certification command reports `certification_context=untouched`, not
   `inspected-development`.
+- A pass is a retrospective computational result only. Clinical validation
+  still requires a separate clinical study and is never inferred from this
+  command.
 
 ## Current Product State
 
-The computation package is ready for a real certification event. The current
-local labeled data are not eligible for final autonomous certification because
-they have already influenced development.
+Some workflow and candidate-scoring code exists, but the current paired-view
+candidate defers uncertain cases and therefore is not a full-binary model. The
+MMRDR-UWF image model assigned a binary action to every held-out image but had
+five misses and 20.02% specificity. Neither artifact is ready to establish the
+full-binary clinical claim. Existing local data have also influenced model
+development and cannot provide a new confirmatory result.
 
 Current decision:
 
 `GO_CLINICIAN_REVIEWED_COMPUTATIONAL_PRODUCT`
 
-`RECOVERY_CANDIDATE_READY_FOR_DIFFERENT_UNTOUCHED_CERTIFICATION`
+`RECOVERY_CANDIDATE_NOT_CLINICALLY_VALIDATED`
 
 `NO_GO_AUTONOMOUS_DIAGNOSIS_BEFORE_CERTIFICATE`
 

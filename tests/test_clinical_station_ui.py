@@ -1,6 +1,22 @@
 import unittest
 
+import numpy as np
+
+from active_retina.clinical_case_runner import classify_forced_binary, html_report
 from active_retina.clinical_station import assessment_summary, form_page, public_scan_response
+
+
+class FixedBinary:
+    def __init__(self, probability):
+        self.probability = probability
+
+    def predict_proba(self, x):
+        return np.asarray([[1.0 - self.probability, self.probability]])
+
+
+class FixedGrade:
+    def predict(self, x):
+        return np.asarray([1])
 
 
 class ClinicalStationUiTests(unittest.TestCase):
@@ -9,6 +25,8 @@ class ClinicalStationUiTests(unittest.TestCase):
         self.assertIn('name="first_image"', page)
         self.assertIn('name="second_image"', page)
         self.assertIn("Analyze scan", page)
+        self.assertIn('name="forced_binary"', page)
+        self.assertIn("not clinically validated", page)
         self.assertNotIn("70.13", page)
         self.assertNotIn("63.12", page)
         self.assertNotIn("operator_id", page)
@@ -40,6 +58,41 @@ class ClinicalStationUiTests(unittest.TestCase):
         self.assertEqual(response["assessment"], "Possible referable diabetic retinopathy")
         self.assertTrue(response["clinician_confirmation_required"])
         self.assertFalse(response["autonomous_diagnosis"])
+
+    def test_forced_binary_response_is_explicitly_unvalidated_and_not_7013(self):
+        response = public_scan_response({
+            "case_id": "CASE-2",
+            "decision": {
+                "action": "CLEAR",
+                "recommendation": "forced_binary_clear_research_output",
+                "binary_mode": "forced_binary_research_unvalidated",
+                "binary_threshold": 0.5,
+                "referable_score": 0.2,
+            },
+        }, "/case?id=CASE-2")
+        self.assertEqual(response["binary_output"], "CLEAR")
+        self.assertFalse(response["is_7013_policy"])
+        self.assertFalse(response["autonomous_diagnosis"])
+
+    def test_forced_binary_classifier_returns_action_for_single_and_paired_images(self):
+        artifact = {"models": {
+            "first_binary": FixedBinary(0.2),
+            "first_grade": FixedGrade(),
+            "paired_binary": FixedBinary(0.8),
+            "paired_grade": FixedGrade(),
+        }}
+        image = np.zeros(4, dtype=np.float32)
+        self.assertEqual(classify_forced_binary(artifact, image, None, True)["action"], "CLEAR")
+        pair = classify_forced_binary(artifact, image, image, True)
+        self.assertEqual(pair["action"], "REFER")
+        self.assertEqual(pair["images_used"], 2)
+
+    def test_forced_binary_quality_failure_routes_to_refer_and_report_renders(self):
+        decision = classify_forced_binary({}, np.zeros(4), None, False)
+        self.assertEqual(decision["action"], "REFER")
+        report = html_report({"case_id": "q1", "decision": decision, "model_version": "test", "model_status": "research"})
+        self.assertIn("quality failure routed to REFER", report)
+        self.assertIn("REFER", report)
 
 
 if __name__ == "__main__":

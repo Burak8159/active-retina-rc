@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from sklearn.svm import LinearSVC
 
 from active_retina.audit_expert_score_oracle_union import (
     ROOT,
+    EXCLUDED_COLUMNS,
     _current_recipe_scores,
     _source_rows,
     read_csv,
@@ -28,6 +30,36 @@ from active_retina.audit_expert_score_oracle_union import (
 SOURCES = ("DDR", "DeepDRiD", "DRTiD")
 C_VALUES = (0.001, 0.01, 0.1, 1.0, 10.0)
 UNION_SHRINKS = (0.5, 0.6, 0.7, 0.8, 0.9, 1.0)
+
+
+def all_aligned_candidates(results: Path, eye_ids: list[str], base: np.ndarray):
+    candidates: list[tuple[str, np.ndarray]] = [("current_fused_recipe", base)]
+    seen = {base.tobytes()}
+    for path in sorted(results.rglob("*.csv")):
+        try:
+            rows = read_csv(path)
+        except (OSError, UnicodeError, csv.Error):
+            continue
+        if not rows or "eye_id" not in rows[0]:
+            continue
+        by_id = {row["eye_id"]: row for row in rows}
+        if len(by_id) != len(rows) or not set(eye_ids).issubset(by_id):
+            continue
+        for column in rows[0]:
+            if column in EXCLUDED_COLUMNS:
+                continue
+            try:
+                values = np.asarray([float(by_id[i][column]) for i in eye_ids], dtype=float)
+            except (TypeError, ValueError, KeyError):
+                continue
+            if not np.isfinite(values).all() or np.ptp(values) <= 1e-12:
+                continue
+            key = values.tobytes()
+            if key in seen:
+                continue
+            seen.add(key)
+            candidates.append((f"{path.relative_to(results)}::{column}", values))
+    return candidates
 
 
 def rank_train_test(train: np.ndarray, test: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -49,12 +81,19 @@ def rank_train_test(train: np.ndarray, test: np.ndarray) -> tuple[np.ndarray, np
     return train_rank, test_rank
 
 
-def score_candidates(results: Path, source: str, eye_ids: list[str]) -> tuple[np.ndarray, list[str]]:
-    oracle = json.loads((results / "expert_score_oracle_union_20261012.json").read_text(encoding="utf-8"))
-    selected = oracle["source_results"][source]["scores_that_added_at_least_one_case"]
+def score_candidates(results: Path, source: str, eye_ids: list[str],
+                     candidate_mode: str = "oracle_contributors") -> tuple[np.ndarray, list[str]]:
     candidates: list[tuple[str, np.ndarray]] = []
     base, _ = _current_recipe_scores(results, source, eye_ids)
+    if candidate_mode == "all_aligned":
+        # Rank transforms are fitted inside folds; this pool is assembled without labels.
+        candidates = all_aligned_candidates(results, eye_ids, base)
+        return np.column_stack([values for _, values in candidates]), [name for name, _ in candidates]
+    if candidate_mode != "oracle_contributors":
+        raise ValueError(f"Unknown candidate mode: {candidate_mode}")
     candidates.append(("current_fused_recipe", base))
+    oracle = json.loads((results / "expert_score_oracle_union_20261012.json").read_text(encoding="utf-8"))
+    selected = oracle["source_results"][source]["scores_that_added_at_least_one_case"]
     cache: dict[Path, dict[str, dict[str, str]]] = {}
     for item in selected:
         if item == "current_fused_recipe":
@@ -235,12 +274,18 @@ def inner_select(x: np.ndarray, y: np.ndarray, groups: np.ndarray, folds: int, s
     return float(chosen["C"]), str(chosen["family"]), {"selected": chosen, "grid": trials}
 
 
-def evaluate_source(results: Path, source: str, cases: dict[str, dict[str, str]], folds: int, seed: int):
+def evaluate_source(results: Path, source: str, cases: dict[str, dict[str, str]], folds: int,
+                    seed: int, candidate_mode: str):
     eye_ids = sorted(cases)
     labels = np.asarray([int(cases[i].get("referable", cases[i].get("referable_dr"))) for i in eye_ids])
     patient_ids = np.asarray([cases[i]["patient_id"] for i in eye_ids])
     _, forced = _current_recipe_scores(results, source, eye_ids)
-    x, feature_names = score_candidates(results, source, eye_ids)
+    x, feature_names = score_candidates(results, source, eye_ids, candidate_mode)
+    candidate_paths = sorted({name.split("::", 1)[0] for name in feature_names if "::" in name})
+    source_file_hashes = {
+        rel: hashlib.sha256((results / rel).read_bytes()).hexdigest()
+        for rel in candidate_paths
+    }
     eligible = ~forced
     x_fit, y_fit, group_fit = x[eligible], labels[eligible], patient_ids[eligible]
     outer = split_folds(y_fit, group_fit, folds, seed + 1)
@@ -307,6 +352,11 @@ def evaluate_source(results: Path, source: str, cases: dict[str, dict[str, str]]
     result["baseline_true_negatives_same_cohort"] = int(np.sum(base_clear & (labels == 0)))
     result["baseline_specificity_same_cohort"] = float(np.mean(base_clear[labels == 0]))
     result["features"] = feature_names
+    result["candidate_channel_count"] = len(feature_names) - 1
+    result["candidate_panel_sha256"] = hashlib.sha256(
+        "\n".join(feature_names).encode("utf-8")
+    ).hexdigest()
+    result["candidate_file_sha256"] = source_file_hashes
     result["folds"] = details
     return result
 
@@ -322,14 +372,19 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=ROOT / "results/expert_selector_nested_crossfit_20261012.json")
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--seed", type=int, default=20261012)
+    parser.add_argument("--candidate-mode", choices=("oracle_contributors", "all_aligned"),
+                        default="oracle_contributors",
+                        help="Compare the historical label-screened shortlist with every complete aligned score channel.")
     args = parser.parse_args()
 
     source_cases = _source_rows(args.results_dir)
     report = {"status": "EXPOSED_DATA_NESTED_PATIENT_CROSSFIT_DEVELOPMENT_ONLY",
-              "claim_boundary": "All source labels and base-model outputs have been inspected in prior development. Nested patient folds limit selector self-fitting but do not make this independent or clinically confirmatory.",
-              "outer_folds": args.folds, "sources": {}}
+              "method": "candidate_set_contamination_sensitivity",
+              "candidate_mode": args.candidate_mode,
+              "claim_boundary": "All source labels and base-model outputs have been inspected in prior development. The all-aligned mode avoids label-based candidate screening in this analysis, but the artifact universe and cohort are historically exposed. Nested patient folds limit selector self-fitting; they do not provide independent or clinical confirmation.",
+              "outer_folds": args.folds, "seed": args.seed, "sources": {}}
     for source in SOURCES:
-        report["sources"][source] = evaluate_source(args.results_dir, source, source_cases[source], args.folds, args.seed)
+        report["sources"][source] = evaluate_source(args.results_dir, source, source_cases[source], args.folds, args.seed, args.candidate_mode)
     report["pooled"] = {
         "cases": sum(v["cases"] for v in report["sources"].values()),
         "unique_patients": sum(v["unique_patients"] for v in report["sources"].values()),

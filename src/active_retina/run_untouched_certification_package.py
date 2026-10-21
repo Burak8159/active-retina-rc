@@ -189,19 +189,19 @@ def main() -> None:
             str(args.batch_size),
         ]
     )
-    go = certification.get("decision") == "GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED"
+    go = certification.get("decision") == "GO_BINARY_80_0_100_RESEARCH_TARGET_MET"
     decision = {
-        "status": "GO_FULL_AUTONOMOUS_COMPUTATIONAL_CERTIFICATE" if go else "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED",
+        "status": "GO_RETROSPECTIVE_BINARY_80_0_100_MET_NOT_CLINICAL_VALIDATION" if go else "NO_GO_AUTONOMOUS_CERTIFICATION_FAILED",
         "manifest_preparation": prep,
         "untouched_validation": validation,
         "certification": certification,
         "product_claim": (
-            "Frozen autonomous diagnosis computation is certified on this untouched cohort."
+            "The frozen model met the prespecified retrospective 80/0/100 computational target on this untouched cohort; this is not clinical validation."
             if go
             else "Frozen computation ran correctly, but autonomous diagnosis is not certified."
         ),
         "paper_claim": (
-            "Upgrade manuscript to autonomous-certified external validation."
+            "Report the locked retrospective result and its uncertainty; do not imply prospective clinical validation."
             if go
             else "Report as failed untouched certification and retain clinician-reviewed/conditional claim."
         ),

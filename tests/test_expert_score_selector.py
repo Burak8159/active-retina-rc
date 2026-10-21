@@ -1,8 +1,15 @@
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import numpy as np
 
-from active_retina.evaluate_crossfit_expert_selector import metrics, rank_train_test, split_folds
+from active_retina.evaluate_crossfit_expert_selector import (
+    all_aligned_candidates,
+    metrics,
+    rank_train_test,
+    split_folds,
+)
 
 
 class ExpertScoreSelectorTests(unittest.TestCase):
@@ -30,6 +37,22 @@ class ExpertScoreSelectorTests(unittest.TestCase):
         self.assertEqual(result["true_negatives"], 1)
         self.assertEqual(result["specificity"], 0.5)
         self.assertEqual(result["binary_coverage"], 1.0)
+
+    def test_all_aligned_panel_excludes_metadata_and_incomplete_files(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "complete.csv").write_text(
+                "eye_id,patient_id,referable,risk,quality\n"
+                "e1,p1,0,0.2,0.4\n"
+                "e2,p2,1,0.9,0.7\n",
+                encoding="utf-8",
+            )
+            (root / "incomplete.csv").write_text(
+                "eye_id,risk\ne1,0.2\n", encoding="utf-8"
+            )
+            panel = all_aligned_candidates(root, ["e1", "e2"], np.array([0.1, 0.8]))
+        self.assertEqual([name.split("::")[-1] for name, _ in panel], ["current_fused_recipe", "risk"])
+        np.testing.assert_array_equal(panel[1][1], np.array([0.2, 0.9]))
 
 
 if __name__ == "__main__":

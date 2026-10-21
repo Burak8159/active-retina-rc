@@ -74,6 +74,22 @@ the distinction and request format.
 
 ## Clinical Workflow Software
 
+### RFMiD Multi-Disease Research UI/API
+
+The ConvNeXt-Tiny multi-label research station returns separate model flags for
+RFMiD's disease labels and its dataset-specific `Disease_Risk` target. It is
+distinct from the DR-only workflow below and is **not clinically validated**.
+It processes uploads in memory without saving the image and binds to localhost
+only. The checkpoint is an ignored local artifact and is not included in the
+public repository.
+
+Start it with:
+
+`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.rfmid_multidisease_station`
+
+Open `http://127.0.0.1:8767`. The multipart JSON API is `POST /api/predict`;
+details are in `docs/rfmid_multidisease_ui_api.md`.
+
 Train the locked software artifact:
 
 `PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.train_clinical_artifact`

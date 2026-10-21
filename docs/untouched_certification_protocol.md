@@ -1,10 +1,11 @@
 # ActiveRetina-RC Untouched Certification Protocol
 
-Status: `REQUIRED_FOR_AUTONOMOUS_DIAGNOSIS`
+Status: `REQUIRED_FOR_RESEARCH_CERTIFICATION`; clinical validation is a separate study.
 
-The frozen autonomous candidate exists, but autonomous diagnosis requires a
-new cohort that has not influenced any model, threshold, paper claim, or repair
-decision.
+The frozen paired-view candidate exists, but it is a selective model whose
+middle score range defers to a clinician. It is not a full-coverage binary
+diagnosis model. The MMRDR-UWF held-out test is a different, single-image model
+evaluation and is not paired-view evidence or prospective clinical validation.
 
 ## What Counts As Untouched
 
@@ -20,6 +21,14 @@ A cohort is untouched only if all of the following are true:
   `optic_disc`.
 - The cohort includes at least 59 referable-DR positive patients; 80-120 is the
   preferred range.
+- For the project's full-binary `80/0/100` research target, every eligible eye
+  must receive a binary output, there must be zero missed referable eyes and
+  zero missed referable patients, the one-sided 95% patient miss-risk upper
+  bound must be at most 5%, and patient-level specificity must be at least 80%.
+- Ungradable and inference-failure handling must be specified before the run.
+  A defer/abstain counts against 100% binary coverage; it is not a negative
+  diagnosis. A forced referral for ungradable input is a referral action, not a
+  claim that disease was diagnosed.
 
 ## Required Files
 
@@ -76,8 +85,10 @@ PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.certify_autonomou
   --output-summary results/untouched_certification_summary.json
 ```
 
-The autonomous claim is allowed only if the summary decision is
-`GO_AUTONOMOUS_5_PERCENT_95_CONFIDENCE_CERTIFIED`.
+The computational target is met only if the summary decision is
+`GO_BINARY_80_0_100_RESEARCH_TARGET_MET`. This result is still a retrospective
+research certificate, not clinical validation, a safety guarantee for other
+populations, or authorization for autonomous clinical use.
 
 ## Current Local Inventory
 
@@ -88,6 +99,14 @@ No current local labeled cohort qualifies as untouched:
 - MFIDDR sample fixture: too small and explicitly fixture-only.
 - Historical/exposed test partitions: inspected during repair and excluded from
   confirmatory claims.
+- MMRDR-UWF official test: already scored once with a frozen threshold; five
+  positive image rows were missed and specificity was 20.02%. This is a held-out
+  dataset test result, not an untouched paired-view certification cohort, and
+  it cannot be reused to repair the model and then called confirmatory.
 
-Therefore the model is computation-ready, but the autonomous diagnosis claim
-requires a new cohort import.
+The validation guard now checks patient/eye/image identifiers across the
+project's recorded development manifests using dataset namespaces, and checks
+exact image-content hashes when the local files are available. It is still not
+a substitute for a data custodian's overlap/untouched attestation. Therefore,
+no clinical validation claim is currently supported; a new independently
+collected cohort and a clinical study are needed.

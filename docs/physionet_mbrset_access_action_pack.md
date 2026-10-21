@@ -73,9 +73,10 @@ PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.run_untouched_cer
   --output-dir results/mbrset_untouched_certification
 ```
 
-Only this final status upgrades the project:
+This status records only a retrospective computational target; it does not
+upgrade the project to clinical validation or autonomous clinical use:
 
 ```text
-GO_FULL_AUTONOMOUS_COMPUTATIONAL_CERTIFICATE
+GO_RETROSPECTIVE_BINARY_80_0_100_MET_NOT_CLINICAL_VALIDATION
 ```
 

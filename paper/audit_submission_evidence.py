@@ -7,6 +7,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any
@@ -23,6 +24,7 @@ SUMMARY_RELATIVES = {
     "nested_margin": Path("results/nested_crossfit_expert_weights_margin_20261013/summary.json"),
     "candidate_transfer": Path("results/clean_candidate_on_exposed981_20261013/summary.json"),
 }
+MMRDR_RUN_CARD = Path("paper/reproducibility/mmrdr_uwf_official_test_run_card.json")
 
 
 def sha256(path: Path) -> str:
@@ -37,6 +39,176 @@ def read_json(path: Path) -> dict[str, Any]:
     if not path.is_file():
         raise FileNotFoundError(f"Required evidence file is missing: {path}")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _wilson_interval(successes: int, total: int) -> list[float]:
+    if total <= 0:
+        raise ValueError("Wilson interval requires a positive denominator")
+    z = 1.959963984540054
+    proportion = successes / total
+    denominator = 1 + z * z / total
+    center = (proportion + z * z / (2 * total)) / denominator
+    radius = z * math.sqrt(
+        proportion * (1 - proportion) / total + z * z / (4 * total**2)
+    ) / denominator
+    return [center - radius, center + radius]
+
+
+def audit_mmrdr_aggregate(root: Path) -> dict[str, Any]:
+    """Cross-check tracked MMRDR aggregates; this does not run image inference."""
+    root = root.resolve()
+    run_card_path = root / MMRDR_RUN_CARD
+    run_card = read_json(run_card_path)
+    validation = run_card["validation_result"]
+    trace_meta = run_card["validation_selection_trace"]
+    history_path = root / validation["source_summary_path"]
+    trace_path = root / trace_meta["path"]
+    history = read_json(history_path)
+
+    if sha256(history_path) != validation["source_summary_sha256"]:
+        raise AssertionError("MMRDR validation summary hash disagrees with the run card")
+    if sha256(trace_path) != trace_meta["sha256"]:
+        raise AssertionError("MMRDR validation trace hash disagrees with the run card")
+
+    epochs = history.get("history")
+    if not isinstance(epochs, list) or len(epochs) != trace_meta["recorded_epochs"]:
+        raise AssertionError("MMRDR history length disagrees with the run card")
+    with trace_path.open(newline="", encoding="utf-8") as stream:
+        trace_rows = list(csv.DictReader(stream))
+    if len(trace_rows) != len(epochs):
+        raise AssertionError("MMRDR trace row count disagrees with source history")
+
+    zero_miss_epochs = []
+    selected_history_row = None
+    for expected_epoch, (item, trace_row) in enumerate(zip(epochs, trace_rows), start=1):
+        metrics = item["validation_zero_miss"]
+        if item.get("epoch") != expected_epoch or int(trace_row["epoch"]) != expected_epoch:
+            raise AssertionError("MMRDR history and trace epochs must be consecutive and aligned")
+        for name in (
+            "n", "positive", "negative", "true_positive", "false_negative_clearance",
+            "true_negative", "false_positive_referral",
+        ):
+            if int(trace_row[name]) != metrics[name]:
+                raise AssertionError(f"MMRDR validation trace mismatch at epoch {expected_epoch}: {name}")
+        for name in ("train_loss", "threshold", "sensitivity", "specificity", "refer_rate"):
+            expected = item["train_loss"] if name == "train_loss" else metrics[name]
+            if not math.isclose(float(trace_row[name]), float(expected), rel_tol=1e-12, abs_tol=1e-12):
+                raise AssertionError(f"MMRDR validation trace mismatch at epoch {expected_epoch}: {name}")
+        if metrics["positive"] != metrics["true_positive"] + metrics["false_negative_clearance"]:
+            raise AssertionError(f"MMRDR validation positive counts do not reconcile at epoch {expected_epoch}")
+        if metrics["negative"] != metrics["true_negative"] + metrics["false_positive_referral"]:
+            raise AssertionError(f"MMRDR validation negative counts do not reconcile at epoch {expected_epoch}")
+        if metrics["n"] != metrics["positive"] + metrics["negative"]:
+            raise AssertionError(f"MMRDR validation total does not reconcile at epoch {expected_epoch}")
+        if metrics["false_negative_clearance"] == 0:
+            zero_miss_epochs.append(item)
+        if expected_epoch == validation["selected_epoch"]:
+            selected_history_row = item
+
+    if len(zero_miss_epochs) != trace_meta["zero_miss_epochs"]:
+        raise AssertionError("MMRDR zero-miss epoch count disagrees with the run card")
+    zero_miss_specificities = [
+        item["validation_zero_miss"]["specificity"] for item in zero_miss_epochs
+    ]
+    recorded_range = trace_meta["specificity_range"]
+    observed_range = [min(zero_miss_specificities), max(zero_miss_specificities)]
+    if any(not math.isclose(a, b, abs_tol=1e-12) for a, b in zip(observed_range, recorded_range)):
+        raise AssertionError("MMRDR zero-miss specificity range disagrees with the run card")
+    if selected_history_row is None or history.get("best_epoch") != validation["selected_epoch"]:
+        raise AssertionError("MMRDR selected epoch disagrees with source history")
+    selected = selected_history_row["validation_zero_miss"]
+    best_true_negative = max(item["validation_zero_miss"]["true_negative"] for item in zero_miss_epochs)
+    if selected["false_negative_clearance"] != 0 or selected["true_negative"] != best_true_negative:
+        raise AssertionError("MMRDR selected epoch is not the maximum-specificity zero-miss epoch")
+    if selected["true_negative"] != trace_meta["selected_true_negative"] or selected["negative"] != trace_meta["selected_nonreferable"]:
+        raise AssertionError("MMRDR selected validation counts disagree with the trace metadata")
+    for key, metric_key in (
+        ("true_positive", "true_positive"),
+        ("false_negative", "false_negative_clearance"),
+        ("true_negative", "true_negative"),
+        ("false_positive", "false_positive_referral"),
+    ):
+        if validation[key] != selected[metric_key]:
+            raise AssertionError(f"MMRDR selected validation result disagrees for {key}")
+    if not math.isclose(validation["threshold"], selected["threshold"], abs_tol=1e-12):
+        raise AssertionError("MMRDR validation threshold disagrees with selected history")
+    if not math.isclose(
+        validation["sensitivity"],
+        validation["true_positive"] / (validation["true_positive"] + validation["false_negative"]),
+        abs_tol=1e-12,
+    ):
+        raise AssertionError("MMRDR selected validation sensitivity does not reconcile")
+    if not math.isclose(
+        validation["specificity"],
+        validation["true_negative"] / (validation["true_negative"] + validation["false_positive"]),
+        abs_tol=1e-12,
+    ):
+        raise AssertionError("MMRDR selected validation specificity does not reconcile")
+
+    test = run_card["official_test_result"]
+    test_rows = run_card["dataset"]["official_test_rows"]
+    tp, fn = test["true_positive"], test["false_negative"]
+    tn, fp = test["true_negative"], test["false_positive"]
+    if tp + fn + tn + fp != test_rows:
+        raise AssertionError("MMRDR official-test confusion counts do not sum to manifest rows")
+    if not math.isclose(test["sensitivity"], tp / (tp + fn), abs_tol=1e-12):
+        raise AssertionError("MMRDR official-test sensitivity does not reconcile")
+    if not math.isclose(test["specificity"], tn / (tn + fp), abs_tol=1e-12):
+        raise AssertionError("MMRDR official-test specificity does not reconcile")
+    ci = _wilson_interval(tn, tn + fp)
+    if any(
+        not math.isclose(observed, expected, abs_tol=1e-12)
+        for observed, expected in zip(ci, test["specificity_wilson_95ci"])
+    ):
+        raise AssertionError("MMRDR official-test Wilson interval does not reconcile")
+    sensitivity_ci = _wilson_interval(tp, tp + fn)
+    if any(
+        not math.isclose(observed, expected, abs_tol=1e-12)
+        for observed, expected in zip(sensitivity_ci, test["sensitivity_wilson_95ci"])
+    ):
+        raise AssertionError("MMRDR official-test sensitivity Wilson interval does not reconcile")
+    grade_actions = run_card["official_test_grade_actions"]
+    if [item["grade"] for item in grade_actions] != list(range(5)):
+        raise AssertionError("MMRDR grade-action table must contain grades 0 through 4 once")
+    if sum(item["images"] for item in grade_actions) != test_rows:
+        raise AssertionError("MMRDR grade-action counts do not sum to official-test rows")
+    if sum(item["referred"] for item in grade_actions) != tp + fp or sum(item["cleared"] for item in grade_actions) != tn + fn:
+        raise AssertionError("MMRDR grade-action totals do not reconcile with confusion counts")
+    if sum(item["images"] for item in grade_actions if item["grade"] < 2) != tn + fp:
+        raise AssertionError("MMRDR grades 0-1 do not reconcile with the nonreferable denominator")
+    if sum(item["images"] for item in grade_actions if item["grade"] >= 2) != tp + fn:
+        raise AssertionError("MMRDR grades 2-4 do not reconcile with the referable denominator")
+    if test["clinical_certification"] or test["binary_action_assignment"] != 1.0:
+        raise AssertionError("MMRDR certification/coverage boundary changed unexpectedly")
+
+    return {
+        "status": "PASS_MMRDR_AGGREGATE_AND_TRACE_INTEGRITY_NOT_INFERENCE_REPRODUCTION",
+        "validation": {
+            "epochs": len(epochs),
+            "zero_miss_epochs": len(zero_miss_epochs),
+            "selected_epoch": validation["selected_epoch"],
+            "selected_true_negative": selected["true_negative"],
+            "selected_nonreferable": selected["negative"],
+            "specificity": selected["specificity"],
+        },
+        "official_test": {
+            "rows": test_rows,
+            "true_positive": tp,
+            "false_negative": fn,
+            "true_negative": tn,
+            "false_positive": fp,
+            "specificity": test["specificity"],
+            "specificity_wilson_95ci": ci,
+            "sensitivity_wilson_95ci": sensitivity_ci,
+            "clinical_certification": False,
+        },
+        "sha256": {
+            "run_card": sha256(run_card_path),
+            "validation_summary": sha256(history_path),
+            "validation_trace": sha256(trace_path),
+        },
+        "scope": "cross-checks tracked aggregate history, trace, run-card metrics, arithmetic, and hashes; does not run image inference, verify patient-level independence, or establish clinical validation",
+    }
 
 
 def audit_summary(root: Path) -> dict[str, Any]:
@@ -87,14 +259,16 @@ def audit_summary(root: Path) -> dict[str, Any]:
     if mismatches:
         raise AssertionError(json.dumps(mismatches, indent=2, sort_keys=True))
 
+    mmrdr = audit_mmrdr_aggregate(root)
     return {
         "status": "PASS_TRACKED_AGGREGATE_INTEGRITY_ONLY_NOT_REPLAY",
-        "scope": "checks arithmetic consistency of tracked summary files only; does not execute the policy or validate underlying row-level data",
+        "scope": "checks tracked aggregate summaries and the MMRDR run-card/trace for internal consistency; does not execute the score policy, run image inference, validate row-level inputs, or establish independent clinical performance",
         "specificity": {"true_negatives": 270, "gradable_nonreferable": 385, "percent": 100 * 270 / 385},
         "headline_checks": {
             name: {"observed": observed[name], "expected": value}
             for name, value in expected.items()
         },
+        "mmrdr_aggregate_audit": mmrdr,
         "sha256": {name: sha256(path) for name, path in required.items()},
     }
 

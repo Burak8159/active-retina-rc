@@ -1,6 +1,6 @@
 # Full Autonomous Certification Runbook
 
-Status: `READY_FOR_REAL_UNTOUCHED_COHORT`
+Status: `MODEL_AND_CLINICAL_PROTOCOL_NOT_READY_FOR_CONFIRMATORY_USE`
 
 This is the shortest path from a legally obtained external paired-view cohort to
 a final autonomous-computation decision.
@@ -100,21 +100,24 @@ and the run can support patient-level certification.
 
 ## Decision Rule
 
-Only this status upgrades the product and paper to autonomous-certified:
+This status means only that the locked retrospective `80/0/100` computational
+target was met on an untouched cohort. It does not establish clinical
+validation or authorize autonomous clinical diagnosis:
 
 ```text
-GO_FULL_AUTONOMOUS_COMPUTATIONAL_CERTIFICATE
+GO_RETROSPECTIVE_BINARY_80_0_100_MET_NOT_CLINICAL_VALIDATION
 ```
 
 All other statuses keep the product in clinician-reviewed mode.
 
 ## Paper Update After GO
 
-If the run returns `GO_FULL_AUTONOMOUS_COMPUTATIONAL_CERTIFICATE`, update the
-manuscript claims from frozen-candidate/conditional to externally certified:
+If the run returns `GO_RETROSPECTIVE_BINARY_80_0_100_MET_NOT_CLINICAL_VALIDATION`, report
+the retrospective held-out evidence without calling it clinically validated:
 
 - report the untouched cohort source, size, positive-patient count, and hashes
 - report coverage, specificity, missed positive patients, and exact 95% upper
   missed-risk bound
 - keep the frozen thresholds and artifact version unchanged
 - include the final decision JSON as the primary evidence artifact
+- retain the clinical-validation NO-GO until a separate clinical study is complete

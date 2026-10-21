@@ -1,54 +1,68 @@
 \documentclass[11pt]{article}
 \usepackage[margin=0.85in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,tabularx,array,xcolor,hyperref}
+\usepackage{amsmath,amssymb,booktabs,tabularx,array,xcolor,hyperref,pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage[T1]{fontenc}
 \usepackage{microtype}
+\emergencystretch=2em
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 \newcommand{\system}{ActiveRetina-RC}
-\newcommand{\statusnote}{\par\smallskip\noindent\fbox{\parbox{0.96\linewidth}{\textbf{Evidence status.} This is a retrospective development study. The 70.13\% result is a same-cohort, score-level replay with thresholds and rank-reference distributions derived from an inspected cohort. It is not independent validation, a clinical certificate, or an image-to-diagnosis product evaluation.}}\par\smallskip}
-\title{Retrospective Zero-Miss Specificity in Multi-Source Diabetic-Retinopathy Screening: Replay, Patient-Grouped Recalibration, and Domain-Transfer Stress Tests}
-\author{Burak Aksu}
+\title{Selection History and Operating-Point Evaluation in Diabetic Retinopathy Screening: A Retrospective Evidence Audit}
+\author{Burak Ata Aksu}
 \date{October 2026}
 \begin{document}
 \maketitle
 \begin{abstract}
-Retinal screening studies often emphasize sensitivity or area under the receiver-operating-characteristic curve while leaving the operating-point selection process difficult to audit. We report an evidence audit of a frozen, multi-source diabetic-retinopathy score policy developed from public DDR, DeepDRiD, and DRTiD data. On a repeatedly inspected pool of 981 eye-level cases, the policy assigns a binary CLEAR or REFER action to every supplied score record, clears 270 of 385 gradable nonreferable eyes (70.13\% specificity), and produces no observed false-negative clearances among 463 gradable referable eyes; all 133 ungradable cases are referred. This is a same-cohort replay: source-specific percentile-reference arrays and zero-miss cutoffs were derived from this pool. Five-fold patient-grouped recalibration yields 268/385 true negatives (69.61\%) and three referable-or-ungradable misses; nested weight/threshold selection yields 248/385 (64.42\%) with five misses, while a nested margin variant yields 253/385 (65.71\%) with six. A post-hoc zero-miss frontier reaches 243/385 (63.12\%), but its margins were selected on held-out predictions. Separate MMRDR-UWF stress tests reach 34.50\% specificity at a same-validation-set zero-miss point, and an MMRDR-initialized fine-tuning run is exposed to the reference cohort through a corrected manifest overlap. Neither is independent confirmation. A transfer candidate OR-combined with the frozen policy adds three clearances but introduces two misses. The contribution is a reproducible audit separating deterministic replay, internal development estimation, and independent external validation. We make no independent clinical-performance, risk-certification, or complete image-to-diagnosis claim.
+Operating-point evidence in diabetic-retinopathy (DR) screening depends on both the model and the history used to select its threshold. We conducted a retrospective audit separating a fixed-threshold raw-image evaluation, exposed-cohort score replay, and patient-grouped development analyses. On the source-designated MMRDR ultra-widefield test partition, a validation-selected frozen ResNet-50 detected 1,283/1,288 referable images (99.61\% sensitivity; image-level Wilson 95\% confidence interval, 99.09--99.83\%) and cleared 262/1,309 nonreferable images (20.02\% specificity; 95\% confidence interval, 17.94--22.27\%), with five false-negative images. A post-hoc SHA-256 audit found two positive test images byte-identical to model-fit images; excluding these rows left five misses among 1,286 positives and unchanged specificity. The partition is therefore not wholly image-disjoint, and neither analysis is independent external validation. On the model-selection subset, the same threshold yielded 100.00\% observed referable sensitivity and 20.50\% specificity; the zero-miss condition did not transfer, while specificity changed by only -0.48 percentage points. Patient-level uncertainty could not be estimated. Post-hoc test-score analysis found ROC-AUC 0.917 and 9.40\% specificity at 100\% observed sensitivity; these are descriptive, not deployable thresholds. In a separate exposed 981-eye pool, deterministic replay of a precomputed-score policy yielded 70.13\% specificity (270/385) with no observed referable or ungradable eye clearances, but the policy's ranks and threshold were derived from that cohort. A paired analysis found two negative CLEAR-to-REFER transitions and three referable-or-ungradable eye REFER-to-CLEAR transitions under patient-grouped calibration; specificity was 69.61\% (268/385; difference $-0.52$ percentage points; conditional patient-cluster bootstrap 95\% interval, $[-1.31,0.00]$), and the grouped procedure had three missed required eyes among 596 referable-or-ungradable eye records (3/596 versus 0/596; eye-level rate difference +0.50 points, conditional patient-cluster bootstrap interval 0.00--1.17). The endpoint is eye-level; patient clusters are the resampling unit, not the estimand. Source-stratified patient-cluster bootstrap intervals for the three source rates were 58.25--71.36\% (DDR), 93.75--100.00\% (DeepDRiD), and 58.27--74.80\% (DRTiD); exploratory contrasts are conditional on the selected policy and do not identify a source cause. Equal-source reweighting gave 76.68\%, an arithmetic composition sensitivity result, not model improvement. Nested procedures also did not preserve the replay's joint zero-miss/high-specificity point. Across five paired split seeds, candidate panels averaged 57.45\% and 56.31\% specificity; neither had a zero-miss run. A controlled simulation illustrates candidate search under stated assumptions but does not explain retinal outcomes. An explicit selection-history map distinguishes these nonexchangeable evidence objects; this is a bounded audit, not a new estimator, clinical certificate, or clinical-utility claim.
 \end{abstract}
 
 \noindent\textbf{Keywords:} diabetic retinopathy, fundus photography, specificity, patient-level validation, score fusion, selective classification, data leakage, risk control.
 
-\statusnote
-
 \section{Introduction}
-Diabetic retinopathy (DR) screening is a thresholded decision problem, not merely a ranking problem. A model may rank referable disease well yet operate poorly when a system must decide which eyes to clear and which to refer. This distinction becomes especially important when investigators seek a zero-observed-miss operating point: each threshold adjustment trades missed disease against false referrals, and repeated inspection of the evaluation cohort can make that trade appear more reliable than it is. The broader methodological value is to quantify how a reported operating point changes across three distinct evidence classes—deterministic replay, internal development estimation, and independent external validation—so that repeated policy selection in any multi-source medical pipeline is not mistaken for transportable performance.
+Diabetic retinopathy (DR) screening is a thresholded decision problem, not merely a ranking problem. A model can rank disease well yet have an operating point that clears too few nonreferable eyes, or one that misses referable disease. This tension is consequential when investigators search for a zero-observed-miss threshold: each threshold change trades missed disease against false referrals, and repeated inspection of the evaluation cohort can make the selected trade-off appear more reliable than it is. The issue generalizes beyond retinal imaging. In multi-source medical pipelines, the reported operating point can depend on the cohort, candidate scores, threshold-selection rule, and prior analyst exposure. A faithful replay of a selected policy therefore answers a different question from patient-grouped development estimation or evaluation on an independent cohort.
 
-The present study audits a concrete development result in \system: a pooled score-level policy across three public fundus datasets. Its attractive headline is 70.13\% specificity, zero observed referable misses, and 100\% binary action assignment. Those values are mathematically reproducible. The scientific question is whether they survive when source-specific thresholds and blend weights are estimated without using the evaluated patients. The answer is materially different: patient-grouped procedures reduce specificity and introduce missed referable or ungradable cases.
+This audit asks three questions. \textbf{RQ1:} Does a threshold chosen on a development partition retain its observed miss--specificity behavior on the dataset's source-designated test partition, and what does exact-image overlap imply for that comparison? \textbf{RQ2:} How do a same-cohort score-policy replay and patient-grouped or nested estimates differ on a repeatedly inspected multi-source cohort? \textbf{RQ3:} Does the selected specificity profile remain stable when the candidate score panel changes across paired patient-group split seeds? A controlled synthetic experiment separately tests whether candidate search alone can create a specificity--zero-miss transfer trade-off under explicit assumptions; it is not used to explain the retinal results. The questions are descriptive and retrospective; they were not prospectively registered, and the empirical analyses do not support population-level hypothesis tests.
 
-We therefore frame this work as a reproducibility and validation-methods report rather than a new diagnostic algorithm. The principal contribution is the traceable comparison between (i) deterministic replay of a same-cohort-selected policy and (ii) patient-grouped recalibration and nested selection on the same previously inspected cohort. A further transfer diagnostic tests whether a separately trained candidate improves the frozen baseline without sacrificing its zero-miss behavior.
+The evidence objects are deliberately kept separate. The MMRDR-UWF ResNet-50 addresses RQ1 and is an image-level evaluation on the dataset's source-designated test partition; two exact-byte test duplicates were also present in model-fit data, so it is not wholly image-disjoint. The 70.13\% result addresses deterministic replay of precomputed scores on the exposed DDR/DeepDRiD/DRTiD cohort. Grouped and nested procedures on that same cohort address internal development sensitivity, not independent confirmation. Candidate-panel comparisons address RQ3 across five paired split seeds. The separate 84.16\% multi-source ResNet-50 threshold-crossfit diagnostic and 47.15\% ConvNeXt-Tiny validation result are secondary, post-selection development evidence. Their cohorts, artifacts, endpoints, and selection histories differ; these percentages are not head-to-head comparisons. No independent external or prospective clinical validation is reported.
+
+We frame the work as a reproducibility and validation-methods case study, not a new diagnostic algorithm. Nested cross-validation and selection-bias analysis are established tools \cite{cawley2010,varma2006}; recent DR studies also compare decision strategies at fixed sensitivity and evaluate referable-risk transfer across datasets \cite{jena2026,sheng2026orderdr}. We therefore do not claim those questions as new in isolation. Our contribution is empirical and bounded to one historically exposed project: showing how operating-point conclusions vary across replay, patient-grouped procedures, candidate panels, and a separate fixed-threshold within-dataset image test. A controlled simulation isolates one candidate-search mechanism under stated Gaussian and exchangeability assumptions, with a perfectly correlated negative control; it demonstrates possibility under that model, not causation in the retinal data. The five-seed panel contrast is small on average, changes direction across seeds, and neither panel reaches zero misses. We make no claim that this case study introduces a new estimator or risk-control theorem.
 
 \subsection{Contributions}
 \begin{enumerate}
-\item We specify and reproduce the frozen source-conditional rank-fusion rule, including feature families, weights, thresholds, and the DDR quality override.
-\item We report the exact composition of the 981-case replay and source-specific specificity counts, keeping gradable referable, gradable nonreferable, and ungradable labels distinct.
-\item We compare the headline replay with five-fold patient-grouped calibration, nested patient-fold weight/threshold selection, and a clearly identified post-hoc zero-miss frontier.
-\item We document a later clean-development-trained transfer diagnostic that gains three true negatives under an OR rule but incurs two misses, illustrating why a point-estimate lift is not sufficient.
-\item We report a distinct MMRDR-UWF transfer stress test and a provenance correction for a multi-source fine-tuning run whose validation manifest overlapped the historical reference cohort.
-\item We provide a fail-closed interpretation and reproducibility map that prohibit treating replay fidelity or exposed-cohort results as clinical certification.
+\item We report a frozen ResNet-50's validation-to-official-test operating-point transfer on MMRDR-UWF, including image-level errors, the low specificity at the selected threshold, and the missing patient identifiers that prevent cluster-aware uncertainty estimation.
+\item We fully describe the source-conditional score-policy replay on the 981-case DDR/DeepDRiD/DRTiD pool and contrast it with fixed, nested, and post-hoc patient-grouped procedures, while separating gradable disease labels from ungradable cases.
+\item We quantify candidate-panel sensitivity across five paired patient-group split seeds and show the per-source and pooled outcomes, including the fact that neither panel achieved zero misses in any run.
+\item We report a reproducible synthetic mechanism experiment with an identical-channel negative control, separating candidate-search behavior from retinal-cohort evidence.
+\item We reconcile these distinct evidence objects in a claim-to-evidence map, including secondary post-selection image-model diagnostics and the corrected validation-manifest overlap, so replay, internal development, and held-out within-dataset testing are not conflated with independent external validation.
 \end{enumerate}
 
 \section{Related Work}
-Deep-learning systems have achieved strong DR-screening performance in large retinal-photograph studies, including multiethnic and primary-care evaluations \cite{gulshan2016,ting2017,abramoff2018,bellemo2019}. Public datasets such as DDR and DeepDRiD support reproducible work on grading, image quality, and cross-domain behavior \cite{ddr,deepdrid}. These works motivate rigorous separation between model discrimination, operating-point selection, and evaluation. Model-selection overfitting and selection bias on finite evaluation sets are established concerns \cite{cawley2010,varma2006}; patient-grouped folds are important when observations share a patient hierarchy \cite{roberts2017}.
+\paragraph{DR screening and operating points.} Large DR-screening studies have evaluated deep-learning systems on retinal photographs in multiethnic, primary-care, and lower-resource settings \cite{gulshan2016,ting2017,abramoff2018,bellemo2019}. Their clinical interpretation depends on the task definition, reference standard, operating threshold, and study population, not only discrimination. Public datasets such as DDR and DeepDRiD support work on grading and image quality, while multi-source datasets introduce differences in acquisition and label construction \cite{ddr,deepdrid,drtidpaper}. The present work does not re-evaluate those systems; it audits how threshold provenance and candidate choice shape conclusions in one development pipeline.
 
-Selective prediction formalizes the option to abstain when a prediction is not sufficiently reliable \cite{geifman2017,selectivenet}. Risk-control methods can provide finite-sample guarantees under prespecified procedures and assumptions; empirical threshold search alone does not do so \cite{vovk2005,angelopoulos2021,angelopoulos2024}. Prediction-model reporting guidance emphasizes transparent data partitioning, evaluation, and limitations \cite{tripodai,claim,claim2024}. The present audit applies those principles to a pooled specificity figure whose thresholds were selected on the same cohort used for reporting.
+A 2026 systematic review and meta-analysis of regulator-approved fundus-based systems synthesized 82 studies, 887,244 examinations, 25 devices, and 28 countries. Its pooled sensitivity/specificity estimates were 0.93/0.90 per patient and 0.92/0.93 per eye; meta-regression identified disease threshold, national-income level, image gradability, pupil dilation, reference standard, and diagnostic criteria as factors explaining between-study heterogeneity \cite{wang2026approveddr}. These estimates concern a distinct evidence base and are not a performance comparator for ActiveRetina. They motivate reporting an operating point together with its cohort, acquisition conditions, endpoint, and selection history; this case study neither estimates real-world performance nor explains the review's heterogeneity.
+
+\paragraph{Decision strategies and external threshold transfer in DR.} On 5,270 EyePACS images (1,366 labeled as DR), Jena and Rayguru compare five AI decision strategies at 95\% and 90\% sensitivity targets; their best single-model strategy has 17.5\% specificity at 95\% sensitivity, while a weighted ensemble at 90\% sensitivity reduces unnecessary referrals by nearly 25\% relative to the single-model 95\% setting \cite{jena2026}. This establishes that comparing DR decision strategies at fixed sensitivity, and documenting the sensitivity--specificity trade-off, are not novel contributions here. We neither rerun their strategies nor make a head-to-head performance claim. Our narrower question is how operating-point evidence in a historically reused retinal pipeline changes across score replay, grouped and nested development procedures, candidate-panel sensitivity, and a separate frozen image-model test. Sheng et al. report external validation of severity grading and referable-risk stratification with ORDER-DR \cite{sheng2026orderdr}, illustrating why threshold selection and external testing must be distinguished. Our MMRDR result is a frozen within-dataset held-out image test, not external transfer; the separate score-policy replay is exposed and cannot estimate transfer to new cases. EyePACS and MMRDR differ in cohort, labels, inputs, models, and estimands, so these figures are contextual prior art and must not be interpreted as a performance comparison.
+
+Three recent studies further bound the interpretation of UWF results. Li et al. evaluated ophthalmic foundation models across Danish and Greenlandic UWF populations; external discrimination was lower than within-population performance, and calibration remained poor even after sequential adaptation \cite{li2026uwf}. A separate medRxiv preprint compared generalist and ophthalmic foundation models on BRSET and mBRSET, likewise reporting external discrimination loss and residual calibration concerns \cite{li2026mbrset}. Poyrazer et al. compared frozen MedSigLIP, RETFound, and EfficientNet-B0 encoders with a shared trained head on APTOS and zero-tuning MESSIDOR-2; similar development AUCs separated under external testing, and development temperature scaling did not resolve external calibration error \cite{poyrazer2026frozen}. Their study directly addresses frozen-representation transfer and calibration, so we make no claim to introduce either question. Our MMRDR classifier instead uses a frozen ImageNet ResNet-50 and a study-trained six-logit head; this manuscript's distinct contribution is an audit of operating-point provenance and selection history alongside its unfavorable, fixed-threshold within-dataset test. The cited studies use different cohorts, endpoints, models, and estimands and are not performance comparators. Collectively, they make it especially important not to infer clinical transfer from our within-dataset result or from score ranking alone.
+
+\paragraph{Selection, dependence, and validation.} Reusing finite evaluation data for model selection can bias reported performance, and nested validation is designed to separate selection from assessment within a specified development procedure \cite{cawley2010,varma2006}. When observations share patients or other clusters, folds should preserve that grouping to avoid leakage across training and evaluation \cite{roberts2017}. However, grouping within a later analysis does not undo earlier cohort-wide inspection, global candidate generation, or checkpoint selection. We therefore report grouped results as internal development diagnostics where that history applies, rather than treating the fold construction alone as proof of independence.
+
+Cutoff optimism and reuse of medical-imaging test data are not new problems. Leeflang et al. quantified bias in sensitivity and specificity after data-driven cutoff selection and examined alternative estimation approaches; Westphal and Zapf addressed inference when multiple diagnostic tests or cutpoints are compared \cite{leeflang2008,westphal2024}. Yamanaka et al. studied repeated reuse of a test set during post-market selection and integration of bone-scintigraphy models, reporting performance bias and evaluating a differential-privacy-based mitigation \cite{yamanaka2026}. These works preclude claiming that cutoff-selection bias or test reuse is itself novel. We do not implement their corrections. The present contribution is narrower: a retrospective DR case study that keeps exposed score replay, patient-grouped development, candidate-panel sensitivity, and fixed-threshold within-dataset image testing separate in the claim-to-evidence account.
+
+\paragraph{Selective prediction and risk control.} Selective classification studies the accuracy--coverage trade-off when a model may abstain or defer uncertain cases \cite{geifman2017,selectivenet}. Conformal prediction and learn-then-test procedures provide formal risk-control tools under their assumptions and prespecified procedures \cite{vovk2005,angelopoulos2021,angelopoulos2024}. An empirical threshold that yields no observed misses on a reused cohort is not equivalent to such a guarantee. This paper does not implement a formal risk-control method; it makes the distinction explicit because several development analyses report a zero-observed-miss point.
+
+\paragraph{Reporting guidance and contribution boundary.} TRIPOD+AI and CLAIM, including its 2024 update, emphasize transparent reporting of participants or cases, data partitions, model evaluation, and limitations \cite{tripodai,claim,claim2024}. These reporting guidelines do not themselves establish validity. Our contribution is not a new DR architecture, a new cross-validation estimator, or a clinical validation study. It is a bounded empirical audit that brings replay fidelity, selection history, grouped development estimates, candidate-panel sensitivity, and one fixed-threshold within-dataset image test into a single claim-to-evidence account.
 
 \section{Study Question and Endpoints}
-For eye-level case $i$, let $Y_i\in\{0,1\}$ denote gradable referable DR, with $Y_i=1$ corresponding to referable disease (dataset grades 2--4 under the harmonized project definition), and let $U_i=1$ mark an ungradable case. The policy emits $A_i\in\{\text{CLEAR},\text{REFER}\}$. We report specificity among gradable nonreferable cases,
+For eye/image record $i$, let $Y_i\in\{0,1\}$ denote gradable referable DR, with $Y_i=1$ corresponding to referable disease (dataset grades 2--4 under the harmonized project definition), and let $U_i=1$ mark an ungradable eye. The policy emits $A_i\in\{\text{CLEAR},\text{REFER}\}$. We report eye-level specificity among gradable nonreferable eyes,
 \begin{equation}
 \mathrm{Sp}=\frac{\sum_i\mathbb{1}(Y_i=0,U_i=0,A_i=\text{CLEAR})}{\sum_i\mathbb{1}(Y_i=0,U_i=0)},
 \end{equation}
-missed referable cases $M=\sum_i\mathbb{1}(Y_i=1,U_i=0,A_i=\text{CLEAR})$, missed ungradable cases $M_U=\sum_i\mathbb{1}(U_i=1,A_i=\text{CLEAR})$, and action assignment $C=\frac{1}{N}\sum_i\mathbb{1}(A_i\in\{\text{CLEAR},\text{REFER}\})$. Here $C=100\%$ means every record receives one of the two computational actions; it does not imply independent generalization, image-quality adequacy, or clinical usability.
+the missed-referable-eye count $M=\sum_i\mathbb{1}(Y_i=1,U_i=0,A_i=\text{CLEAR})$, missed-ungradable-eye count $M_U=\sum_i\mathbb{1}(U_i=1,A_i=\text{CLEAR})$, and action assignment $C=\frac{1}{N}\sum_i\mathbb{1}(A_i\in\{\text{CLEAR},\text{REFER}\})$. These outcomes are image/eye-level, not patient-level. Here $C=100\%$ means every record receives one of the two computational actions; it does not imply independent generalization, image-quality adequacy, or clinical usability.
 
 The prespecified development target used in the project was a useful specificity at zero observed misses and full binary action assignment. This paper does not present that target as a validated safety guarantee. We use ``zero-miss'' only as a finite-sample descriptive observation unless explicitly qualified otherwise.
+
+The principal raw-image outcome is the fixed-threshold primary operating point on the official test: false-negative count and sensitivity are reported first, with specificity and referral burden as the paired trade-off. Overall accuracy is not the primary endpoint because it depends on case mix and can obscure the miss/referral balance. The 70.13\% value is a secondary deterministic score-replay statistic, not model accuracy. The 84.16\% value is a separate post-selection development diagnostic and is not used to support the primary claim. A 100\% binary action-assignment rate means the evaluator emitted an action for every supplied row; it is not clinical coverage or proof every case was correctly resolved.
 
 \section{Data and Provenance}
 \subsection{Inspected pooled reference cohort}
@@ -71,6 +85,29 @@ Pooled & 981 & 385 & 463 & 133 & 270 & 115 & 70.13\% \\
 \end{tabular}
 \end{table}
 
+\begin{table}[t]
+\centering
+\caption{Source-specific uncertainty and exploratory contrasts for the exposed replay. Specificities are percentages; contrasts are percentage points (pp). Percentile intervals use patient-cluster resampling within source (50,000 replicates; seed 20261019).}
+\label{tab:source-bootstrap}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}Xrr}
+\toprule
+Quantity & Estimate & 95\% cluster interval \\
+\midrule
+DDR specificity & 65.05\% & 58.25--71.36\% \\
+DeepDRiD specificity & 98.08\% & 93.75--100.00\% \\
+DRTiD specificity & 66.93\% & 58.27--74.80\% \\
+DeepDRiD $-$ DDR & 33.03 pp & 25.24--40.29 pp \\
+DeepDRiD $-$ DRTiD & 31.15 pp & 22.05--40.16 pp \\
+DDR $-$ DRTiD & $-1.88$ pp & $[-12.31,\,8.54]$ pp \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The source-specific uncertainty analysis is conditional on the exposed cohort and the already selected replay policy. Table~\ref{tab:source-bootstrap} reports source-stratified patient-cluster bootstrap intervals and exploratory pairwise contrasts (50,000 replicates; seed 20261019). The DeepDRiD contrasts are large in this sample, while the DDR--DRTiD interval includes zero. These are descriptive intervals, not multiplicity-adjusted tests. They quantify neither selection uncertainty nor a causal dataset, camera, or grading effect. The contrast pattern is evidence of source-associated heterogeneity in this selected sample; its cause is unidentified. The 6.55-point difference between observed-mixture and equal-source summaries decomposes arithmetically into a $-13.12$-point DDR contribution, a $+19.45$-point DeepDRiD contribution, and a $+0.23$-point DRTiD contribution. Thus the reweighted increase is driven by assigning more weight to the small, high-specificity DeepDRiD subset; it does not represent improved classification.
+
+For source $d$ with observed specificity $\widehat{\mathrm{Sp}}_d$ and negative-eye mixture weight $\widehat{w}_d$, the reported summaries are $\widehat{\mathrm{Sp}}_{\mathrm{obs}}=\sum_d\widehat{w}_d\widehat{\mathrm{Sp}}_d$ and $\widehat{\mathrm{Sp}}_{\mathrm{equal}}=\frac{1}{3}\sum_d\widehat{\mathrm{Sp}}_d$. The difference is exactly $100\sum_d(1/3-\widehat{w}_d)\widehat{\mathrm{Sp}}_d=6.55$ percentage points for these observed counts. This identity is descriptive reweighting of the same selected sample; it introduces no target-population assumption.
+
 The datasets have different acquisition and label characteristics \cite{ddr,deepdrid,drtidpaper}; domain generalization remains an active challenge in DR classification \cite{galappaththige2024}. Pooling gives each eye one vote in the pooled denominator; it is not a population-standardized estimate. Dataset availability and use remain subject to the corresponding licenses and access conditions. We do not redistribute raw images.
 
 \subsection{Exposure and split history}
@@ -89,31 +126,375 @@ s_{\mathrm{DRTiD}}&=0.72r_{\mathrm{rank-pair}}+0.08r_{\mathrm{fundus-margin}}+0.
 \end{align}
 An eye is referred when its score reaches its source-specific cut point; the DDR rule also refers cases whose quality score reaches its stored override threshold. The cut points are 0.22224 for DDR, 0.435849 for DeepDRiD, and 0.34496 for DRTiD; the DDR quality override is 0.0018599. These numerical cut points and rank-reference vectors come from the exposed cohort. They are published here to make the replay auditable, not as proposed portable clinical thresholds.
 
-The implementation is a deterministic score-policy evaluator. It requires three precomputed component outputs per source and a source identifier. It is not a single end-to-end image model. Exact source checkpoints and preprocessing implementations are not all present in the current repository state; accordingly, the replay should not be described as complete raw-image inference. Throughout, “deterministic replay” means recomputing actions from supplied component-score rows and a frozen policy; “internal development estimation” means grouped or nested analysis on the previously inspected project cohorts; and “independent external validation” means evaluation on a new cohort untouched by training, calibration, threshold/policy selection, or prior project decisions. No independent external validation is reported here.
+The implementation is a deterministic score-policy evaluator. It requires three precomputed component outputs per source and a source identifier. It is not a single end-to-end image model. Exact source checkpoints and preprocessing implementations are not all present in the current repository state; accordingly, the replay should not be described as complete raw-image inference. Throughout, ``deterministic replay'' means recomputing actions from supplied component-score rows and a frozen policy; ``internal development estimation'' means grouped or nested analysis on the previously inspected project cohorts; and ``independent external validation'' means evaluation on a new cohort untouched by training, calibration, threshold/policy selection, or prior project decisions. No independent external validation is reported here.
 
 \section{Evaluation Procedures}
 \subsection{Frozen same-cohort replay}
 We reran the frozen policy on each of the 981 stored component-score rows and compared every emitted action and risk score with the recorded replay. We then reconstructed source-level confusion counts and checked the headline grouped/nested counts against their saved summary artifacts. The executable command, required file inventory, environment dependency, checksums, and scope are specified in the accompanying reproduction-package README. This validates deterministic replay of supplied scores and manuscript transcription; it does not regenerate image features, retrain component models, or provide independent external validation.
 
 \subsection{Patient-grouped calibration and nested selection}
-The fixed-recipe analysis used five patient-grouped folds. For each fold, source-specific calibration was performed without its held-out patients, and predictions were aggregated over the held-out folds. The component model family and the cohort had already been inspected globally; this is not an independent confirmatory evaluation.
+The fixed-recipe analysis used five patient-grouped folds. For each fold, source-specific calibration was performed without its held-out patients, and predictions were aggregated over the held-out folds. The component model family and the cohort had already been inspected globally; this is not an independent confirmatory evaluation. For a paired descriptive comparison, held-out actions were joined to replay actions by source and eye and checked against the patient manifest and labels. Specificity differences were bootstrapped by resampling negative patient clusters within each source, retaining paired decisions and each resampled eye denominator (50,000 replicates; seed 20261020). For the required-eye miss-rate difference, we separately resampled the 574 source--patient clusters containing referable or ungradable eyes within source, retaining each selected cluster's paired replay and cross-fit actions and eye count, and recomputed the pooled eye-level rate difference over referable-or-ungradable eye records (50,000 replicates; seed 20261020). The estimand remains eye-level; patient-cluster resampling changes the resampling unit, not the endpoint. Both percentile intervals condition on fixed decisions and do not include prior model, candidate, policy, or threshold-selection uncertainty; neither is confirmatory.
 
 The nested analysis used five outer patient-grouped folds and four inner folds. Blend weights were searched on a simplex grid with 0.1 increments; the risk threshold was the minimum required-positive score in the training portion. The inner search compared weight/margin combinations, prioritizing zero inner misses before specificity; tested margins were 0, 0.005, 0.01, 0.02, 0.03, 0.05, 0.075, 0.1, 0.15, and 0.2. The selected combination was evaluated on its outer fold. This protects each outer fold from that run's direct fitting, but the data and component family remain previously exposed. Separately, a post-hoc margin sweep searched 13 values from 0 to 0.2 and chose source-specific margins after inspecting held-out predictions; that frontier is included solely to show the attainable retrospective trade-off and is not an unbiased candidate.
 
-\subsection{Clean-development candidate transfer diagnostic}
-A ResNet-50 initialized from a public MMRDR-UWF model was fine-tuned at 448-pixel input on original training partitions after excluding all patient groups mapped to the 981 reference cases. Its patient-disjoint development split selected the checkpoint and two thresholds. The frozen candidate was then evaluated on the repeatedly inspected reference cohort. We also computed an offline union action, CLEAR if either the old baseline or candidate cleared. Because the reference cohort has extensive prior project exposure, this is a transfer diagnostic—not an independent test or a new baseline.
+For panel $p$ and paired split seed $s$, let $\widehat{\mathrm{Sp}}_{p,s}=\mathrm{TN}_{p,s}/N_-,$ where $N_-=385$ gradable nonreferable eyes. We summarize the paired contrast $\Delta_s=100(\widehat{\mathrm{Sp}}_{\mathrm{all},s}-\widehat{\mathrm{Sp}}_{\mathrm{shortlist},s})$ in percentage points, together with its arithmetic mean, observed range, sign count, and the miss count for each panel. This response profile makes split sensitivity visible instead of treating one favorable partition as the panel effect. Since the seeds reuse patients and the artifact universe is exposed, these summaries are descriptive and are not confidence intervals, hypothesis tests, or estimates of performance on new patients.
 
-\subsection{MMRDR-UWF and multi-source fine-tuning stress tests}
+\subsection{Candidate-set sensitivity protocol}
+We repeated the same five-outer/four-inner selector under two panels using fixed integer RNG seeds 20261015--20261019. The first value identifies the original split; four additional values were then run to assess split sensitivity. These date-shaped integers are RNG identifiers, not calendar dates, and are not five independent replications. The label-screened panel contains the frozen recipe and channels previously identified by a full-cohort oracle as adding at least one clearance; this screening used the full cohort and is explicitly label-informed. The expanded panel contains that recipe plus every complete, finite, nonconstant numeric score column aligned to each source in the stored CSV artifact library. Identifiers, labels, quality, and action fields are excluded; exact duplicate vectors are collapsed; rank transforms are fit within each training fold. Panel sizes, including the recipe, are 11/1/7 and 44/40/119 columns for DDR/DeepDRiD/DRTiD. Ungradable cases are forced to REFER and excluded from gradable specificity; the reported miss counts are gradable referable cases assigned CLEAR. The contrast changes both panel size and the prior screening history, so it does not isolate a causal effect of dimensionality or label screening. We summarize seed-to-seed ranges descriptively, not as confidence intervals: folds overlap in training data and the same patients are reused across all five splits. The historical artifact library and model families were created after repeated inspection of this cohort, so this does not estimate total search optimism or external performance.
+
+\subsection{Controlled zero-miss candidate-search simulation}
+We generated equally informative Gaussian score channels with positive scores distributed as $\mathcal{N}(1.5,1)$ and negative scores as $\mathcal{N}(0,1)$. Within-case channel correlation was set to $\rho\in\{0,0.5,0.9,1\}$ using a shared standard-normal component plus channel-specific noise. Each channel's threshold was the minimum of 60 development-positive scores, giving zero development misses by construction. Among $K\in\{1,5,20,100\}$ channels, we selected the one with the greatest specificity on 200 development-negative observations and evaluated the selected threshold on independent synthetic samples of 300 positives and 500 negatives. We ran 2,000 replicates per condition with fixed seed 20261016; ties selected the first channel. A perfect-correlation condition ($\rho=1$) is a negative control because all candidate channels are identical.
+
+We separately varied the development-negative selection sample size over 50, 200, and 1,000 cases for the 100-candidate panel. For each replicate and correlation, the development-positive and independent test samples were shared across all three sizes, while the development-negative samples were nested prefixes of a common 1,000-case sample. Thus, differences across sample sizes isolate how many synthetic negatives inform candidate ranking; these sensitivity replicates use separate, fixed random-number streams and are distinct from the primary simulation. The analysis remains synthetic and does not posit a retinal score distribution.
+
+For one prespecified channel with iid continuous positive scores and no ties, exchangeability gives $\Pr(\text{zero test misses})=n_d/(n_d+n_t)$ when the threshold is the minimum among $n_d$ development-positive scores and $n_t$ independent test positives. Under an idealized panel of $K$ independent, identically distributed channels selected by greatest \emph{true} specificity, the corresponding probability is $K\,\mathrm{B}(1+n_t/n_d,K)$, where $\mathrm{B}$ is the beta function. To see this, transform positive scores through their common CDF so they are uniform on $[0,1]$. For each channel let $U_k$ be the minimum of its $n_d$ development scores; selection by the largest true-specificity threshold chooses $U_{(K)}=\max_k U_k$. Conditional on this threshold, the probability all $n_t$ test-positive scores exceed it is $(1-U_{(K)})^{n_t}$. The variable $V=1-U_{(K)}$ has density $K n_d v^{n_d-1}(1-v^{n_d})^{K-1}$ on $0<v<1$, giving $\mathbb{E}[V^{n_t}]=K n_d\int_0^1v^{n_d+n_t-1}(1-v^{n_d})^{K-1}dv=K\,\mathrm{B}(1+n_t/n_d,K)$. For $n_d=60$ and $n_t=300$, this idealized reference is 16.67\%, 0.397\%, 0.00188\%, and $1.04\times10^{-6}\%$ for $K=1,5,20,100$, respectively. These order-statistic references assume the true channel specificity is known; the simulation instead selects by finite-sample estimated specificity and allows correlated channels, so its results need not equal the formula. Neither result is a clinical risk guarantee.
+
+\subsection{Clean-development candidate transfer diagnostic}
+A ResNet-50 initialized from a public MMRDR-UWF model was fine-tuned at 448-pixel input on original training partitions after excluding all patient groups mapped to the 981 reference cases. Its patient-disjoint development split selected the checkpoint and two thresholds. The frozen candidate was then evaluated on the repeatedly inspected reference cohort. We also computed an offline union action, CLEAR if either the old baseline or candidate cleared. Because the reference cohort has extensive prior project exposure, this is a transfer diagnostic, not an independent test or a new baseline.
+
+\subsection{Frozen MMRDR-UWF classifier and official-test protocol}
+One implementation detail affects interpretation of the classifier score: the six-logit head has outputs for grades 0--5, while this experiment contains categorical labels only for grades 0--4, and the referable score aggregates logits 2--5. The grade-5 logit therefore has no direct grade-5 categorical examples. It may still receive indirect gradients from binary referable, pairwise-ranking, and hard-boundary losses, all of which act on the aggregate referable score. Because the checkpoint is unavailable, its contribution cannot be isolated; we do not infer the direction or magnitude of any effect on the reported test metrics.
+The raw-image classifier uses the \texttt{resnet50.a1\_in1k} ImageNet-1K encoder with 224-by-224 RGB inputs. Images are bicubically resized, center-cropped to 95\% of the scaled image, and normalized using ImageNet channel statistics. The encoder is frozen; cached 2,048-dimensional features feed a trained six-logit linear head (12,294 trainable parameters including bias). The six logits represent grades 0--5; MMRDR-UWF labels in this experiment occupy grades 0--4, with referable disease defined as grade $\geq2$. The referable-risk score is the log-sum-exp of grade-2--5 logits minus the log-sum-exp of grade-0--1 logits. This is a study-trained classifier using a pretrained frozen backbone, not a fully fine-tuned retinal foundation model.
+
+The official UWF training partition supplies training rows; 1,172 images were carved out for image-level development and threshold selection because patient identifiers were unavailable in the export. The selected checkpoint is epoch 20. At its frozen validation threshold (the minimum validation referable score, $-1.8022103309631348$ on the uncalibrated logit scale), the classifier detected all 572/572 referable images and cleared 123/600 nonreferable images. The training implementation combined inverse-frequency weighted ordinal cross-entropy, binary referable-risk cross-entropy, pairwise ranking loss, and a hard-boundary loss. The checkpoint does not preserve all optimizer and loss hyperparameters or the feature-cache hash; exact independent retraining is consequently not reproducible from the public checkout.
+
+The primary fixed-threshold analysis used the source-designated official test partition after checkpoint and threshold freeze, with no test-driven model, threshold, or preprocessing changes. After this primary result had been inspected, we computed post-hoc score-ranking and sensitivity-constrained frontier diagnostics from the test export; these did not alter the model or operating point and are descriptive only. The test export contains no patient identifiers. The dataset descriptor states that UWF was partitioned at the patient level to prevent leakage \cite{mmrdr}; we cannot independently audit patient separation from these rows or compute patient-clustered uncertainty. In addition, a SHA-256 audit of original image bytes across the 10,404-row local UWF manifest found eight exact-duplicate groups: six within one official partition and two crossing official training/test. Both copies in the latter training rows fell in the internal model-fit split; neither group crossed the internal fit/model-selection boundary. Both test copies were referable and referred. The source-designated test therefore is not wholly image-disjoint from model fitting. The test was already inspected, and the audit cannot detect transformed near-duplicates or other patient overlap. We report image-level metrics and describe this as a within-dataset test-partition evaluation with documented exact-image overlap, not independent-site or prospective clinical evaluation.
+
+After the frozen result had been inspected, a secondary score diagnostic was computed from the hash-verified prediction export. ROC-AUC uses the Mann--Whitney statistic with average ranks for ties; average precision groups tied scores before updating precision and recall. For each stated minimum-sensitivity constraint, unique observed test scores were enumerated and the point with greatest test specificity satisfying the constraint was retained. This test-label-derived envelope is post-hoc, is not model selection, and must not be used as a deployment threshold. The script emits aggregate-only JSON. Patient identifiers are absent, so no patient-clustered uncertainty is available for these diagnostics.
+
+\subsection{MMRDR-UWF local development and multi-source fine-tuning stress tests}
 The separate MMRDR-UWF local development subset contains 1,172 images (572 referable and 600 nonreferable at the grade-$\geq2$ boundary) from the multimodal MMRDR release \cite{mmrdr}. Patient identifiers were not available in the exported rows, so the local split is image-level; the official test partition was not evaluated. Candidate and threshold comparisons on this subset are therefore development-only. A later four-source fine-tuning run used DDR, DeepDRiD, DRTiD, and IDRiD training images \cite{idrid}, with a 1,337-image-row manifest spanning 982 eyes. A subsequent audit found that all 981 historical reference eyes appeared in its validation rows. This correction supersedes an earlier claim that the reference eyes were held apart; the fine-tuning experiment is exposed relative to the historical reference and cannot provide independent validation.
+
+\subsection{Multi-source ResNet-50 threshold-crossfit diagnostic}
+The separate multi-source candidate uses a ResNet-50 score export and a manifest of 6,348 training images and 1,338 validation images from DDR, DeepDRiD, and DRTiD. The manifest has 929 validation patient groups and no patient overlap between its train and validation partitions. The stored checkpoint epoch (epoch 6) was selected using the complete validation split under the run's zero-miss operating-point criterion. We therefore freeze that checkpoint and cross-fit only the decision threshold as a post-selection sensitivity analysis; the procedure cannot undo the earlier full-validation checkpoint selection.
+
+Patients are sorted by descending validation-image count, with patient ID as the deterministic tie-breaker, then assigned whole to the currently smallest of five folds (fold-index tie-breaker). For each fold, a scalar threshold maximizing image-level accuracy is selected from the other four folds' scores and applied to the held-out fold. This yields group-disjoint threshold fitting and scoring, but it is not nested model selection, an unbiased estimate of the training pipeline, or external validation. The binary action rule is REFER when score is greater than or equal to threshold, otherwise CLEAR; no abstention state is present in this diagnostic.
+
+\subsection{End-to-end image-model development run}
+We also audited the saved source-balanced ConvNeXt-Tiny run as a distinct experiment. It uses the pretrained \texttt{convnext\_tiny.fb\_in22k\_ft\_in1k} encoder with eye-level image bags (one DDR image or paired DeepDRiD/DRTiD views), plus grade, risk, and quality heads. The saved configuration uses log-mean-exp view-risk pooling at temperature 0.25 and validation-selected ordinal-risk/quality thresholds. Its manifest contains 4,675 training eyes, 982 validation eyes, and 1,236 test eyes; test evaluation is explicitly marked skipped. The saved run completed one source-balanced epoch of 1,200 batches. The validation cohort and thresholds have been repeatedly inspected. The checkpoint and eye-level predictions are excluded from the public checkout, so this manuscript does not claim clean-clone reproduction of the model result.
 
 \subsection{Statistics}
 Specificity is reported as an empirical ratio with its numerator and denominator. We do not attach a population confidence interval to the headline result because threshold and reference selection reuse the cohort and patient dependence cannot be ignored. A standard exact binomial interval describes sampling for a fixed procedure but does not correct post-selection bias in this setting \cite{clopperpearson,cawley2010}. The 75\% specificity target corresponds arithmetically to at least $\lceil0.75\times385\rceil=289$ true negatives on this denominator; it is a development arithmetic target, not a clinical threshold.
 
-\section{Results}
-\subsection{The replay is exact, but it is optimistic by construction}
-The deterministic replay reproduced the frozen counts: 270 true negatives among 385 gradable nonreferable cases (70.13\%), no observed referable clearances among 463 gradable referable cases, no ungradable case cleared, and 100\% binary action assignment. By source, specificity was 134/206 (65.05\%) for DDR, 51/52 (98.08\%) for DeepDRiD, and 85/127 (66.93\%) for DRTiD. The large source spread and unequal source composition make the pooled estimate sensitive to case mix. More importantly, the score reference vectors and thresholds were estimated on the same cases, so the point estimate is a resubstitution-style development result.
+\subsection{Selection-history evidence map}
+For each analysis object, we recorded four fields: (1) input and unit (raw image, precomputed score row, or generated observation); (2) outcome-dependent choices, including fitting, checkpoint/candidate selection, score normalization, and threshold selection; (3) partition and identity evidence, including whether patient grouping was observed, verified, or unavailable; and (4) the narrowest inference supported by that history. Evidence class was assigned from this record, not from the metric value or the label ``test.'' Exact replay of the same records supports implementation consistency only. Fold-held estimates remain internal development evidence when the cohort or candidate family was globally exposed before folding. A frozen model evaluated on a dataset-designated split is a within-dataset evaluation; image overlap or missing patient identifiers further restricts its independence. A threshold envelope selected from inspected test labels is post-hoc descriptive evidence. Independent external validation requires a cohort unused for training, selection, calibration, repair, or prior project decisions. Unrecovered patient linkage or selection history is marked unavailable rather than presumed independent. This map organizes the evidence; it does not adjust outcomes or provide a risk guarantee.
 
-\subsection{Patient-grouped procedures do not retain the zero-miss headline}
+\section{Results}
+\subsection{Frozen raw-image classifier: official MMRDR-UWF test}
+On the development partition, the frozen validation threshold detected 572/572 referable images and cleared 123/600 nonreferable images (20.50\% specificity). On the source-designated official UWF test partition it detected 1,283/1,288 referable images and cleared 262/1,309 nonreferable images. This is 99.61\% image-level sensitivity (Wilson 95\% interval, 99.09--99.83\%) and 20.02\% specificity (Wilson 95\% interval, 17.94--22.27\%), with five false-negative clearances and 1,047 false-positive referrals. The exact-byte audit identified two referable test images with copies in model-fit data; removing these two rows post hoc leaves 1,281/1,286 true positives, five misses, and 262/1,309 true negatives (20.02\% specificity). The excluded-row calculation is descriptive and does not convert this inspected, partly overlapping partition into an independent test. The one-sided exact 95\% upper bound for the image-row miss fraction is 0.81\%; it is not a patient-level risk bound because patient identifiers are absent and the calculation treats image rows as independent. Every test image received a binary CLEAR or REFER action (100\% action assignment), which is an implementation property, not evidence that every case was safely resolved.
+
+All five false-negative clearances were grade 2, the lowest referable category. The 1,047 false referrals comprised 593/800 grade-0 images (74.13\% referred) and 454/509 grade-1 images (89.19\% referred); all grade-3 and grade-4 images were referred. Table~\ref{tab:mmrdr-test} reports the complete operating-point counts, and Fig.~\ref{fig:mmrdr-operating-transfer} visualizes the validation-to-test change. This post-test decomposition localizes the observed errors around the grade-1/2 boundary and shows the concentration of false-referral burden among grade 0--1 cases; it was not used to modify the frozen model or threshold.
+
+\begin{table}[t]
+\centering
+\caption{Frozen MMRDR-UWF classifier at a validation-selected threshold. The official-test row is primary; the duplicate-excluded row is a post-hoc exact-byte sensitivity check. Counts are images; test rows lack patient IDs.}
+\label{tab:mmrdr-test}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+Partition & $N$ & TP/FN & TN/FP & Sensitivity & Specificity & Actions \\
+\midrule
+Development validation & 1,172 & 572/0 & 123/477 & 100.00\% & 20.50\% & 100\% \\
+Official UWF test & 2,597 & 1,283/5 & 262/1,047 & 99.61\% & 20.02\% & 100\% \\
+Test, exact duplicates excluded & 2,595 & 1,281/5 & 262/1,047 & 99.61\% & 20.02\% & 100\% \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Official-test sensitivity Wilson 95\% interval: 99.09--99.83\%; specificity Wilson 95\% interval: 17.94--22.27\%. The final row excludes the two test images with exact copies in model-fit data; its unchanged five misses and specificity are post-hoc descriptive results. Intervals and the one-sided missed-risk bound are image-row calculations, not patient-clustered estimates.
+\end{table}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.92\linewidth,height=4.8cm,
+    xmin=15,xmax=25,ymin=-1,ymax=6,
+    xlabel={Specificity among nonreferable images (\%)},
+    ylabel={False-negative clearances},
+    xtick={15,17.5,20,22.5,25},ytick={0,1,2,3,4,5,6},
+    grid=major,tick label style={font=\scriptsize},
+    label style={font=\small},
+    nodes near coords,nodes near coords style={font=\scriptsize,anchor=west},
+    point meta=explicit symbolic]
+\addplot[only marks,mark=*,mark size=2.5pt,blue!70!black] coordinates {
+    (20.50,0) [Validation]
+    (20.015,5) [Official test]
+};
+\end{axis}
+\end{tikzpicture}
+\caption{The validation-selected zero-observed-miss operating point did not retain zero misses on the frozen official test. Specificity remained approximately 20\%; both points are image-level within-dataset results.}
+\label{fig:mmrdr-operating-transfer}
+\end{figure}
+
+The test scores also show why a ranking summary alone can mislead operational interpretation. Figure~\ref{fig:mmrdr-roc} plots an aggregate-only, fixed-grid empirical ROC trace derived after the test labels had been inspected. The locked development threshold and the retrospective point with 100\% observed test sensitivity are marked separately; the latter is a descriptive point, not a proposed threshold. The high AUC therefore coexists with poor specificity at the frozen operating point and does not rescue the observed miss count.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.92\linewidth,height=5.2cm,
+    xmin=0,xmax=1,ymin=0,ymax=1,
+    xlabel={False-positive rate},ylabel={True-positive rate},
+    xtick={0,0.2,0.4,0.6,0.8,1.0},ytick={0,0.2,0.4,0.6,0.8,1.0},
+    grid=major,tick label style={font=\scriptsize},
+    label style={font=\small},
+    legend style={font=\scriptsize,at={(0.02,0.98)},anchor=north west},
+]
+\addplot[gray,dashed,no marks] coordinates {(0,0) (1,1)};
+\addlegendentry{Chance}
+\addplot[blue!75!black,thick,no marks] table[
+    x=false_positive_rate,y=true_positive_rate,col sep=comma
+] {reproducibility/mmrdr_roc_display_aggregate_20261019.csv};
+\addlegendentry{Empirical ROC (AUC 0.9173)}
+\addplot[only marks,mark=*,mark size=2.5pt,orange!85!black] coordinates {
+    (0.799847,0.996118)
+};
+\addlegendentry{Frozen threshold}
+\addplot[only marks,mark=square*,mark size=2.5pt,red!75!black] coordinates {
+    (0.906035,1.0)
+};
+\addlegendentry{Post-hoc 100\% sensitivity}
+\end{axis}
+\end{tikzpicture}
+\caption{Image-level empirical ROC curve from the already-inspected official MMRDR-UWF test scores (2,597 images). AUC is computed from all scores; the displayed curve samples the aggregate empirical envelope at 1\%-FPR increments. The frozen-threshold marker corresponds to 99.61\% sensitivity and 20.02\% specificity. The post-hoc marker corresponds to 100\% observed sensitivity and 9.40\% specificity; because it uses test labels, it is descriptive only and is not a candidate or deployment threshold. No patient-clustered uncertainty is available.}
+\label{fig:mmrdr-roc}
+\end{figure}
+
+This result fails the project's joint high-specificity/zero-miss objective: specificity is low and the validation operating point incurred five false-negative clearances on test. It is nevertheless the manuscript's strongest fixed-threshold raw-image evaluation. It does not validate the separate 70.13\% score replay or establish performance at another site, clinical utility, or autonomous diagnostic safety.
+
+\subsection{The replay is exact, but it is in-sample}
+The deterministic replay reproduced the frozen counts: 270 true negatives among 385 gradable nonreferable cases (70.13\%), no observed referable clearances among 463 gradable referable cases, no ungradable case cleared, and 100\% binary action assignment. Table~\ref{tab:cohort} reports the source-specific numerators and denominators: specificity was 134/206 (65.05\%) for DDR, 51/52 (98.08\%) for DeepDRiD, and 85/127 (66.93\%) for DRTiD. Source-stratified patient-cluster intervals and exploratory pairwise contrasts are reported above. Reweighting these same three rates to one third per source gives 76.68\% (patient-cluster bootstrap 95\% percentile interval, 72.93--80.32\%), compared with 70.13\% under the observed negative-eye mixture. This 6.55-point difference is arithmetic standardization of the same exposed outcomes, not a model improvement, representative target-population estimate, or external validation; Fig.~\ref{fig:source} shows both summaries. The score reference vectors and thresholds were estimated on the same cases, so the 70.13\% point estimate is an in-sample development replay, not an estimate of future-patient performance.
+
+\subsection{Accuracy-threshold diagnostic on the multi-source ResNet-50}
+The threshold-only grouped cross-fit produced 1,126 correct classifications among 1,338 validation images (84.16\% accuracy): 660 true positives, 466 true negatives, 99 false positives, and 113 false negatives. Sensitivity was 85.38\%, specificity 82.48\%, and binary action assignment 100\%. The five fold thresholds were 1.266855, 1.266855, 1.220113, 1.266855, and 0.809623. Fold-level aggregate counts and thresholds are provided in the machine-readable supplement. This accuracy is descriptive only: it misses 113 of 773 referable images, and the checkpoint epoch was selected with all validation labels before threshold cross-fitting. The result is therefore post-selection development evidence, not an unbiased validation estimate, an external test, or evidence of autonomous safety. It is not used to claim that a clinical performance target was met.
+
+\subsection{End-to-end model result is a separate, lower development point}
+The ConvNeXt-Tiny image model cleared 182/386 gradable nonreferable eyes (47.15\%) on its 982-eye validation manifest. It assigned an action to every row, referred all 463 gradable referable eyes (zero observed misses), and referred all 133 known-ungradable cases. By source, it cleared 112/207 DDR negatives, 27/52 DeepDRiD negatives, and 43/127 DRTiD negatives. By ordinal grade, it cleared 169/274 grade-0 eyes (61.68\%) but only 13/112 grade-1 eyes (11.61\%), revealing a concentrated grade-boundary failure. It referred 800/982 eyes (81.47\%). Table~\ref{tab:replay-model} places this development result beside the distinct raw-image test and score replay, with evidence boundaries kept explicit. The threshold was selected on this previously inspected validation set and the saved run skipped test evaluation. Thus, 47.15\% is an internal development estimate, not a test result or a safety certificate.
+
+\begin{table}[t]
+\centering
+\caption{Selection-history evidence map for the principal analyses. The rows have different inputs and estimands and are not a head-to-head model comparison.}
+\label{tab:replay-model}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}X}
+\toprule
+Evidence object / input unit & Outcome-dependent selection history & Partition / identity status & Permissible inference \\
+\midrule
+Frozen ResNet-50 / raw UWF images, image unit & Head/checkpoint and threshold selected using internal image-level validation; threshold frozen before test scoring & Two positive test images have exact model-fit copies; patient IDs unavailable locally & Primary fixed-threshold, image-level within-dataset outcome; not independent patient/site validation \\
+Score-policy replay / precomputed component scores, eye unit & Source ranks, weights, and cutoffs developed using the same exposed score cohort later replayed & Same 981-eye cohort supplies policy references and outcomes & Deterministic implementation replay only; 70.13\% is not raw-image performance \\
+Grouped/nested procedures / precomputed scores, eye unit & Fold-level fitting separated within each run, but cohort and component-family history predate folds & Reuses exposed 981-eye cohort; paired seeds reuse patients & Internal development and split-sensitivity evidence; not independent confirmation \\
+Post-hoc MMRDR frontier / test logits, image unit & Alternative cutoffs selected by searching inspected test scores against test labels & Same official test records as primary outcome; no patient IDs & Descriptive ranking/trade-off diagnostic only; no deployment cutoff \\
+ConvNeXt-Tiny / raw image bags, eye unit & Checkpoint and thresholds selected on exposed validation; official test inference skipped & Exposed 982-eye validation manifest; no test result & Development comparator only; no held-out performance claim \\
+Controlled simulation / generated score channels, case unit & Candidate selected on generated development samples and tested on separately generated samples & Synthetic records are independent by construction & Mechanism evidence under stated generator only; not retinal performance or causal explanation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Table~\ref{tab:replay-model} operationalizes the selection-history audit: it makes the selection path and inference limit visible alongside, but separate from, the numerical results. For the primary raw-image test, sensitivity was 99.61\% (1,283/1,288), specificity was 20.02\% (262/1,309; Wilson 95\% interval 17.94--22.27\%), accuracy was 59.49\%, balanced accuracy was 59.81\%, and 2,330/2,597 images (89.72\%) were referred. These are observed image-level metrics on MMRDR-UWF's source-designated test partition, with two positive images duplicated byte-for-byte in model-fit data; they are not prospective real-world clinical performance or an independent test. The 70.13\% score replay uses precomputed outputs and must not be presented as the classifier's accuracy or specificity.
+
+The hash-verified test scores had image-level ROC-AUC 0.9173 and average precision 0.9234. The locked threshold produced 99.61\% sensitivity at 20.02\% specificity. A retrospective envelope obtained 30.94\% specificity at at least 99\% sensitivity, 57.07\% at at least 95\%, and 74.41\% at at least 90\%; at 100\% observed sensitivity, specificity was 9.40\%. Each envelope point maximizes specificity subject to its sensitivity constraint on these same inspected test scores, so the envelope is an optimistically selected descriptive bound, not a prespecified operating point. We report no inferential interval for the searched envelope because pointwise intervals would ignore the within-test search and patient clustering cannot be recovered from the export. These cutoffs must not be used for model selection or deployment. All five false-negative images were grade 2; the 1,047 false referrals comprised 593 grade-0 and 454 grade-1 images. Thus, the frozen model's near-perfect ranking summary does not imply a useful high-sensitivity operating point: on this test partition, the sensitivity-specificity trade-off remains severe near the grade-1/2 boundary. Table~\ref{tab:mmrdr-test-frontier} and Fig.~\ref{fig:mmrdr-roc} summarize this descriptive trade-off; aggregate coordinates are in \path{paper/reproducibility/mmrdr_roc_display_aggregate_20261019.csv}, with the aggregate result and hash-checked analysis in \path{paper/reproducibility/mmrdr_test_score_diagnostic_20261019.json} and \path{src/active_retina/analyze_mmrdr_test_frontier.py}. Neither representation repairs the locked result.
+
+\begin{table}[t]
+\centering
+\caption{Post-hoc sensitivity-constrained specificity envelope on the inspected MMRDR-UWF test scores. Alternative cutoffs are descriptive only, not model-selection or deployment thresholds.}
+\label{tab:mmrdr-test-frontier}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}Xrr}
+\toprule
+Sensitivity constraint & Observed sensitivity & Specificity \\
+\midrule
+100\% (zero observed misses) & 100.00\% & 9.40\% \\
+$\geq$99\% & 99.07\% & 30.94\% \\
+$\geq$98\% & 98.06\% & 41.33\% \\
+$\geq$95\% & 95.03\% & 57.07\% \\
+$\geq$90\% & 90.06\% & 74.41\% \\
+$\geq$80\% & 80.05\% & 88.62\% \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Candidate-set construction changes nested estimates}
+In the initial seed, the 19-column label-screened panel yields 189/385 true negatives (49.09\%) with two referable misses, while all 203 aligned columns yield 221/385 (57.40\%) with three misses. Across five paired seeds, mean specificity is 57.45\% (SD 4.79 points; range 49.09--60.78\%) for the label-screened panel and 56.31\% (SD 1.01; 54.81--57.40\%) for all aligned columns. Mean misses are 2.6 and 4.2, respectively; neither panel attains zero misses in any run. The all-aligned panel has lower specificity in four seeds and higher specificity in one. Its paired difference averages -1.14 points and ranges from -4.16 to +8.31. Among the ten panel-by-seed results, the highest specificity subject to fewer than five observed referable misses is 234/385 (60.78\%) with three misses, from the label-screened panel at seed 20261019. This is a retrospectively selected maximum across repeated partitions, not a prespecified operating-point estimate. Thus the favorable initial contrast reverses under four alternate partitions. The pattern is evidence of split-by-panel instability within an exposed cohort, not an unbiased panel effect. The seed-level pooled counts are supplied in the aggregate CSV supplement; Table~\ref{tab:candidate-set} summarizes the five-seed estimates, source-specific counts for the initial seed are shown in Fig.~\ref{fig:candidate-source}, and Fig.~\ref{fig:panel-seed-sensitivity} shows their paired seed-to-seed variation.
+
+\begin{table}[t]
+\centering
+\caption{Paired five-seed sensitivity of nested patient-grouped selection. Across-seed standard deviations and ranges describe split sensitivity only; they are not confidence intervals.}
+\label{tab:candidate-set}
+\footnotesize
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.19\linewidth}rrr>{\centering\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}X}
+\toprule
+Panel & \shortstack{Mean TN\\(/385)} & \shortstack{Mean specificity\\(\%)} & SD (pp) & Range (\%) & \shortstack[l]{Mean misses;\\zero-miss runs} \\
+\midrule
+Oracle shortlist (11/1/7) & 221.2 & 57.45\% & 4.79 & 49.09--60.78 & 2.6; 0/5 \\
+All aligned (44/40/119) & 216.8 & 56.31\% & 1.01 & 54.81--57.40 & 4.2; 0/5 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=10pt,
+    width=0.95\linewidth,
+    height=5.4cm,
+    ymin=0, ymax=100,
+    ylabel={Specificity (\%)},
+    symbolic x coords={DDR,DeepDRiD,DRTiD},
+    xtick=data,
+    x tick label style={font=\small},
+    ymajorgrids=true,
+    grid style={gray!25},
+    legend style={font=\scriptsize,at={(0.5,-0.2)},anchor=north,legend columns=1},
+    tick label style={font=\scriptsize},
+]
+\addplot[fill=blue!55] coordinates {(DDR,47.57) (DeepDRiD,84.62) (DRTiD,37.01)};
+\addlegendentry{Oracle-contributor shortlist}
+\addplot[fill=orange!75] coordinates {(DDR,57.28) (DeepDRiD,88.46) (DRTiD,44.88)};
+\addlegendentry{All aligned columns}
+\end{axis}
+\end{tikzpicture}
+\caption{Per-source specificity for the nested candidate panels. The corresponding miss counts (shortlist versus all aligned) are DDR 1/2, DeepDRiD 0/1, and DRTiD 1/0. These are development-fold outcomes on the exposed cohort, not external validation.}
+\label{fig:candidate-source}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.95\linewidth, height=5.0cm,
+    ymin=45, ymax=65, ylabel={Specificity (\%)},
+    symbolic x coords={seed15,seed16,seed17,seed18,seed19}, xtick=data,
+    xticklabels={15,16,17,18,19}, xlabel={RNG seed ID (last two digits)},
+    ymajorgrids=true, grid style={gray!25},
+    tick label style={font=\small},
+    legend style={font=\small,at={(0.5,-0.25)},anchor=north,legend columns=2},
+]
+\addplot[mark=*,thick,blue] coordinates {(seed15,49.09) (seed16,58.96) (seed17,58.18) (seed18,60.26) (seed19,60.78)};
+\addlegendentry{Oracle shortlist}
+\addplot[mark=square*,thick,orange] coordinates {(seed15,57.40) (seed16,54.81) (seed17,55.84) (seed18,56.62) (seed19,56.88)};
+\addlegendentry{All aligned}
+\end{axis}
+\end{tikzpicture}
+\caption{Specificity across paired patient-fold RNG seeds (full IDs 20261015--20261019; integer identifiers, not dates). The first is the original split and the other four are added sensitivity splits. The direction of the candidate-panel contrast reverses after the initial seed. The connected points are split-sensitivity summaries on the same exposed cohort, not independent replications or confidence intervals.}
+\label{fig:panel-seed-sensitivity}
+\end{figure}
+
+This is a new empirical analysis of the ActiveRetina artifact history, not a new learning algorithm. Its result is that selected internal estimates vary across paired splits and candidate-panel definitions, while neither panel reaches the desired zero-miss point. Because panel size and screening history change together, the observed difference does not show that adding channels alone improves or harms performance. The full-cohort oracle shortlist remains label-informed, and the expanded panel is not historically independent of the inspected cohort.
+
+The observed numerical gap is not an estimate of a paired or causal model-performance difference: the cohorts differ by one eye, the inputs differ, and both operating points were selected during development. The comparison prevents the score-level replay from being mislabeled as end-to-end model performance.
+
+\subsection{Synthetic mechanism: candidate search can trade specificity for zero-miss transfer}
+The controlled simulation demonstrates the proposed mechanism only within its specified data-generating process. Figure~\ref{fig:arxiv-panel-simulation} and Table~\ref{tab:arxiv-panel-simulation} summarize the operating points. With independent channels ($\rho=0$), increasing the searched panel from one to 100 raised mean selected-development specificity from 22.51\% to 55.45\% and mean independent-test specificity from 22.48\% to 52.89\%; zero-miss frequency over 300 test positives fell from 18.10\% (Wilson Monte Carlo interval, 16.47--19.85\%) to 0/2,000 (0--0.19\%). With $\rho=0.9$, development specificity rose from 23.39\% to 41.64\%, while zero-miss frequency fell from 15.60\% (14.08--17.26\%) to 1.20\% (0.81--1.78\%). Under the identical-channel negative control ($\rho=1$), panel sizes one and 100 yielded the same mean development and test specificities (22.42\% and 22.26\%) and the same zero-miss frequency (17.40\%; 15.80--19.12\%). The one-channel frequencies are close to the exchangeability reference of $60/(60+300)=16.67\%$. Intervals here quantify Monte Carlo error for the simulated frequency, not uncertainty in retinal performance.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.95\linewidth,height=5.2cm,
+    xlabel={Candidate channels searched ($K$)},
+    ylabel={Zero-miss test replicates (\%)},
+    xmin=1,xmax=100,ymin=0,ymax=20,
+    xmode=log,log basis x=10,xtick={1,5,20,100},
+    ytick={0,5,10,15,20},ymajorgrids=true,
+    grid style={gray!25},tick label style={font=\scriptsize},
+    legend style={font=\scriptsize,at={(0.5,-0.27)},anchor=north,legend columns=2},
+]
+\addplot[mark=*,thick,blue] coordinates {(1,18.10) (5,0.25) (20,0) (100,0)};
+\addlegendentry{$\rho=0$}
+\addplot[mark=square*,thick,orange] coordinates {(1,16.40) (5,1.35) (20,0.05) (100,0)};
+\addlegendentry{$\rho=0.5$}
+\addplot[mark=triangle*,thick,teal] coordinates {(1,15.60) (5,4.50) (20,2.45) (100,1.20)};
+\addlegendentry{$\rho=0.9$}
+\addplot[mark=diamond*,thick,black] coordinates {(1,17.40) (5,17.40) (20,17.40) (100,17.40)};
+\addlegendentry{$\rho=1$ identical-channel control}
+\end{axis}
+\end{tikzpicture}
+\caption{Synthetic probability of zero misses on 300 independent positive cases after selecting the highest-development-specificity channel among equally discriminative candidates. Each point uses 2,000 Monte Carlo replicates. Candidate correlation attenuates the panel-size effect; perfectly identical channels show no panel-size effect. This is mechanism evidence under the stated simulation, not clinical evidence or an explanation of the observed retinal results.}
+\label{fig:arxiv-panel-simulation}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Selected conditions from the synthetic candidate-search experiment. Wilson intervals quantify Monte Carlo frequency only.}
+\label{tab:arxiv-panel-simulation}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{crrrrr}
+\toprule
+$\rho$ & $K$ & Dev. Sp. & Test Sp. & Zero-miss tests & MC Wilson 95\% CI \\
+\midrule
+0.0 & 1 & 22.51\% & 22.48\% & 18.10\% & 16.47--19.85\% \\
+0.0 & 100 & 55.45\% & 52.89\% & 0.00\% & 0.00--0.19\% \\
+0.9 & 1 & 23.39\% & 23.29\% & 15.60\% & 14.08--17.26\% \\
+0.9 & 100 & 41.64\% & 40.37\% & 1.20\% & 0.81--1.78\% \\
+1.0 & 1 & 22.42\% & 22.26\% & 17.40\% & 15.80--19.12\% \\
+1.0 & 100 & 22.42\% & 22.26\% & 17.40\% & 15.80--19.12\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This simulation shows that finite-sample candidate search can produce a specificity--zero-miss trade-off under one explicit model; it does not establish that the project's retinal score channels are exchangeable Gaussian variables, that multiplicity caused the replay-to-grouped difference, or that the mechanism generalizes to other datasets. The seed, parameters, implementation, and aggregate output are listed in the reproducibility materials.
+
+\subsubsection{Sensitivity to the number of development negatives}
+For the 100-candidate panel, the paired sensitivity analysis separates estimated-specificity optimism from zero-miss transfer. At $\rho=0$, the development-minus-test specificity gap declined from 8.46 percentage points with 50 development negatives to 0.57 points with 1,000, while mean independent-test specificity rose from 50.11\% to 53.78\%; no zero-miss replicate occurred at any of the three sample sizes (0/2,000; Monte Carlo Wilson interval 0--0.19\%). The paired reduction in the gap between 50 and 1,000 negatives was 7.89 percentage points (Monte Carlo normal 95\% interval, 7.60--8.19). At $\rho=0.9$, the gap declined from 4.04 to 0.25 points and test specificity rose from 38.25\% to 40.08\%; zero-miss frequency changed only from 1.35\% (0.93--1.96\%) to 1.10\% (0.73--1.66\%), while the paired gap reduction was 3.79 points (3.50--4.08). These intervals quantify Monte Carlo uncertainty in the paired contrast under the stated generator, not patient-sampling uncertainty. Figure~\ref{fig:arxiv-negative-sample-sensitivity} plots the simulated gap and its Monte Carlo intervals. The result suggests that a larger negative selection sample mainly reduces optimism in estimated specificity, while candidate search's effect on zero-miss transfer remains. These are not retinal performance estimates (Table~\ref{tab:arxiv-negative-sample-sensitivity}).
+
+\begin{table*}[t]
+\centering
+\caption{Paired sensitivity of the 100-candidate synthetic selection result to the number of development negatives. Specificity gap is development minus independent-test specificity. Wilson intervals quantify Monte Carlo error for the simulated zero-miss frequency only.}
+\label{tab:arxiv-negative-sample-sensitivity}
+\footnotesize
+\begin{tabularx}{\textwidth}{c r r r r X}
+\toprule
+$\rho$ & $N^-_{\mathrm{dev}}$ & Dev. Sp. & Test Sp. & Gap (pp) & Zero-miss tests, \% (MC Wilson 95\% CI) \\
+\midrule
+0.0 & 50 & 58.57\% & 50.11\% & 8.46 & 0.00 (0.00--0.19) \\
+0.0 & 200 & 55.37\% & 52.82\% & 2.55 & 0.00 (0.00--0.19) \\
+0.0 & 1,000 & 54.34\% & 53.78\% & 0.57 & 0.00 (0.00--0.19) \\
+0.9 & 50 & 42.29\% & 38.25\% & 4.04 & 1.35 (0.93--1.96) \\
+0.9 & 200 & 40.79\% & 39.66\% & 1.13 & 1.20 (0.81--1.78) \\
+0.9 & 1,000 & 40.33\% & 40.08\% & 0.25 & 1.10 (0.73--1.66) \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.94\linewidth,height=5.0cm,
+    xmode=log,log basis x=10,xmin=40,xmax=1250,
+    xtick={50,200,1000},xticklabels={50,200,1,000},
+    xlabel={Development negatives used for selection},
+    ylabel={Development--test specificity gap (pp)},
+    ymin=-0.5,ymax=10,
+    grid=major,tick label style={font=\scriptsize},
+    label style={font=\small},
+    legend style={font=\scriptsize,at={(0.98,0.98)},anchor=north east},
+]
+\addplot+[blue,mark=*,thick,error bars/.cd,y dir=both,y explicit]
+coordinates {
+    (50,8.4594) +- (0,0.29095)
+    (200,2.55015) +- (0,0.17645)
+    (1000,0.56565) +- (0,0.11862)
+};
+\addlegendentry{$\rho=0$}
+\addplot+[orange!85!black,mark=square*,thick,error bars/.cd,y dir=both,y explicit]
+coordinates {
+    (50,4.0395) +- (0,0.30649)
+    (200,1.1339) +- (0,0.17470)
+    (1000,0.2540) +- (0,0.11416)
+};
+\addlegendentry{$\rho=0.9$}
+\end{axis}
+\end{tikzpicture}
+\caption{Paired synthetic development-minus-test specificity gap for the 100-candidate selector as the number of development negatives increases. Whiskers are normal Monte Carlo 95\% intervals for each simulated mean gap, not patient-sampling intervals. All candidate channels have identical marginal quality under the generator; the result is mechanism-only and not a retinal performance estimate.}
+\label{fig:arxiv-negative-sample-sensitivity}
+\end{figure}
+
+\subsection{Patient-grouped procedures do not preserve zero-miss status}
 \begin{table}[t]
 \centering
 \caption{Specificity and observed misses across development procedures on the inspected 981-case cohort. Patient grouping improves the evaluation design but does not make this cohort untouched.}
@@ -131,7 +512,56 @@ Post-hoc zero-miss margin & 243 & 63.12\% & 0 & held-out tuned \\
 \end{tabular}
 \end{table}
 
-The fixed-blend patient-grouped estimate is 0.52 percentage points below the same-cohort replay and includes three missed referable-or-ungradable cases. Nested weight selection decreases specificity by 5.71 points from the replay and yields five misses. Adding the nested margin increases specificity from 64.42\% to 65.71\% but also increases misses to six. The post-hoc margin sweep can force observed misses to zero, but specificity falls to 63.12\%; because the margins were selected on the held-out folds, even that zero-miss point is optimistic and cannot be deployed. This is the practical consequence of selection bias: outer-fold labels must not be used to choose the operating point whose outer-fold performance is then reported \cite{cawley2010,varma2006}.
+Figure~\ref{fig:tradeoff} plots the observed specificity--miss outcomes for these procedures; neither observed zero-miss point estimates performance on new patients.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    xmin=60, xmax=72,
+    ymin=-0.7, ymax=7,
+    width=\linewidth, height=5.2cm,
+    xlabel={Specificity among 385 gradable negatives (\%)},
+    ylabel={Observed misses},
+    xtick={60,62,64,66,68,70,72},
+    ytick={0,1,2,3,4,5,6,7},
+    grid=major,
+    tick label style={font=\small},
+    label style={font=\small},
+    nodes near coords,
+    nodes near coords style={font=\scriptsize,anchor=west},
+    point meta=explicit symbolic
+]
+\addplot[only marks,mark=*,mark size=2.2pt,blue!70!black] coordinates {
+    (70.13,0) [Replay]
+    (69.61,3) [Grouped]
+    (64.42,5) [Nested]
+    (65.71,6) [Nested+margin]
+    (63.12,0) [Post-hoc]
+};
+\end{axis}
+\end{tikzpicture}
+\caption{Observed specificity--miss tradeoff for the five score-policy procedures in Table~\ref{tab:procedures}. Misses include referable and ungradable clearances. The replay is selected on the same exposed cohort; the post-hoc zero-miss point uses held-out labels. Neither zero-miss point estimates performance on new patients.}
+\label{fig:tradeoff}
+\end{figure}
+
+The fixed-blend patient-grouped estimate is 0.52 percentage points below the same-cohort replay and includes three missed required-eye events. We paired its held-out decisions with the deterministic replay for all 981 eye records. Among 385 gradable nonreferable eyes, 268 were cleared by both procedures, two replay clears became cross-fit referrals, and no negative changed in the reverse direction: 268/385 versus 270/385, a difference of $-0.52$ percentage points. A source-stratified patient-cluster bootstrap over 364 negative source--patient clusters gave a conditional percentile 95\% interval of $[-1.31,0.00]$ points. Among the 596 referable or ungradable eye records, the three cross-fit missed-eye events were replay-REFER to cross-fit-CLEAR transitions; replay had no such events. Their observed eye-level missed-required-eye rates were 0/596 versus 3/596, a paired difference of $+0.50$ percentage points (conditional source-stratified patient-cluster bootstrap 95\% interval, $[0.00,1.17]$; 574 positive-or-ungradable source--patient clusters). Table~\ref{tab:paired-transitions} reports all paired transitions. The paired result shows why similar specificity alone is misleading: the small change in negative clearances coexists with loss of zero-miss status. Both intervals are conditional on fixed predictions from an already exposed cohort and do not include candidate/model or threshold-selection uncertainty; they are not confirmatory validation. The missed-eye interval includes zero and should not be read as evidence of a statistically resolved risk difference. Nested weight selection decreases specificity by 5.71 points from the replay and yields five missed required eyes. Adding the nested margin increases specificity from 64.42\% to 65.71\% but also increases missed required eyes to six. The post-hoc margin sweep can force observed missed-eye events to zero, but specificity falls to 63.12\%; because the margins were selected on the held-out folds, even that zero-miss point is optimistic and cannot be deployed. This is the practical consequence of selection bias: outer-fold labels must not be used to choose the operating point whose outer-fold performance is then reported \cite{cawley2010,varma2006}.
+
+\begin{table}[t]
+\centering
+\caption{Paired replay-to-cross-fit eye-action transitions on the exposed 981-eye cohort.}
+\label{tab:paired-transitions}
+\begin{tabular}{lrrrr}
+\toprule
+Outcome subset & C/C & C/R & R/C & R/R \\
+\midrule
+Gradable nonreferable ($n=385$) & 268 & 2 & 0 & 115 \\
+Referable or ungradable ($n=596$) & 0 & 0 & 3 & 593 \\
+\bottomrule
+\end{tabular}
+\smallskip
+\parbox{0.9\linewidth}{\footnotesize C/C: CLEAR under both; C/R: replay CLEAR, grouped cross-fit REFER; R/C: replay REFER, grouped cross-fit CLEAR; R/R: REFER under both.}
+\end{table}
 
 \begin{figure}[t]
 \centering
@@ -141,9 +571,10 @@ The fixed-blend patient-grouped estimate is 0.52 percentage points below the sam
 DDR & \textcolor{blue}{\rule{39.0mm}{2.4mm}} & 65.05\% (134/206)\\[2pt]
 DeepDRiD & \textcolor{blue}{\rule{58.8mm}{2.4mm}} & 98.08\% (51/52)\\[2pt]
 DRTiD & \textcolor{blue}{\rule{40.2mm}{2.4mm}} & 66.93\% (85/127)\\[2pt]
-Pooled & \textcolor{black}{\rule{42.1mm}{2.4mm}} & 70.13\% (270/385)
+Pooled & \textcolor{black}{\rule{42.1mm}{2.4mm}} & 70.13\% (270/385)\\[2pt]
+Equal-source & \textcolor{orange}{\rule{46.0mm}{2.4mm}} & 76.68\% (one-third per source)
 \end{tabular}
-\caption{Observed same-cohort specificity by source. Bar lengths are proportional to the exact source ratios in Table~\ref{tab:cohort}; pooled specificity is a case-weighted aggregate over the three source denominators. This figure visualizes exposed development results and is not an external-performance estimate.}
+\caption{Observed source-specific replay specificity and two summaries of the same outcomes. Bar lengths are proportional to the reported values: pooled specificity uses observed negative-eye weights, while equal-source reweighting assigns one third to each source. The 6.55-point difference is compositional, not a model change, target-clinic estimate, or external validation.}
 \label{fig:source}
 \end{figure}
 
@@ -159,27 +590,40 @@ On the MMRDR-UWF validation subset, the best tested RETFound feature head at a w
 On the audited 982-eye fine-tuning validation manifest, the MMRDR-initialized warm start reached 95/386 gradable negatives at zero observed misses (24.61\%). Fine-tuning at epochs 1, 2, and 3 yielded 63/386 (16.32\%), 74/386 (19.17\%), and 73/386 (18.91\%), respectively. The warm start remained the strongest tested point, but every historical reference eye was in the validation rows. These figures are reported to preserve the provenance correction and training outcome; they do not establish an independent gain or a clean epoch-selection comparison.
 
 \section{Discussion}
-The key finding is methodological: a zero-miss specificity point can look stable in replay and then lose zero-miss status when calibration is moved into patient-grouped folds. The observed 70.13\% should therefore be retained as a historical frozen reference, not promoted to an independent performance claim. Patient grouping is necessary to prevent same-patient leakage across folds, but it cannot undo earlier cohort-wide exploration. This distinction is often obscured when a dataset split is called ``test'' even after repeated model repair.
+The key finding is methodological: a zero-miss specificity point can look stable in replay and then lose zero-miss status when calibration is moved into patient-grouped folds. The observed 70.13\% is therefore kept as a historical frozen reference, not promoted to an independent performance claim. Patient grouping is necessary to prevent same-patient leakage across folds, but it cannot undo earlier cohort-wide exploration. This distinction is often obscured when a dataset split is called ``test'' even after repeated model repair.
 
 The source-specific results also argue against interpreting the pooled metric as a universal operating point. DeepDRiD contributes a small negative denominator (52 cases) with 51 correctly cleared, while DDR and DRTiD provide much larger denominators and lower specificities. A pooled value summarizes this particular composition; it does not guarantee equivalent behavior in a new clinic, camera, geography, or prevalence setting.
 
 The later transfer experiment is a useful negative result. A candidate trained with patient groups excluded from training and threshold selection can add a few clearances on an exposed cohort, yet the simple OR policy creates two misses. In the original replay, 270 of 385 nonreferable cases are cleared and 115 are referred; the 463 gradable referable and 133 ungradable records are referred. Small specificity gains are not acceptable when they break the safety constraint. A clinically meaningful next step is not another search over this reference pool; it is to freeze one complete image-to-action artifact and evaluate once on an untouched patient-level external cohort.
 
-The MMRDR experiments extend this caution across a second acquisition domain, but they are not evidence that a particular architecture or dataset is generally ineffective. Within-validation zero-miss points were modest, and the MMRDR-initialized training results were affected by a validation manifest that included the historical reference eyes. Their value here is diagnostic: higher AUROC, a few extra clearances, or additional training data cannot substitute for a frozen procedure evaluated on a genuinely untouched cohort.
+The frozen MMRDR-UWF test adds a stronger locked evaluation than the exposed development studies, but it remains a test partition within one dataset. The validation-selected operating point did not preserve zero observed misses, and specificity was only 20.02\%. Because patient identifiers are absent from the export, image-level intervals cannot establish patient-level uncertainty. The separate MMRDR validation comparisons and multi-source fine-tuning results remain development diagnostics; the latter's validation manifest included every historical reference eye. These findings do not show that a particular architecture or dataset is generally ineffective. They show that higher AUROC, a zero-miss validation cutoff, or more training data cannot substitute for patient-identifiable, independent confirmatory evaluation.
+
+The referral-burden concern is not unique to this pipeline: on EyePACS, Jena and Rayguru report 17.5\% specificity for their best single model at 95\% sensitivity and lower unnecessary-referral burden for a weighted ensemble evaluated at a 90\% target \cite{jena2026}. This is contextual evidence that operating-point policy matters, not a performance comparison or external confirmation of ActiveRetina. Cohorts, labels, models, sensitivity targets, and evaluation procedures differ, so the numerical values must not be ranked across studies.
+
+The candidate-panel result sharpens the selection-history concern, but its initial single-seed effect is not stable: four alternate paired partitions reverse its direction. A 2026 factorial radiomics study already decomposes cumulative analytical leakage through simulations and a TCIA cohort \cite{garciahidalgo2026}; we make no first-in-field claim for leakage auditing. Our narrower empirical question is the interaction of candidate-panel construction and patient-fold realization for a zero-miss retinal operating point. Nested cross-validation cannot erase the project's prior cohort exposure, and the result needs replication on a cohort and candidate library that did not influence development.
 
 \subsection{What this study does and does not establish}
-It establishes deterministic replay of a source-conditional score policy and documents the difference between resubstitution-style and patient-grouped development procedures on this historical cohort. It does not establish a calibrated probability, transportable zero-miss behavior, a regulatory claim, clinical utility, prospective workflow safety, or a complete raw-image model. The word ``coverage'' is used only for action assignment when specified; it must not be confused with the fraction of cases autonomously diagnosed by a validated system.
+It establishes deterministic replay of a source-conditional score policy, reports patient-grouped development procedures, and evaluates a frozen ResNet-50 classifier once on an official within-dataset test partition. It does not establish calibrated probabilities, transportable zero-miss behavior, patient-level test uncertainty, independent-site generalization, clinical utility, prospective workflow safety, or clinical validation. The word ``coverage'' is used only for computational action assignment when specified; it must not be confused with the fraction of cases autonomously diagnosed by a validated system.
 
 \section{Limitations}
-First, the headline policy was built and tuned on the same 981-case cohort used for replay. Second, the source component scores are precomputed; this artifact is not end-to-end inference, and all source checkpoints/preprocessing contracts are not available together in this checkout. Third, label definitions and image acquisition differ across datasets, and the pooled result is not prevalence- or population-standardized. Fourth, patient-grouped folds only protect their own fitting operations; prior project-wide inspection remains. Fifth, the current source-level negatives are modest, especially for DeepDRiD. Sixth, the transfer union is a diagnostic construction, not an adopted policy. Finally, no clinical trial, prospective deployment, or independent external certification is included.
+The MMRDR six-logit referable score includes index 5 although the experiment has no grade-5 categorical training examples. Binary referable, pairwise-ranking, and hard-boundary losses may indirectly supervise this logit through their aggregate score, but it receives no direct grade-5 categorical supervision. Since the checkpoint is unavailable, no ablation can establish whether this design choice materially affected performance; the direction and magnitude are unknown.
+First, the headline score-policy replay was built and tuned on the same 981-case cohort used for replay, and its component scores and local policy are not in the public checkout. Second, the frozen MMRDR-UWF evaluation is within one dataset, its released rows lack patient IDs, and its checkpoint plus full training configuration are not in the public checkout; it has five false-negative clearances and low specificity. A post-hoc SHA-256 audit found two test images duplicated byte-for-byte in model-fit data. Excluding them left the observed misses and specificity unchanged, but the official partition is therefore not wholly image-disjoint and the filtered result is not an independent confirmation. Exact-byte matching cannot detect recompressed or transformed near-duplicates or other patient overlap. Third, the 84.16\% multi-source accuracy result cross-fits only the threshold; its epoch was selected using the full validation labels, and the result has 113 missed referable images. Fourth, the ConvNeXt-Tiny run is an exposed raw-image validation experiment whose test was skipped and whose checkpoint/predictions are not bundled. Fifth, label definitions and acquisition differ across datasets, and pooled results are not population-standardized. Sixth, patient-grouped folds only protect their own fitting operations; prior project-wide inspection remains. No clinical trial, prospective deployment, independent-site validation, or patient-level risk certificate is included.
 
 \section{Reproducibility and Data Availability}
-The audit script has two modes. Its clean-clone default, \path{--mode summary}, checks selected headline counts in tracked summary files and hashes those files; it does not execute the policy or independently reconstruct the counts from patient records. The optional \path{--mode full-replay} uses \path{results/deployable_exposed_baseline_7013_20261013_with_components/policy.json} and \path{validation_replay.csv}, with the evaluator in \path{src/active_retina/exposed_expert_policy.py}, to recompute every action and risk score for the 981 supplied component-score rows and check source counts and saved summaries. Grouped, nested, and transfer summaries are listed in the reproduction-package README. Both modes use Python 3.12 and the dependency pinned in \path{paper/reproducibility/requirements.txt}; the full replay also writes SHA-256 digests for its inputs. Neither mode recreates image-level component scores, retrains models, or establishes external validation.
+The arXiv source archive contains this manuscript, aggregate supplements, and analysis code for selected audits. In particular, it includes an identifier-free receipt for the paired replay-versus-patient-grouped analysis: on the same exposed 981-eye cohort, eye-level specificity was 70.13\% (270/385) for deterministic replay and 69.61\% (268/385) for grouped calibration. Among 596 referable-or-ungradable eye records, replay had zero missed required eyes and grouped calibration had three (0/596 versus 3/596); the paired eye-level missed-required-eye-rate difference was +0.50 percentage points (conditional interval 0.00--1.17). Conditional source-stratified patient-cluster intervals were $[-1.31,0.00]$ percentage points for the specificity difference and $[0.00,1.17]$ points for the missed-required-eye-rate difference. These intervals use patient clusters as the resampling unit but retain eye-level endpoints; they quantify resampling variability conditional on observed decisions. They do not adjust for prior cohort-wide search, calibration or threshold selection, and are not independent validation. The archive does not contain the score-policy file, model checkpoints, prediction exports, or a complete executable reproduction bundle. The replay and paired audit require local row-level score/label inputs and a patient manifest that are not included; therefore neither result can be independently rerun from this archive. The aggregate supplements contain no dataset images, patient identifiers, per-eye labels, or per-eye scores. The MMRDR-UWF test result was computed from a local checkpoint and test export. Neither is included, and the checkpoint does not preserve the complete training invocation or feature-cache provenance. A development-only reconstruction attempt on 2026-10-17 used checked-in trainer defaults with the hash-verified development manifest and feature cache. At epoch 1, historical versus reconstructed training loss was 2.721 versus 10.591, and validation specificity at zero observed misses was 4.67\% versus 0.50\% (thresholds $-1.350$ versus $3.802$). The rerun completed 11 validation epochs and stopped before checkpoint saving because pretrained backbone weights were unavailable locally; it did not read official-test inputs or outputs. The divergence establishes a failure to reproduce the recorded development trace from the recovered defaults, but does not identify whether unrecorded run-specific overrides, runtime differences, or other missing provenance caused it. It is not a new model result and does not change the official-test evaluation. Accordingly, this manuscript reports the provenance and limitations of those analyses but does not provide clean-clone reproduction of the image model result.
 
-The clean public checkout omits the local policy and per-eye score/label rows pending author confirmation that redistribution is permitted by every applicable source term; consequently, the public aggregate check is not a clean-clone reproduction of the row-level replay. The DDR repository states CC BY-NC-SA 4.0 for dataset materials; the DeepDRiD code repository carries CC BY-SA 4.0; and DRTiD is described by its official repository as research-only and application-accessed. Those statements do not, by themselves, settle the rights for this project's derived per-eye outputs. MMRDR and IDRiD item-level terms also require author verification. Raw images are not redistributed. The code-and-data release checklist is \path{paper/SUBMISSION_RELEASE_CHECKLIST.md}; until its rights and author declarations are resolved, the full reproduction bundle and final author/data-use checks remain incomplete. No independent external validation cohort is reported.
+The post-hoc exact-image audit is implemented in \path{paper/reproducibility/audit_mmrdr_exact_duplicate_impact.py}. The aggregate receipt reports eight exact-duplicate groups over 10,404 UWF images, including two positive test rows with exact copies in model-fit data. Excluding those two rows leaves the five misses and 20.02\% specificity unchanged. The source archive may include the aggregate receipt, but not its image paths, identifiers, per-image predictions, source images, or feature cache; consequently the image-level SHA-256 scan cannot be rerun from the archive. It only tests byte identity, not visual similarity or participant identity, and its filtered metrics are post hoc because the test outcomes were already inspected.
+
+The source datasets remain available from their respective official distribution channels under their own licenses and access conditions. This archive redistributes none of their images or row-level records. The author confirms that aggregate findings may be published; that confirmation is not a legal interpretation of every dataset term, and no permission to redistribute derived per-eye records is asserted. The paired audit script and aggregate receipt are included, but execution requires the omitted local score/label rows and patient manifest; only its reported aggregate output is available for inspection. The public repository has not been verified as a version-matched clean-clone reproduction release for image inference or the row-level score analyses. No independent external validation cohort is reported.
 
 \section{Conclusion}
-The 70.13\% specificity result is exactly reproducible as a frozen score-level replay on its 981-case development cohort, but that same cohort supplied its percentile references and operating thresholds. Patient-grouped procedures yield 64.42--69.61\% specificity with observed misses; a post-hoc zero-miss frontier falls to 63.12\% after held-out tuning. A later candidate-transfer union reaches 70.91\% on the same exposed cohort but introduces two misses. MMRDR-UWF and fine-tuning stress tests also remain internal development evidence, with explicit image-level split and manifest-overlap limitations. The defensible conclusion is not that ActiveRetina has a clinically ready 70.13\% model. It is that retrospective zero-miss operating points require strict provenance and a new untouched evaluation before they can support transportable claims.
+The frozen MMRDR-UWF ResNet-50 classifier achieved 99.61\% sensitivity and 20.02\% specificity on the source-designated image-level test split, with five false-negative clearances; its validation-selected zero-miss operating point did not transfer. A post-hoc exact-byte audit found two positive test images with copies in model-fit data. Their exclusion leaves the five misses and 20.02\% specificity unchanged, but confirms that the source-designated test partition is not wholly image-disjoint; this is not independent external validation. A distinct three-source ResNet-50 diagnostic produced 84.16\% threshold-crossfit accuracy but missed 113 referable images, and checkpoint selection had used the full validation set; this is post-selection evidence, not independent confirmation. The MMRDR export lacks patient IDs. Separately, the 70.13\% result is a score-level replay on its exposed 981-eye cohort, not a future-patient estimate. In a paired comparison on that same cohort, patient-grouped calibration retained similar eye-level specificity (69.61\% versus 70.13\%) but changed three referable or ungradable eye decisions from REFER to CLEAR. Among 596 referable-or-ungradable eye records, there were 3/596 versus 0/596 missed required eyes; the paired eye-level rate difference was +0.50 percentage points (conditional patient-cluster bootstrap 95\% interval, 0.00--1.17). Patient clusters are the resampling unit, not the endpoint. This conditional analysis does not adjust for prior exploration or establish future-patient risk; the interval includes zero. In the nested panel analysis, the retrospectively highest result with fewer than five misses is 60.78\% specificity with three misses, selected across ten repeated panel-by-seed outcomes. Across five paired seeds the wider panel averaged 1.14 percentage points lower specificity, the difference changed sign once, and neither panel achieved zero misses. These findings support a bounded evidence audit of operating-point transfer and panel-by-split instability, not a novel general-purpose estimator, autonomous model, or clinical validation. Independent, patient-identifiable replication is required before broader claims.
+
+\section*{Acknowledgment and AI-Assistance Disclosure}
+OpenAI ChatGPT, accessed through Codex, assisted with drafting and revising prose across this manuscript and with developing analysis and audit code used in the project. The system did not conduct clinical review or independently validate the scientific claims. The human author is responsible for checking the generated text and code against the source artifacts and for approving the final submission.
+
+\section*{Funding, Competing Interests, and Ethics}
+The author reports sponsor funding; sponsor identities, award identifiers, and sponsor roles were not available for this manuscript. The author intends to pursue pilot deployment of ActiveRetina; related organizational, ownership, or financial relationships have not been characterized here. The author reports that ethics approval was granted, but the approving authority, approval identifier, date, scope, and the source datasets' consent/waiver basis for this secondary analysis were not available for verification in this manuscript. The study analyzes previously released datasets and reports no new participant recruitment. The author confirms sole authorship and confirms that aggregate findings may be published. The latter is the author's statement and is not a legal determination of dataset-license scope.
 
 \appendix
 \section{Compact Claim Register}
@@ -194,37 +638,47 @@ Claim & Status and evidence boundary \\
 Zero observed misses & True for that replay; thresholds were selected using the same cohort.\\
 Patient-generalized 70.13\% & Not established; grouped procedures differ and have observed misses.\\
 75\% zero-miss performance & Not achieved; no candidate meets both conditions on an untouched cohort.\\
-Clinical autonomy & Not established; score-level evaluator is not full image-to-output deployment.\\
+Clinical autonomy & Not established; no independent-site validation or patient-level risk certificate.\\
+Frozen MMRDR-UWF ResNet-50 & Official within-dataset test: 1,283/1,288 TP, 262/1,309 TN, five false-negative images; low specificity and no patient IDs.\\
+ConvNeXt-Tiny model result & 47.15\% (182/386) on exposed validation; test skipped and weights omitted.\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\section{Submission Readiness Note}
-This is a coherent research-report draft with explicit methods, results, negative findings, and a score-level replay auditor. A self-contained manuscript-only LaTeX upload archive is prepared; it intentionally excludes per-eye score and label files. The public aggregate-integrity check is not full row-level reproduction, and the optional score-level replay remains a separate rights-gated package. Before posting, the author must verify reference metadata and that dataset terms permit publication of the reported aggregate results, review the exact source and arXiv-generated preview/metadata, and personally complete arXiv's submission and license steps. Author contribution, affiliation/contact details, funding, competing interests, and other disclosures must be confirmed as factual where included. The exposed-cohort boundary must remain in the abstract and conclusion. The current evidence does not justify clinical deployment claims.
+\begin{thebibliography}{99}
 
-\begin{thebibliography}{20}
-\bibitem{gulshan2016} V. Gulshan et al., ``Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs,'' \emph{JAMA}, vol. 316, no. 22, pp. 2402--2410, 2016.
-\bibitem{ting2017} D. S. W. Ting et al., ``Development and validation of a deep learning system for diabetic retinopathy and related eye diseases using retinal images from multiethnic populations with diabetes,'' \emph{JAMA}, vol. 318, no. 22, pp. 2211--2223, 2017.
-\bibitem{abramoff2018} M. D. Abr\`amoff et al., ``Pivotal trial of an autonomous AI-based diagnostic system for detection of diabetic retinopathy in primary care offices,'' \emph{npj Digital Medicine}, vol. 1, art. no. 39, 2018.
-\bibitem{bellemo2019} V. Bellemo et al., ``Artificial intelligence using deep learning to screen for referable and vision-threatening diabetic retinopathy in Africa,'' \emph{The Lancet Digital Health}, vol. 1, no. 1, pp. e35--e44, 2019.
+\bibitem{cawley2010} G. C. Cawley and N. L. C. Talbot, ``On over-fitting in model selection and subsequent selection bias in performance evaluation,'' \emph{Journal of Machine Learning Research}, vol. 11, pp. 2079--2107, 2010.
+\bibitem{varma2006} S. Varma and R. Simon, ``Bias in error estimation when using cross-validation for model selection,'' \emph{BMC Bioinformatics}, vol. 7, art. no. 91, 2006, doi: 10.1186/1471-2105-7-91.
+\bibitem{jena2026} S. S. Jena and M. M. Rayguru, ``Beyond the model: Evaluating AI decision strategies for diabetic retinopathy screening under clinical constraints,'' \emph{Cureus}, vol. 18, no. 5, e108630, May 2026, doi: 10.7759/cureus.108630.
+\bibitem{sheng2026orderdr} Q. Sheng, Q. Dong, S. Wu, and W. Liang, ``ORDER-DR: External validation of severity grading and referable-risk stratification from fundus images,'' \emph{Frontiers in Endocrinology}, vol. 17, art. no. 1923216, 2026, doi: 10.3389/fendo.2026.1923216.
+\bibitem{gulshan2016} V. Gulshan et al., ``Development and validation of a deep learning algorithm for detection of diabetic retinopathy in retinal fundus photographs,'' \emph{JAMA}, vol. 316, no. 22, pp. 2402--2410, 2016, doi: 10.1001/jama.2016.17216.
+\bibitem{ting2017} D. S. W. Ting et al., ``Development and validation of a deep learning system for diabetic retinopathy and related eye diseases using retinal images from multiethnic populations with diabetes,'' \emph{JAMA}, vol. 318, no. 22, pp. 2211--2223, 2017, doi: 10.1001/jama.2017.18152.
+\bibitem{abramoff2018} M. D. Abr\`amoff et al., ``Pivotal trial of an autonomous AI-based diagnostic system for detection of diabetic retinopathy in primary care offices,'' \emph{npj Digital Medicine}, vol. 1, art. no. 39, 2018, doi: 10.1038/s41746-018-0040-6.
+\bibitem{bellemo2019} V. Bellemo et al., ``Artificial intelligence using deep learning to screen for referable and vision-threatening diabetic retinopathy in Africa: a clinical validation study,'' \emph{The Lancet Digital Health}, vol. 1, no. 1, pp. e35--e44, 2019, doi: 10.1016/S2589-7500(19)30004-4.
+\bibitem{ddr} T. Li et al., ``Diagnostic assessment of deep learning algorithms for diabetic retinopathy screening,'' \emph{Information Sciences}, vol. 501, pp. 511--522, 2019, doi: 10.1016/j.ins.2019.06.011.
 \bibitem{deepdrid} Y. Liu et al., ``DeepDRiD: Diabetic retinopathy-grading and image quality estimation challenge,'' \emph{Patterns}, vol. 3, no. 6, art. no. 100512, 2022, doi: 10.1016/j.patter.2022.100512.
-\bibitem{ddr} T. Li et al., ``Diagnostic assessment of deep learning algorithms for diabetic retinopathy screening,'' \emph{Information Sciences}, vol. 501, pp. 511--522, 2019.
+\bibitem{drtidpaper} J. Hou, J. Xu, F. Xiao, R.-W. Zhao, Y. Zhang, H. Zou, L. Lu, W. Xue, and R. Feng, ``Cross-field transformer for diabetic retinopathy grading on two-field fundus images,'' in \emph{Proc. 2022 IEEE Int. Conf. Bioinformatics Biomed. (BIBM)}, 2022, pp. 985--990; see also arXiv:2211.14552.
+\bibitem{wang2026approveddr} T.-W. Wang, W.-T. Luo, Y.-K. Tu, Y.-B. Chou, and Y.-T. Wu, Systematic review and meta-analysis of regulator-approved deep learning systems for fundus diabetic retinopathy detections, \emph{npj Digital Medicine}, vol. 9, art. no. 110, 2026, doi: 10.1038/s41746-025-02223-8.
+\bibitem{li2026uwf} L. Y. Li, V. Thambawita, S. Byberg, and A. Hulman, ``Assessing the generalisability of foundation models to ultra-wide field retinal imaging for diabetic retinopathy screening in Denmark and Greenland,'' \emph{International Journal of Medical Informatics}, vol. 217, art. no. 106503, 2026, doi: 10.1016/j.ijmedinf.2026.106503.
+\bibitem{li2026mbrset} L. Y. Li, B. Lebiecka-Johansen, S. Byberg, V. Thambawita, and A. Hulman, ``Comparison of foundation models and transfer learning strategies for diabetic retinopathy classification,'' medRxiv preprint, Apr. 2026, doi: 10.64898/2026.04.17.26351092.
+\bibitem{poyrazer2026frozen} M. Poyrazer, H. Ya\u{g}c\i, and R. Erten, ``How well do frozen foundation models transfer? A calibration-focused benchmark for diabetic retinopathy grading,'' \emph{Frontiers in Medicine}, vol. 13, art. no. 1815982, 2026, doi: 10.3389/fmed.2026.1815982.
+\bibitem{roberts2017} D. R. Roberts et al., ``Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure,'' \emph{Ecography}, vol. 40, no. 8, pp. 913--929, 2017, doi: 10.1111/ecog.02881.
+\bibitem{leeflang2008} M. M. G. Leeflang, K. G. M. Moons, J. B. Reitsma, and A. H. Zwinderman, ``Bias in sensitivity and specificity caused by data-driven selection of optimal cutoff values: mechanisms, magnitude, and solutions,'' \emph{Clinical Chemistry}, vol. 54, no. 4, pp. 729--737, 2008, doi: 10.1373/clinchem.2007.096032.
+\bibitem{westphal2024} M. Westphal and A. Zapf, ``Statistical inference for diagnostic test accuracy studies with multiple comparisons,'' \emph{Statistical Methods in Medical Research}, vol. 33, no. 4, pp. 669--680, 2024, doi: 10.1177/09622802241236933.
+\bibitem{yamanaka2026} H. Yamanaka, R. Nakaoka, and A. Shimizu, ``Performance bias due to test data reuse in post-market retraining of a bone scintigram diagnostic support system and its bias correction,'' \emph{Advanced Biomedical Engineering}, vol. 15, pp. 76--84, 2026, doi: 10.14326/abe.15.76.
 \bibitem{geifman2017} Y. Geifman and R. El-Yaniv, ``Selective classification for deep neural networks,'' in \emph{Advances in Neural Information Processing Systems}, 2017.
 \bibitem{selectivenet} Y. Geifman and R. El-Yaniv, ``SelectiveNet: A deep neural network with an integrated reject option,'' in \emph{Proceedings of the 36th International Conference on Machine Learning}, 2019, pp. 2151--2159.
 \bibitem{vovk2005} V. Vovk, A. Gammerman, and G. Shafer, \emph{Algorithmic Learning in a Random World}. Springer, 2005.
 \bibitem{angelopoulos2021} A. N. Angelopoulos and S. Bates, ``A gentle introduction to conformal prediction and distribution-free uncertainty quantification,'' arXiv:2107.07511, 2021.
 \bibitem{angelopoulos2024} A. N. Angelopoulos, S. Bates, E. J. Cand\`es, M. I. Jordan, and L. Lei, ``Learn then test: Calibrating predictive algorithms to achieve risk control,'' \emph{The Annals of Applied Statistics}, vol. 19, no. 2, pp. 1641--1662, 2025, doi: 10.1214/24-AOAS1998.
-\bibitem{tripodai} G. S. Collins et al., ``TRIPOD+AI statement: updated guidance for reporting clinical prediction models that use regression or machine learning methods,'' \emph{BMJ}, vol. 385, q902, 2024.
-\bibitem{claim} B. J. Mongan, L. Moy, and C. E. Kahn, ``Checklist for Artificial Intelligence in Medical Imaging (CLAIM): a guide for authors and reviewers,'' \emph{Radiology: Artificial Intelligence}, vol. 2, no. 2, e200029, 2020.
-\bibitem{clopperpearson} C. J. Clopper and E. S. Pearson, ``The use of confidence or fiducial limits illustrated in the case of the binomial,'' \emph{Biometrika}, vol. 26, no. 4, pp. 404--413, 1934.
-\bibitem{cawley2010} G. C. Cawley and N. L. C. Talbot, ``On over-fitting in model selection and subsequent selection bias in performance evaluation,'' \emph{Journal of Machine Learning Research}, vol. 11, pp. 2079--2107, 2010.
-\bibitem{varma2006} S. Varma and R. Simon, ``Bias in error estimation when using cross-validation for model selection,'' \emph{BMC Bioinformatics}, vol. 7, art. no. 91, 2006, doi: 10.1186/1471-2105-7-91.
-\bibitem{roberts2017} D. R. Roberts et al., ``Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure,'' \emph{Ecography}, vol. 40, no. 8, pp. 913--929, 2017, doi: 10.1111/ecog.02881.
-\bibitem{drtidpaper} ``Cross-field transformer for diabetic retinopathy grading on two-field fundus images,'' arXiv:2211.14552, 2022.
-\bibitem{idrid} P. Porwal et al., ``Indian Diabetic Retinopathy Image Dataset (IDRiD): A database for diabetic retinopathy screening research,'' \emph{Data}, vol. 3, no. 3, art. no. 25, 2018, doi: 10.3390/data3030025.
-\bibitem{mmrdr} Z. Tang et al., ``A multimodal retinal image dataset for diabetic retinopathy detection using foundation models,'' \emph{Scientific Data}, vol. 13, no. 1, art. no. 639, 2026, doi: 10.1038/s41597-026-07005-9.
-\bibitem{retfound} Y. Zhou et al., ``A foundation model for generalizable disease detection from retinal images,'' \emph{Nature}, vol. 622, pp. 156--163, 2023, doi: 10.1038/s41586-023-06555-x.
-\bibitem{galappaththige2024} C. J. Galappaththige, G. Kuruppu, and M. H. Khan, ``Generalizing to unseen domains in diabetic retinopathy classification,'' in \emph{Proc. IEEE/CVF Winter Conf. Applications of Computer Vision}, 2024, pp. 7685--7695.
+\bibitem{tripodai} G. S. Collins et al., ``TRIPOD+AI statement: updated guidance for reporting clinical prediction models that use regression or machine learning methods,'' \emph{BMJ}, vol. 385, e078378, 2024, doi: 10.1136/bmj-2023-078378.
+\bibitem{claim} B. J. Mongan, L. Moy, and C. E. Kahn, ``Checklist for Artificial Intelligence in Medical Imaging (CLAIM): a guide for authors and reviewers,'' \emph{Radiology: Artificial Intelligence}, vol. 2, no. 2, e200029, 2020, doi: 10.1148/ryai.2020200029.
 \bibitem{claim2024} A. S. Tejani et al., ``Checklist for Artificial Intelligence in Medical Imaging (CLAIM): 2024 update,'' \emph{Radiology: Artificial Intelligence}, vol. 6, no. 4, e240300, 2024, doi: 10.1148/ryai.240300.
+\bibitem{galappaththige2024} C. J. Galappaththige, G. Kuruppu, and M. H. Khan, ``Generalizing to unseen domains in diabetic retinopathy classification,'' in \emph{Proc. IEEE/CVF Winter Conf. Applications of Computer Vision}, 2024, pp. 7685--7695.
+\bibitem{mmrdr} Z. Tang et al., ``A multimodal retinal image dataset for diabetic retinopathy detection using foundation models,'' \emph{Scientific Data}, vol. 13, no. 1, art. no. 639, 2026, doi: 10.1038/s41597-026-07005-9.
+\bibitem{idrid} P. Porwal et al., ``Indian Diabetic Retinopathy Image Dataset (IDRiD): A database for diabetic retinopathy screening research,'' \emph{Data}, vol. 3, no. 3, art. no. 25, 2018, doi: 10.3390/data3030025.
+\bibitem{clopperpearson} C. J. Clopper and E. S. Pearson, ``The use of confidence or fiducial limits illustrated in the case of the binomial,'' \emph{Biometrika}, vol. 26, no. 4, pp. 404--413, 1934.
+\bibitem{retfound} Y. Zhou et al., ``A foundation model for generalizable disease detection from retinal images,'' \emph{Nature}, vol. 622, pp. 156--163, 2023, doi: 10.1038/s41586-023-06555-x.
+\bibitem{garciahidalgo2026} C. Garc\'ia-Hidalgo et al., ``Decomposing performance inflation in radiomics: factorial quantification of analytical leakage,'' \emph{European Journal of Radiology}, vol. 201, art. no. 112890, 2026, doi: 10.1016/j.ejrad.2026.112890.
 \end{thebibliography}
 \end{document}

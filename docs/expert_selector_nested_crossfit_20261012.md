@@ -29,6 +29,8 @@ observed misses in this report are not a guarantee.
 | Nested nonlinear selector (logistic, pairwise rank, shallow tree) | 196 / 385 | 50.91% | 1 | 100% |
 | Earlier full-cohort label-informed oracle union (not a model) | 293 / 385 | 76.10% | 0 | 100% |
 
+The table's retained pooled aggregates are in `results/expert_selector_nested_crossfit_20261012.json` (pairwise rank), `results/expert_selector_nested_crossfit_oof_threshold_20261012.json` (regularized blend, single-expert route, and OR route), `results/expert_selector_nested_crossfit_nonlinear_20261012.json` (nonlinear selector), and `results/expert_score_oracle_union_20261012.json` (label-informed oracle). The historical replay row comes from `results/deployable_exposed_baseline_7013_20261013_with_components/summary.json`. The single-expert and OR pooled counts are sums of the corresponding per-source aggregates in the cross-fitted threshold summary. Rows without a retained source for their exact aggregate are intentionally not included in the manuscript comparison.
+
 ## Final Simple-Blend Diagnostic
 
 After the nested selectors failed to recover the oracle complementarity, I

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,14 @@ import torch
 from torch.utils.data import DataLoader
 
 from .train_every_image_autonomy import FundusDataset, GradeReferableModel, metrics, predict
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def wilson_interval(successes: int, total: int, z: float = 1.959963984540054) -> tuple[float, float]:
@@ -42,6 +51,11 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--num-workers", type=int, default=2)
     parser.add_argument("--device", default="auto")
+    parser.add_argument(
+        "--resume-before-inference",
+        action="store_true",
+        help="Resume the same locked attempt only if inference never started and no result files exist.",
+    )
     args = parser.parse_args()
 
     with args.test_manifest.open("r", encoding="utf-8-sig", newline="") as handle:
@@ -53,11 +67,35 @@ def main() -> None:
         raise SystemExit("Checkpoint lacks the test-not-yet-evaluated marker; refusing to call this a one-shot test.")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     lock_path = args.output_dir / "OFFICIAL_TEST_EVALUATION_STARTED.lock"
+    input_record = {
+        "checkpoint": str(args.checkpoint.resolve()),
+        "checkpoint_sha256": sha256_file(args.checkpoint),
+        "test_manifest": str(args.test_manifest.resolve()),
+        "test_manifest_sha256": sha256_file(args.test_manifest),
+    }
     try:
         with lock_path.open("x", encoding="utf-8") as lock:
-            lock.write(json.dumps({"checkpoint": str(args.checkpoint.resolve()), "test_manifest": str(args.test_manifest.resolve())}) + "\n")
+            lock.write(json.dumps(input_record, sort_keys=True) + "\n")
     except FileExistsError as exc:
-        raise SystemExit(f"One-shot test was already started for this output directory: {lock_path}") from exc
+        inference_lock = args.output_dir / "INFERENCE_STARTED.lock"
+        result_paths = (args.output_dir / "test_predictions.csv", args.output_dir / "summary.json")
+        try:
+            prior_attempt = json.loads(lock_path.read_text(encoding="utf-8").splitlines()[0])
+        except (OSError, json.JSONDecodeError, IndexError) as read_exc:
+            raise SystemExit(f"Existing one-shot lock is unreadable; refusing to resume: {lock_path}") from read_exc
+        same_inputs = (
+            prior_attempt.get("checkpoint") == input_record["checkpoint"]
+            and prior_attempt.get("checkpoint_sha256") == input_record["checkpoint_sha256"]
+            and prior_attempt.get("test_manifest") == input_record["test_manifest"]
+            and prior_attempt.get("test_manifest_sha256") == input_record["test_manifest_sha256"]
+        )
+        if (
+            not args.resume_before_inference
+            or not same_inputs
+            or inference_lock.exists()
+            or any(path.exists() for path in result_paths)
+        ):
+            raise SystemExit(f"One-shot test was already started or cannot be safely resumed: {lock_path}") from exc
     device = torch.device(args.device) if args.device != "auto" else torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
     wrapper = GradeReferableModel(checkpoint["model_name"], checkpoint.get("args", {}).get("image_size", 224), pretrained=False)
     model = wrapper.model
@@ -65,6 +103,12 @@ def main() -> None:
     model.to(device)
     dataset = FundusDataset(rows, wrapper.eval_transform, Path.cwd())
     loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
+    inference_lock = args.output_dir / "INFERENCE_STARTED.lock"
+    try:
+        with inference_lock.open("x", encoding="utf-8") as marker:
+            marker.write("Inference began; this test attempt cannot be resumed.\n")
+    except FileExistsError as exc:
+        raise SystemExit(f"Inference-start marker already exists; refusing a second pass: {inference_lock}") from exc
     labels, grades, scores, ids = predict(model, loader, device)
     threshold = float(checkpoint["threshold"])
     result = metrics(labels, scores, threshold)

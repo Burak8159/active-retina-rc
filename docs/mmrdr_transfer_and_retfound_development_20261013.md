@@ -14,16 +14,17 @@ An initial filename join was audited and discarded as invalid. Its high referabl
 
 | Experiment | Validation result at zero observed misses | Interpretation |
 | --- | ---: | --- |
-| Frozen ResNet-50 UWF-only HGB, 224 px | 47/600 true negatives; 7.83% specificity; AUROC 0.900 | Same-encoder control |
-| Frozen ResNet-50 CFP+UWF HGB, 224 px | 18/600 true negatives; 3.00%; AUROC 0.891 | Naive source pooling harmed UWF validation performance |
-| RETFound-EyePACS direct probabilities, UWF | 26/600; 4.33%; AUROC 0.777 | Material domain shift from its EyePACS color-fundus task to MMRDR-UWF |
-| RETFound features + HGB | 1/600; 0.17%; AUROC 0.888 | No useful gain |
-| RETFound features + RBF-SVM | 60/600; 10.00%; AUROC 0.916 | Best single RETFound head |
-| RETFound features + logistic head | 63/600; 10.50%; AUROC 0.919 | Best single RETFound head by this zero-miss criterion |
-| Existing frozen ResNet+DINO HGB rank + 448-px fine-tuned ResNet rank | 202/600; 33.67%; AUROC 0.932 | Existing internal validation reference |
-| Reference + 25% RETFound logistic rank | 207/600; 34.50%; AUROC 0.940 | Small same-validation gain only; five extra negatives cleared |
+| ResNet-50 cached UWF head | 123/600; 20.50% specificity | Retained summary: `results/mmrdr_uwf_cached_head_20261013/summary.json` |
+| DINO frozen UWF head | 148/600; 24.67% | Retained summary: `results/mmrdr_uwf_dino_head_dev_20261013/summary.json` |
+| DINO hard-head UWF candidate | 86/600; 14.33% | Retained summary: `results/mmrdr_uwf_dino_hardhead_dev_20261013/summary.json` |
+| ResNet/DINO feature stack + HGB | 151/600; 25.17% | Retained summary: `results/mmrdr_embedding_heads_20261013/summary.json` |
+| RETFound-EyePACS features + HGB | 1/600; 0.17% | Retained summary: `results/mmrdr_uwf_retfound_eyepacs_heads_20261013/summary.json` |
+| RETFound-EyePACS features + RBF-SVM | 60/600; 10.00% | Same retained head-summary file |
+| RETFound-EyePACS features + logistic head | 63/600; 10.50% | Same retained head-summary file |
+| Internal reference rank fusion | 202/600; 33.67% | Retained summary: `results/mmrdr_retfound_fusion_20261013/summary.json` |
+| Reference + 25% RETFound logistic rank | 207/600; 34.50% | Same retained fusion summary; five extra negatives cleared on the reused validation set |
 
-All rows use 572 referable and 600 nonreferable UWF validation images, with referable defined as grade >= 2. The threshold is the minimum positive validation score, so zero misses are guaranteed on these same validation observations by construction. Model choice, fusion weights, and threshold selection reused this validation set; the figures are optimistic diagnostics, not a certificate or an unbiased estimate of future performance.
+All rows use the same 572 referable and 600 nonreferable UWF validation images, with referable defined as grade >= 2. The retained aggregate summaries are the source of the values above. The threshold is the minimum positive validation score, so zero misses are guaranteed on these same validation observations by construction. Model choice, fusion weights, and threshold selection reused this validation set; the figures are optimistic diagnostics, not a certificate or an unbiased estimate of future performance. Earlier values in the first draft of this table (including 47/600 for a ResNet row) were not traceable to the retained summary files and are superseded here; they are not used as results.
 
 ### MMRDR-initialized all-source fine-tuning diagnostic
 

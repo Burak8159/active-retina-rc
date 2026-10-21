@@ -53,7 +53,41 @@
       "observed": 2
     }
   },
-  "scope": "checks arithmetic consistency of tracked summary files only; does not execute the policy or validate underlying row-level data",
+  "mmrdr_aggregate_audit": {
+    "official_test": {
+      "clinical_certification": false,
+      "false_negative": 5,
+      "false_positive": 1047,
+      "rows": 2597,
+      "sensitivity_wilson_95ci": [
+        0.9909447401432485,
+        0.9983407416578001
+      ],
+      "specificity": 0.2001527883880825,
+      "specificity_wilson_95ci": [
+        0.17936894466398606,
+        0.22269137669031225
+      ],
+      "true_negative": 262,
+      "true_positive": 1283
+    },
+    "scope": "cross-checks tracked aggregate history, trace, run-card metrics, arithmetic, and hashes; does not run image inference, verify patient-level independence, or establish clinical validation",
+    "sha256": {
+      "run_card": "94f2c0d9094ba58a146d826bfbb5e21fd0347b0ea666f8110a3b1ef014a2ca11",
+      "validation_summary": "7d72d5024931086b94598c5fe0d0f5cabc6f5cd456dcd7097c3468552a852f11",
+      "validation_trace": "89c2a5d02f812f9bf0dcf14dc14224efaa47f862e55e7756c1d89d5685e213b1"
+    },
+    "status": "PASS_MMRDR_AGGREGATE_AND_TRACE_INTEGRITY_NOT_INFERENCE_REPRODUCTION",
+    "validation": {
+      "epochs": 26,
+      "selected_epoch": 20,
+      "selected_nonreferable": 600,
+      "selected_true_negative": 123,
+      "specificity": 0.205,
+      "zero_miss_epochs": 26
+    }
+  },
+  "scope": "checks tracked aggregate summaries and the MMRDR run-card/trace for internal consistency; does not execute the score policy, run image inference, validate row-level inputs, or establish independent clinical performance",
   "sha256": {
     "candidate_transfer": "bdd7e59ad0084b55d818560c5b80c5f3ea7ef442d96f95c6c3ea4907027bd047",
     "crossfit": "fbbfc36e842d0199cb6a4b9949d7e25fafa25c481eeaf86f88fb5daa192cfc23",
