@@ -1,0 +1,893 @@
+{
+  "status": "SCOPED_DEVELOPMENT_ONLY_NOT_CLINICAL_VALIDATION",
+  "test_metrics": {
+    "ddr_hf_specificity300": {
+      "ungradable": {
+        "n_samples": 608,
+        "n_unique_patient_ids": 608,
+        "patient_ids_verified": false,
+        "accuracy_at_0_5": 0.9819078947368421,
+        "auroc": 0.9983654577527472,
+        "sensitivity_at_0_5": 0.9457364341085271,
+        "specificity_at_0_5": 0.9916492693110647,
+        "confusion_matrix": [
+          [
+            475,
+            4
+          ],
+          [
+            7,
+            122
+          ]
+        ]
+      },
+      "dr_grade_0_to_4": {
+        "n_samples": 479,
+        "n_unique_patient_ids": 479,
+        "patient_ids_verified": false,
+        "accuracy": 0.6910229645093946,
+        "macro_recall": 0.6881246838025297,
+        "labels_present": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "referable_dr_binary_grade_ge_2": {
+        "n_samples": 479,
+        "positive": 259,
+        "accuracy_at_0_5": 0.8893528183716075,
+        "auroc": 0.9613022113022113,
+        "patient_ids_verified": false,
+        "threshold": 0.5
+      }
+    },
+    "deepdrid": {
+      "dr_grade_0_to_4": {
+        "n_samples": 212,
+        "n_unique_patient_ids": 53,
+        "patient_ids_verified": true,
+        "accuracy": 0.7641509433962265,
+        "macro_recall": 0.602579365079365,
+        "labels_present": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "referable_dr_binary_grade_ge_2": {
+        "n_samples": 212,
+        "positive": 84,
+        "accuracy_at_0_5": 0.9009433962264151,
+        "auroc": 0.9640997023809523,
+        "patient_ids_verified": true,
+        "threshold": 0.5
+      }
+    },
+    "drtid_paired": {
+      "dr_grade_0_to_4": {
+        "n_samples": 434,
+        "n_unique_patient_ids": 217,
+        "patient_ids_verified": true,
+        "accuracy": 0.6566820276497696,
+        "macro_recall": 0.47425629290617843,
+        "labels_present": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "referable_dr_binary_grade_ge_2": {
+        "n_samples": 434,
+        "positive": 164,
+        "accuracy_at_0_5": 0.8294930875576036,
+        "auroc": 0.8916666666666667,
+        "patient_ids_verified": true,
+        "threshold": 0.5
+      }
+    },
+    "hygd_v1_1_0": {
+      "glaucoma": {
+        "n_samples": 112,
+        "n_unique_patient_ids": 43,
+        "patient_ids_verified": true,
+        "accuracy_at_0_5": 0.9821428571428571,
+        "auroc": 0.998828125,
+        "sensitivity_at_0_5": 0.9875,
+        "specificity_at_0_5": 0.96875,
+        "confusion_matrix": [
+          [
+            31,
+            1
+          ],
+          [
+            1,
+            79
+          ]
+        ]
+      }
+    }
+  },
+  "best_epoch": 1,
+  "split_manifest_sha256": "c47fa3e3871d178e6d8e9d32966e940a3d7ef865d70dfb48af9c90fa66f47974",
+  "duplicate_audit": {
+    "unique_sha256_images": 9661,
+    "cross_split_duplicate_groups": 6,
+    "conflicting_label_groups_quarantined": 0,
+    "rows_removed": 13,
+    "same_source_repeat_rows_removed": 7,
+    "rows_before": 9674,
+    "rows_after": 9661
+  },
+  "elapsed_seconds": 1304.606731891632,
+  "time_limit_reached": false,
+  "max_seconds": 5400,
+  "trained_heads": [
+    "dr_grade_0_4",
+    "ungradable",
+    "hygd_gon"
+  ],
+  "not_trained_heads": [
+    "mmrdr_7_lesions"
+  ],
+  "global_any_disease_binary": "NOT_TRAINED_INVALID_WITH_PARTIAL_SOURCE_LABELS",
+  "label_scope": "Each head is scored only where its source supplied that label; HYGD split is patient-disjoint. Existing data were previously inspected/exposed.",
+  "history": [
+    {
+      "epoch": 1,
+      "validation_loss": 0.4226789321050333,
+      "adaptive_task_weights": {
+        "dr": 1.0019758939743042,
+        "gon": 1.0021100044250488,
+        "lesion": 1.0,
+        "quality": 1.0020935535430908
+      },
+      "validation_metrics": {
+        "ddr_hf_specificity300": {
+          "ungradable": {
+            "n_samples": 625,
+            "n_unique_patient_ids": 625,
+            "patient_ids_verified": false,
+            "accuracy_at_0_5": 0.9776,
+            "auroc": 0.996423986796259,
+            "sensitivity_at_0_5": 0.9548872180451128,
+            "specificity_at_0_5": 0.983739837398374,
+            "confusion_matrix": [
+              [
+                484,
+                8
+              ],
+              [
+                6,
+                127
+              ]
+            ]
+          },
+          "dr_grade_0_to_4": {
+            "n_samples": 492,
+            "n_unique_patient_ids": 492,
+            "patient_ids_verified": false,
+            "accuracy": 0.6808943089430894,
+            "macro_recall": 0.6423832380135049,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 492,
+            "positive": 286,
+            "accuracy_at_0_5": 0.8841463414634146,
+            "auroc": 0.955733586801548,
+            "patient_ids_verified": false,
+            "threshold": 0.5
+          }
+        },
+        "deepdrid": {
+          "dr_grade_0_to_4": {
+            "n_samples": 253,
+            "n_unique_patient_ids": 64,
+            "patient_ids_verified": true,
+            "accuracy": 0.6877470355731226,
+            "macro_recall": 0.5879615557320991,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 253,
+            "positive": 88,
+            "accuracy_at_0_5": 0.8656126482213439,
+            "auroc": 0.9510330578512397,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "drtid_paired": {
+          "dr_grade_0_to_4": {
+            "n_samples": 500,
+            "n_unique_patient_ids": 250,
+            "patient_ids_verified": true,
+            "accuracy": 0.656,
+            "macro_recall": 0.5064492007453173,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 500,
+            "positive": 246,
+            "accuracy_at_0_5": 0.834,
+            "auroc": 0.9158824659112733,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "hygd_v1_1_0": {
+          "glaucoma": {
+            "n_samples": 94,
+            "n_unique_patient_ids": 42,
+            "patient_ids_verified": true,
+            "accuracy_at_0_5": 0.9148936170212766,
+            "auroc": 0.9436152570480929,
+            "sensitivity_at_0_5": 0.9552238805970149,
+            "specificity_at_0_5": 0.8148148148148148,
+            "confusion_matrix": [
+              [
+                22,
+                5
+              ],
+              [
+                3,
+                64
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "epoch": 2,
+      "validation_loss": 0.436670854158214,
+      "adaptive_task_weights": {
+        "dr": 1.0041340589523315,
+        "gon": 1.004211664199829,
+        "lesion": 1.0,
+        "quality": 1.0042414665222168
+      },
+      "validation_metrics": {
+        "ddr_hf_specificity300": {
+          "ungradable": {
+            "n_samples": 625,
+            "n_unique_patient_ids": 625,
+            "patient_ids_verified": false,
+            "accuracy_at_0_5": 0.9776,
+            "auroc": 0.9962558836114677,
+            "sensitivity_at_0_5": 0.9548872180451128,
+            "specificity_at_0_5": 0.983739837398374,
+            "confusion_matrix": [
+              [
+                484,
+                8
+              ],
+              [
+                6,
+                127
+              ]
+            ]
+          },
+          "dr_grade_0_to_4": {
+            "n_samples": 492,
+            "n_unique_patient_ids": 492,
+            "patient_ids_verified": false,
+            "accuracy": 0.6829268292682927,
+            "macro_recall": 0.6652740476896448,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 492,
+            "positive": 286,
+            "accuracy_at_0_5": 0.8841463414634146,
+            "auroc": 0.95485097426845,
+            "patient_ids_verified": false,
+            "threshold": 0.5
+          }
+        },
+        "deepdrid": {
+          "dr_grade_0_to_4": {
+            "n_samples": 253,
+            "n_unique_patient_ids": 64,
+            "patient_ids_verified": true,
+            "accuracy": 0.6798418972332015,
+            "macro_recall": 0.6276350146635284,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 253,
+            "positive": 88,
+            "accuracy_at_0_5": 0.8616600790513834,
+            "auroc": 0.9547520661157025,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "drtid_paired": {
+          "dr_grade_0_to_4": {
+            "n_samples": 500,
+            "n_unique_patient_ids": 250,
+            "patient_ids_verified": true,
+            "accuracy": 0.642,
+            "macro_recall": 0.5162493870746299,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 500,
+            "positive": 246,
+            "accuracy_at_0_5": 0.838,
+            "auroc": 0.9127616669867487,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "hygd_v1_1_0": {
+          "glaucoma": {
+            "n_samples": 94,
+            "n_unique_patient_ids": 42,
+            "patient_ids_verified": true,
+            "accuracy_at_0_5": 0.9148936170212766,
+            "auroc": 0.9449972360420121,
+            "sensitivity_at_0_5": 0.9552238805970149,
+            "specificity_at_0_5": 0.8148148148148148,
+            "confusion_matrix": [
+              [
+                22,
+                5
+              ],
+              [
+                3,
+                64
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "epoch": 3,
+      "validation_loss": 0.425932918009894,
+      "adaptive_task_weights": {
+        "dr": 1.0064167976379395,
+        "gon": 1.006359577178955,
+        "lesion": 1.0,
+        "quality": 1.0063494443893433
+      },
+      "validation_metrics": {
+        "ddr_hf_specificity300": {
+          "ungradable": {
+            "n_samples": 625,
+            "n_unique_patient_ids": 625,
+            "patient_ids_verified": false,
+            "accuracy_at_0_5": 0.9744,
+            "auroc": 0.9963628583654257,
+            "sensitivity_at_0_5": 0.9398496240601504,
+            "specificity_at_0_5": 0.983739837398374,
+            "confusion_matrix": [
+              [
+                484,
+                8
+              ],
+              [
+                8,
+                125
+              ]
+            ]
+          },
+          "dr_grade_0_to_4": {
+            "n_samples": 492,
+            "n_unique_patient_ids": 492,
+            "patient_ids_verified": false,
+            "accuracy": 0.6890243902439024,
+            "macro_recall": 0.6585237948016115,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 492,
+            "positive": 286,
+            "accuracy_at_0_5": 0.8882113821138211,
+            "auroc": 0.9579231448163487,
+            "patient_ids_verified": false,
+            "threshold": 0.5
+          }
+        },
+        "deepdrid": {
+          "dr_grade_0_to_4": {
+            "n_samples": 253,
+            "n_unique_patient_ids": 64,
+            "patient_ids_verified": true,
+            "accuracy": 0.691699604743083,
+            "macro_recall": 0.5995516233504559,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 253,
+            "positive": 88,
+            "accuracy_at_0_5": 0.8695652173913043,
+            "auroc": 0.9532369146005509,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "drtid_paired": {
+          "dr_grade_0_to_4": {
+            "n_samples": 500,
+            "n_unique_patient_ids": 250,
+            "patient_ids_verified": true,
+            "accuracy": 0.656,
+            "macro_recall": 0.5162359027164853,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 500,
+            "positive": 246,
+            "accuracy_at_0_5": 0.838,
+            "auroc": 0.9154183470968568,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "hygd_v1_1_0": {
+          "glaucoma": {
+            "n_samples": 94,
+            "n_unique_patient_ids": 42,
+            "patient_ids_verified": true,
+            "accuracy_at_0_5": 0.9042553191489362,
+            "auroc": 0.9463792150359315,
+            "sensitivity_at_0_5": 0.9402985074626866,
+            "specificity_at_0_5": 0.8148148148148148,
+            "confusion_matrix": [
+              [
+                22,
+                5
+              ],
+              [
+                4,
+                63
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "epoch": 4,
+      "validation_loss": 0.4311973683391796,
+      "adaptive_task_weights": {
+        "dr": 1.0079915523529053,
+        "gon": 1.0084733963012695,
+        "lesion": 1.0,
+        "quality": 1.0084236860275269
+      },
+      "validation_metrics": {
+        "ddr_hf_specificity300": {
+          "ungradable": {
+            "n_samples": 625,
+            "n_unique_patient_ids": 625,
+            "patient_ids_verified": false,
+            "accuracy_at_0_5": 0.9712,
+            "auroc": 0.9969588605660493,
+            "sensitivity_at_0_5": 0.9097744360902256,
+            "specificity_at_0_5": 0.9878048780487805,
+            "confusion_matrix": [
+              [
+                486,
+                6
+              ],
+              [
+                12,
+                121
+              ]
+            ]
+          },
+          "dr_grade_0_to_4": {
+            "n_samples": 492,
+            "n_unique_patient_ids": 492,
+            "patient_ids_verified": false,
+            "accuracy": 0.709349593495935,
+            "macro_recall": 0.6725137232509754,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 492,
+            "positive": 286,
+            "accuracy_at_0_5": 0.8841463414634146,
+            "auroc": 0.9566161993346459,
+            "patient_ids_verified": false,
+            "threshold": 0.5
+          }
+        },
+        "deepdrid": {
+          "dr_grade_0_to_4": {
+            "n_samples": 253,
+            "n_unique_patient_ids": 64,
+            "patient_ids_verified": true,
+            "accuracy": 0.691699604743083,
+            "macro_recall": 0.6171883403978151,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 253,
+            "positive": 88,
+            "accuracy_at_0_5": 0.8695652173913043,
+            "auroc": 0.9525482093663912,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "drtid_paired": {
+          "dr_grade_0_to_4": {
+            "n_samples": 500,
+            "n_unique_patient_ids": 250,
+            "patient_ids_verified": true,
+            "accuracy": 0.646,
+            "macro_recall": 0.501513680494263,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 500,
+            "positive": 246,
+            "accuracy_at_0_5": 0.836,
+            "auroc": 0.9124255809487228,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "hygd_v1_1_0": {
+          "glaucoma": {
+            "n_samples": 94,
+            "n_unique_patient_ids": 42,
+            "patient_ids_verified": true,
+            "accuracy_at_0_5": 0.9148936170212766,
+            "auroc": 0.9419568822553898,
+            "sensitivity_at_0_5": 0.9552238805970149,
+            "specificity_at_0_5": 0.8148148148148148,
+            "confusion_matrix": [
+              [
+                22,
+                5
+              ],
+              [
+                3,
+                64
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "epoch": 5,
+      "validation_loss": 0.43306749025670505,
+      "adaptive_task_weights": {
+        "dr": 1.0098880529403687,
+        "gon": 1.0106087923049927,
+        "lesion": 1.0,
+        "quality": 1.010548710823059
+      },
+      "validation_metrics": {
+        "ddr_hf_specificity300": {
+          "ungradable": {
+            "n_samples": 625,
+            "n_unique_patient_ids": 625,
+            "patient_ids_verified": false,
+            "accuracy_at_0_5": 0.9744,
+            "auroc": 0.996897732135216,
+            "sensitivity_at_0_5": 0.9473684210526315,
+            "specificity_at_0_5": 0.9817073170731707,
+            "confusion_matrix": [
+              [
+                483,
+                9
+              ],
+              [
+                7,
+                126
+              ]
+            ]
+          },
+          "dr_grade_0_to_4": {
+            "n_samples": 492,
+            "n_unique_patient_ids": 492,
+            "patient_ids_verified": false,
+            "accuracy": 0.7113821138211383,
+            "macro_recall": 0.6915382546672946,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 492,
+            "positive": 286,
+            "accuracy_at_0_5": 0.8882113821138211,
+            "auroc": 0.95768551836513,
+            "patient_ids_verified": false,
+            "threshold": 0.5
+          }
+        },
+        "deepdrid": {
+          "dr_grade_0_to_4": {
+            "n_samples": 253,
+            "n_unique_patient_ids": 64,
+            "patient_ids_verified": true,
+            "accuracy": 0.6877470355731226,
+            "macro_recall": 0.6186094813732892,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 253,
+            "positive": 88,
+            "accuracy_at_0_5": 0.8774703557312253,
+            "auroc": 0.9554407713498623,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "drtid_paired": {
+          "dr_grade_0_to_4": {
+            "n_samples": 500,
+            "n_unique_patient_ids": 250,
+            "patient_ids_verified": true,
+            "accuracy": 0.626,
+            "macro_recall": 0.503619937236442,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 500,
+            "positive": 246,
+            "accuracy_at_0_5": 0.844,
+            "auroc": 0.9135618718391908,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "hygd_v1_1_0": {
+          "glaucoma": {
+            "n_samples": 94,
+            "n_unique_patient_ids": 42,
+            "patient_ids_verified": true,
+            "accuracy_at_0_5": 0.9148936170212766,
+            "auroc": 0.9485903814262023,
+            "sensitivity_at_0_5": 0.9552238805970149,
+            "specificity_at_0_5": 0.8148148148148148,
+            "confusion_matrix": [
+              [
+                22,
+                5
+              ],
+              [
+                3,
+                64
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "epoch": 6,
+      "validation_loss": 0.4447224411752273,
+      "adaptive_task_weights": {
+        "dr": 1.0118128061294556,
+        "gon": 1.0127544403076172,
+        "lesion": 1.0,
+        "quality": 1.0126782655715942
+      },
+      "validation_metrics": {
+        "ddr_hf_specificity300": {
+          "ungradable": {
+            "n_samples": 625,
+            "n_unique_patient_ids": 625,
+            "patient_ids_verified": false,
+            "accuracy_at_0_5": 0.9728,
+            "auroc": 0.9964010636346965,
+            "sensitivity_at_0_5": 0.9398496240601504,
+            "specificity_at_0_5": 0.9817073170731707,
+            "confusion_matrix": [
+              [
+                483,
+                9
+              ],
+              [
+                8,
+                125
+              ]
+            ]
+          },
+          "dr_grade_0_to_4": {
+            "n_samples": 492,
+            "n_unique_patient_ids": 492,
+            "patient_ids_verified": false,
+            "accuracy": 0.7195121951219512,
+            "macro_recall": 0.6825425832798355,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 492,
+            "positive": 286,
+            "accuracy_at_0_5": 0.8882113821138211,
+            "auroc": 0.9591282503903863,
+            "patient_ids_verified": false,
+            "threshold": 0.5
+          }
+        },
+        "deepdrid": {
+          "dr_grade_0_to_4": {
+            "n_samples": 253,
+            "n_unique_patient_ids": 64,
+            "patient_ids_verified": true,
+            "accuracy": 0.6956521739130435,
+            "macro_recall": 0.6387775486001799,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 253,
+            "positive": 88,
+            "accuracy_at_0_5": 0.8656126482213439,
+            "auroc": 0.9550275482093664,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "drtid_paired": {
+          "dr_grade_0_to_4": {
+            "n_samples": 500,
+            "n_unique_patient_ids": 250,
+            "patient_ids_verified": true,
+            "accuracy": 0.644,
+            "macro_recall": 0.5027704226733353,
+            "labels_present": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "referable_dr_binary_grade_ge_2": {
+            "n_samples": 500,
+            "positive": 246,
+            "accuracy_at_0_5": 0.834,
+            "auroc": 0.9154343511939056,
+            "patient_ids_verified": true,
+            "threshold": 0.5
+          }
+        },
+        "hygd_v1_1_0": {
+          "glaucoma": {
+            "n_samples": 94,
+            "n_unique_patient_ids": 42,
+            "patient_ids_verified": true,
+            "accuracy_at_0_5": 0.9148936170212766,
+            "auroc": 0.94914317302377,
+            "sensitivity_at_0_5": 0.9552238805970149,
+            "specificity_at_0_5": 0.8148148148148148,
+            "confusion_matrix": [
+              [
+                22,
+                5
+              ],
+              [
+                3,
+                64
+              ]
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "adaptive_task_weights": {
+    "dr": 1.0118128061294556,
+    "gon": 1.0127544403076172,
+    "lesion": 1.0,
+    "quality": 1.0126782655715942
+  }
+}
