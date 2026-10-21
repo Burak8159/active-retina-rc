@@ -1,206 +1,111 @@
-# ActiveRetina Flagship Paper
+# Golden Horn 8159: Accessible Retinal Health Impact Project
+
+**ActiveRetina** is the software project of Golden Horn 8159's effort to make
+retinal-image analysis more accessible. The long-term aim is to support earlier
+recognition of retinal disease in communities with limited access to eye-care
+services, while keeping clinicians and patients at the center of care.
+
+This repository contains working image-analysis prototypes, a local scan
+interface, and the engineering and evaluation tools used to improve them. It is
+an impact-driven development project, not only a paper repository.
+
+## The Need
+
+Many retinal conditions can threaten sight, and access to timely specialist
+assessment is uneven. Fundus photography can make retinal images easier to
+capture and review, but an AI result is only useful when its limits are
+understood and the surrounding care pathway is reliable. ActiveRetina explores
+software that can help organize and interpret retinal images as one part of a
+future, clinician-led screening workflow.
+
+## What Works Today
+
+- A local browser interface accepts a fundus image and returns separate
+  research-model outputs for the conditions represented in the RFMiD label set.
+- A JSON API exposes the same inference workflow for software integration.
+- A separate diabetic-retinopathy workflow supports paired-image case review,
+  image-quality handling, and an auditable case report.
+- The software records model and input provenance where supported by each
+  workflow, and the research station processes uploaded images in memory rather
+  than saving them.
+
+The multi-disease RFMiD prototype uses a fine-tuned ConvNeXt-Tiny model. Its
+held-out RFMiD image-split results included a macro AUROC of 0.894 across 36
+label heads with both classes represented in that split. For the dataset's
+overall `Disease_Risk` label, accuracy was 92.7%, sensitivity 92.9%, and
+specificity 91.8% at the development threshold. These are retrospective
+dataset-split measurements, not evidence of performance in a clinic or on new
+populations. The split's patient-level independence has not been verified.
+
+## Try the Local Research Interface
+
+The RFMiD checkpoint is a local model artifact and is not distributed in this
+repository. After obtaining the project environment and placing the checkpoint
+at `models/rfmid_convnext_tiny_multilabel_20261021.pt`, start the station:
+
+```bash
+PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.rfmid_multidisease_station
+```
+
+Open [http://127.0.0.1:8767](http://127.0.0.1:8767). The page is bound to the
+local computer only. It accepts JPEG, PNG, and WebP images up to 16 MB. The
+JSON endpoint is `POST /api/predict`; see
+[`docs/rfmid_multidisease_ui_api.md`](docs/rfmid_multidisease_ui_api.md) for the
+request and response details.
+
+For the separate DR case workflow and browser station, see
+[`docs/api_contract.md`](docs/api_contract.md) and
+[`docs/hardware_enclosure_clinical_station.md`](docs/hardware_enclosure_clinical_station.md).
+
+## Responsible Use
+
+**Research prototype only.** The model outputs are not diagnoses and must not
+be used to decide that a person is healthy, defer care, or initiate treatment.
+The models have documented errors and have not been clinically validated. A
+positive, negative, or ungradable result requires appropriate professional
+review; out-of-scope diseases and image types may not be detected.
+
+The current RFMiD model is evaluated retrospectively on an image-level split.
+Patient-level separation, external-site performance, calibration for clinical
+use, prospective workflow benefit, and safety have not been established. The
+separate DR score-policy replay figures in this repository are development
+references, not raw-image model accuracy or independent clinical validation.
+
+## Impact Path
+
+1. Build accessible, understandable software for retinal-image review.
+2. Improve disease-specific models using properly labeled and permissioned
+   data, while reporting each condition separately.
+3. Validate performance on patient-disjoint and independent clinical cohorts
+   with qualified reference grading.
+4. Work with eye-care professionals and community partners to assess whether
+   the technology can support a safe, useful screening pathway.
+
+The goal is meaningful access and better-informed care, not replacing eye-care
+professionals or promising perfect automated diagnosis.
+
+## Development
+
+Install dependencies in a project environment, then run the test suite:
+
+```bash
+PYTHONPATH=src .venv-active-retina/bin/python -m pytest -q
+```
+
+Key areas:
+
+- `src/active_retina/`: image models, inference services, and workflow software
+- `docs/`: product, data, validation, and API documentation
+- `configs/`: model and evaluation configurations
+- `tests/`: software and evidence-integrity tests
+- `paper/`: research manuscripts and reproducibility material
 
-Status: `GO_CLINICIAN_REVIEWED_COMPUTATIONAL_PRODUCT`
+Dataset images, model checkpoints, and row-level prediction exports are not
+included by default. Check each dataset's terms before acquiring, using, or
+redistributing data or derived artifacts.
 
-Autonomous status:
-`CONDITIONAL_GO_AUTONOMOUS_DIAGNOSIS_AFTER_UNTOUCHED_CERTIFICATION`.
+## Contact and Collaboration
 
-Software product status:
-`GO_CLINICIAN_REVIEWED_COMPUTATIONAL_PRODUCT`.
-The repository now includes a locked model artifact, fail-closed clinical
-gateway, real image case runner, local browser station, audit hashes, JSON
-API, HTML clinician report, and hardware-enclosure runbook. This is
-product-grade workflow software for supervised clinical review, not autonomous
-diagnosis.
-
-The current evidence package supports a transparent arXiv benchmark/methods
-preprint. It is not a clinical deployment claim. IEEE journal submission remains
-conditional on a stronger DeepDRiD-only finite-sample risk-control path. See
-`docs/flagship_evidence_layer.md`.
-
-The frozen autonomous candidate is computation-ready. The final autonomous
-claim is controlled by one command:
-
-`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.run_untouched_certification_package --cohort-kind mbrset --labels external/mBRSET/<metadata-file>.csv --image-root external/mBRSET/<image-folder> --attestation configs/untouched_attestation_template.json --output-dir results/mbrset_untouched_certification`
-
-Only `GO_FULL_AUTONOMOUS_COMPUTATIONAL_CERTIFICATE` upgrades the project to
-autonomous-certified. See `docs/full_autonomous_certification_runbook.md`.
-
-Prior policy results are exploratory and uncertified; the original test holdout
-has been exposed. See `docs/evidence_integrity_audit.md`. Corrected development
-runs use training patients only and exclude test evaluation by default.
-
-## Frozen 70.13% Development Reference
-
-The project's preserved high-water reference is **270/385 = 70.13% specificity**, with zero observed referable misses, zero ungradable clearances, and a binary action assigned to all 981 supplied score records. Its immutable ID is
-`active-retina-pooled-development-70.13-20261012`.
-
-Canonical freeze record: `results/frozen_development_reference_70_13_20261012.json`.
-Reproduced aggregate: `results/deployable_exposed_baseline_7013_20261013/summary.json`.
-Replay policy: `configs/research_baselines/70_13_exposed_policy.json`.
-Evidence boundary and grouped comparisons: `docs/deployable_baseline_7013_status_20261013.md`.
-
-This is a repeatedly inspected, same-cohort score-level development replay,
-not independent validation or a raw-image diagnostic model. The 100% figure is
-action assignment for supplied score rows, not end-to-end input coverage. Keep
-this reference unchanged; any modified data, policy, cutoff, or evaluation
-cohort must receive a distinct candidate ID and result record.
-
-This folder contains the reproducible scaffold for the upgraded ActiveRetina flagship paper:
-
-**Risk-Controlled Adaptive Retinal Imaging for Diabetic Retinopathy Screening**
-
-Current evidence summary: the dependency-light executable baseline and the frozen ImageNet-pretrained ResNet-50 feature baseline have both run end to end on DeepDRiD. The flagship evidence layer now gives paired-view discrimination evidence, risk-coverage-cost baselines, patient-cluster bootstrap uncertainty, mapping sensitivity, mechanism diagnostics, generated figures, a machine-readable GO decision for a benchmark preprint, and an exact finite-sample calibration risk audit. The study remains limited by unresolved DeepDRiD suffix-to-field mapping, exposed historical test data, small validation size, and missing five-class prediction outputs. See `docs/flagship_evidence_layer.md`.
-
-The project no longer waits for request-only datasets. The flagship contribution is now safety-first paired-view adaptive imaging:
-
-- decide when one retinal image is enough,
-- decide when another retinal view is medically useful,
-- defer when the model cannot satisfy a target missed-referable-DR risk level,
-- report acquisition savings only at calibrated, patient-level operating points.
-
-## Research Baseline Profiles
-
-The inspected 70.13 score-policy replay and the 63.12 post-hoc cohort
-diagnostic are available as separate, explicitly nonclinical profiles. Start
-the local research API with:
-
-`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.baseline_profiles --serve --host 127.0.0.1 --port 8766`
-
-The 70.13 endpoint requires precomputed component scores; this is not raw-image
-inference. The 63.12 endpoint serves only its cohort diagnostic and rejects
-new-case scoring. See `docs/deployable_baseline_7013_status_20261013.md` for
-the distinction and request format.
-
-## Clinical Workflow Software
-
-### RFMiD Multi-Disease Research UI/API
-
-The ConvNeXt-Tiny multi-label research station returns separate model flags for
-RFMiD's disease labels and its dataset-specific `Disease_Risk` target. It is
-distinct from the DR-only workflow below and is **not clinically validated**.
-It processes uploads in memory without saving the image and binds to localhost
-only. The checkpoint is an ignored local artifact and is not included in the
-public repository.
-
-Start it with:
-
-`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.rfmid_multidisease_station`
-
-Open `http://127.0.0.1:8767`. The multipart JSON API is `POST /api/predict`;
-details are in `docs/rfmid_multidisease_ui_api.md`.
-
-Train the locked software artifact:
-
-`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.train_clinical_artifact`
-
-Run the fail-closed clinical gateway:
-
-`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.clinical_gateway --input configs/clinical_gateway_example.json --output results/clinical_gateway_example_output.json`
-
-Run a real paired-image case through the product workflow:
-
-`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.clinical_case_runner --case-id DEMO-IMG-001 --first-image external/DeepDRiD_v1_1/deepdrdoc-DeepDRiD-56d8af7/regular_fundus_images/regular-fundus-training/Images/1/1_l2.jpg --second-image external/DeepDRiD_v1_1/deepdrdoc-DeepDRiD-56d8af7/regular_fundus_images/regular-fundus-training/Images/1/1_l1.jpg --output-json results/clinical_case_demo_output.json --output-html results/clinical_case_demo_report.html`
-
-The demo case output uses the frozen feature cache, writes SHA-256 input hashes,
-and produces `results/clinical_case_demo_report.html`. Every case is marked
-`manual_review_required: true`.
-
-Run the live encoder path for new imported images:
-
-`HF_HOME=.model_cache/huggingface TORCH_HOME=.model_cache/torch PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.clinical_case_runner --case-id DEMO-LIVE-ENCODER-001 --first-image external/DeepDRiD_v1_1/deepdrdoc-DeepDRiD-56d8af7/regular_fundus_images/regular-fundus-training/Images/1/1_l2.jpg --second-image external/DeepDRiD_v1_1/deepdrdoc-DeepDRiD-56d8af7/regular_fundus_images/regular-fundus-training/Images/1/1_l1.jpg --force-live-encoder --output-json results/clinical_case_live_encoder_output.json --output-html results/clinical_case_live_encoder_report.html`
-
-Run the local browser station:
-
-`HF_HOME=.model_cache/huggingface TORCH_HOME=.model_cache/torch PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.clinical_station --host 127.0.0.1 --port 8765`
-
-Then open `http://127.0.0.1:8765`.
-
-Analysis API:
-
-`POST http://127.0.0.1:8765/api/analyze`
-
-API contract:
-
-`docs/api_contract.md`
-
-Hardware/enclosure workflow:
-
-`docs/hardware_enclosure_clinical_station.md`
-
-## Flagship Thesis
-
-Existing diabetic retinopathy models usually predict from whatever images are already available. ActiveRetina-RC instead treats imaging as a clinical decision process: after an initial retinal photograph, the system must choose `STOP`, `ACQUIRE`, or `DEFER` under an explicit missed-disease risk constraint.
-
-The intended contribution is risk-controlled acquisition under uncertainty and
-dataset shift. The final paper is a DeepDRiD-only decision-theoretic acquisition
-benchmark, not a private-dataset access project.
-
-## Primary Decisions
-
-- Primary available acquisition dataset: DeepDRiD paired color fundus views.
-- Primary endpoint: referable DR, defined as grade >= 2 where a 5-class grade is available.
-- Secondary endpoint: five-class DR grading, grades 0-4.
-- Safety target: missed referable DR risk, calibrated at patient level.
-- Core policy actions: `STOP`, `ACQUIRE_SECOND_VIEW`, `DEFER`.
-- Request-only datasets: out of scope for this paper.
-- CCG status: out of scope. Non-myopic four-field planning is no longer a dependency.
-
-## Flagship Gates
-
-- F0: Dataset/legal/schema audit for DeepDRiD plus every external dataset used.
-- F1: Immutable patient-level splits with sealed test patients.
-- F2: Cross-fitted single-view and two-view predictions.
-- F3: Paired single-view versus two-view value with bootstrap confidence intervals.
-- F4: Calibrated stop/acquire/defer policies satisfying target missed-referable-DR risk on calibration patients.
-- F5: Sealed-test cost-risk curves: sensitivity, specificity, AUPRC, AUROC, Brier score, defer rate, and mean images acquired.
-- F6: External robustness and shift analysis on public DR datasets, clearly separating acquisition evidence from single-image robustness evidence.
-- F7: Final decision: `GO_DEEPDRID_ARXIV_BENCHMARK_CONDITIONAL_IEEE`, `METHOD_ONLY_WEAK_EVIDENCE`, or `NO_GO`.
-
-## Run Order
-
-1. Verify DeepDRiD manifests, local image files, and suffix-mapping sensitivity branches. Done.
-2. Generate cross-fitted predictions for both mapping branches with the dependency-light executable baseline. Done.
-3. Evaluate one-view, two-view, and hindsight second-view value using only out-of-fold/held-out predictions. Done.
-4. Implement calibrated stop/acquire/defer policies. Done.
-5. Evaluate sealed-test cost-risk curves. Done for the executable baseline and pretrained ResNet-50 feature baseline.
-6. Resolve DeepDRiD suffix mapping or make the paper suffix-agnostic before final field-named claims.
-7. Add formal finite-sample risk-control analysis from calibration patients.
-8. Generate V2 failure-analysis artifacts:
-
-`PYTHONPATH=src .venv-active-retina/bin/python -m active_retina.rebuild_v2_artifacts`
-
-This creates grade-stratified referable analysis and paired-score delta tables
-from existing predictions. It does not complete the five-class secondary
-endpoint because the current prediction exports do not contain five-class class
-probabilities or predicted grades.
-
-9. Write the IEEEtran manuscript from frozen real metrics only after the relevant
-readiness gate is satisfied.
-
-The encoder/classifier scaffold lives in `src/active_retina/modeling.py`. It uses a pretrained ConvNeXt-Tiny candidate with ResNet-50 fallback and a permutation-aware set-pooling head.
-
-## Public Supporting Datasets
-
-Run the public evidence audit:
-
-`PYTHONPATH=src python -m active_retina.audit_public_datasets --registry configs/public_datasets.json`
-
-This creates `results/public_dataset_access_matrix.json`, `results/public_dataset_access_matrix.csv`, and `docs/public_dataset_evidence_matrix.md`. Public datasets are assigned evidence roles and cannot be promoted beyond what their schema supports.
-
-For locally downloaded datasets with a metadata CSV, use:
-
-`PYTHONPATH=src python -m active_retina.prepare_generic_fundus ...`
-
-See `docs/public_dataset_runbook.md` for examples and reporting rules.
-
-## Non-Negotiables
-
-- Test patients remain sealed.
-- Patient IDs, not images, are the split unit.
-- Any learned counterfactual target must be cross-fitted.
-- Fixture smoke outputs must keep `TEST_FIXTURE` in filenames and reports.
-- No paper claim may be made from fixture outputs.
-- Mapping sensitivity is mandatory until DeepDRiD suffix-to-field identity is officially verified.
-- Dependency-light baseline outputs prove pipeline readiness, not final model superiority.
-- Pretrained ResNet-50 outputs are real experimental evidence, but current policy claims remain blocked by mapping sensitivity and external robustness gaps.
+Golden Horn 8159 welcomes conversations with eye-care professionals,
+researchers, community health organizations, and technical collaborators who
+can help evaluate responsible ways to improve access to retinal care.
